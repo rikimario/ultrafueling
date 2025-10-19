@@ -11,64 +11,101 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 export default function AuthPage() {
   return (
-    <div className="flex w-full max-w-sm flex-col gap-6">
-      <Tabs defaultValue="account">
-        <TabsList>
-          <TabsTrigger value="account">Account</TabsTrigger>
-          <TabsTrigger value="password">Password</TabsTrigger>
-        </TabsList>
-        <TabsContent value="account">
-          <Card>
-            <CardHeader>
-              <CardTitle>Account</CardTitle>
-              <CardDescription>
-                Make changes to your account here. Click save when you&apos;re
-                done.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-6">
-              <div className="grid gap-3">
-                <Label htmlFor="tabs-demo-name">Name</Label>
-                <Input id="tabs-demo-name" defaultValue="Pedro Duarte" />
-              </div>
-              <div className="grid gap-3">
-                <Label htmlFor="tabs-demo-username">Username</Label>
-                <Input id="tabs-demo-username" defaultValue="@peduarte" />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button>Save changes</Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-        <TabsContent value="password">
-          <Card>
-            <CardHeader>
-              <CardTitle>Password</CardTitle>
-              <CardDescription>
-                Change your password here. After saving, you&apos;ll be logged
-                out.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-6">
-              <div className="grid gap-3">
-                <Label htmlFor="tabs-demo-current">Current password</Label>
-                <Input id="tabs-demo-current" type="password" />
-              </div>
-              <div className="grid gap-3">
-                <Label htmlFor="tabs-demo-new">New password</Label>
-                <Input id="tabs-demo-new" type="password" />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button>Save password</Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
+    <section className="flex items-center justify-center mt-10">
+      <div className="flex w-full max-w-sm flex-col gap-6">
+        <Tabs defaultValue="Login">
+          <TabsList>
+            <TabsTrigger value="Login">Login</TabsTrigger>
+            <TabsTrigger value="Sign up">Sign up</TabsTrigger>
+          </TabsList>
+          <TabsContent value="Login">
+            <form>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Login</CardTitle>
+                  <CardDescription>
+                    Sign in to you&apos;re account.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="grid gap-6">
+                  <div className="grid gap-3">
+                    <Label htmlFor="tabs-demo-name">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      name="email"
+                      placeholder="John@example.com"
+                    />
+                  </div>
+                  <div className="grid gap-3">
+                    <Label htmlFor="tabs-demo-username">Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      name="password"
+                      placeholder="********"
+                    />
+                  </div>
+                </CardContent>
+                <CardFooter className={cn("flex flex-col gap-4")}>
+                  <Button size={"lg"} formAction={login}>
+                    Login
+                  </Button>
+                  <Button
+                    variant={"outline"}
+                    className={cn("w-full")}
+                    onClick={signInWithGoogle}
+                  >
+                    Sign in with Google
+                  </Button>
+                </CardFooter>
+              </Card>
+            </form>
+          </TabsContent>
+          <TabsContent value="Sign up">
+            <form>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Sign up</CardTitle>
+                  <CardDescription>
+                    Create you&apos;ll new account
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="grid gap-6">
+                  <div className="grid gap-3">
+                    <Label htmlFor="full_name">Username*</Label>
+                    <Input id="full_name" type="text" name="full_name" />
+                  </div>
+                  <div className="grid gap-3">
+                    <Label htmlFor="email">Email*</Label>
+                    <Input id="email" type="email" name="email" />
+                  </div>
+                  <div className="grid gap-3">
+                    <Label htmlFor="password">Password*</Label>
+                    <Input id="password" type="password" name="password" />
+                  </div>
+                </CardContent>
+                <CardFooter className={cn("flex flex-col gap-4")}>
+                  <Button size={"lg"} formAction={signup}>
+                    Sign up
+                  </Button>
+                  <Button
+                    variant={"outline"}
+                    className={cn("w-full")}
+                    onClick={signInWithGoogle}
+                  >
+                    Sign in with Google
+                  </Button>
+                </CardFooter>
+              </Card>
+            </form>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </section>
   );
 }
