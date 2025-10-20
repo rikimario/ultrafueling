@@ -5,45 +5,60 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@/utils/supabase/server";
 
-export async function login(formData: FormData) {
+export async function login(prevState: any, formData: FormData) {
   const supabase = await createClient();
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
-  };
+  const email = (formData.get("email") as string)?.trim();
+  const password = (formData.get("password") as string)?.trim();
 
-  const { error } = await supabase.auth.signInWithPassword(data);
+  if (!email || !password) {
+    return { error: "Please enter both email and password." };
+  }
+
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    redirect("/error");
+    if (error.message.includes("Missing email or phone")) {
+      return { error: "Please enter both email and password." };
+    }
+    if (error.message.includes("Invalid login credentials")) {
+      return { error: "Incorrect email or password." };
+    }
+    return { error: error.message };
   }
 
   revalidatePath("/", "layout");
   redirect("/");
 }
 
-export async function signup(formData: FormData) {
+export async function signup(prevState: any, formData: FormData) {
   const supabase = await createClient();
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
-    options: {
-      data: {
-        full_name: formData.get("full_name") as string,
-      },
-    },
-  };
+  const full_name = (formData.get("full_name") as string)?.trim();
+  const email = (formData.get("email") as string)?.trim();
+  const password = (formData.get("password") as string)?.trim();
 
-  const { error } = await supabase.auth.signUp(data);
+  if (!full_name || !email || !password) {
+    return { error: "All fields are required." };
+  }
+
+  if (password.length < 6) {
+    return { error: "Password must be at least 6 characters long." };
+  }
+
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { full_name },
+    },
+  });
 
   if (error) {
-    redirect("/error");
+    if (error.message.includes("User already registered")) {
+      return { error: "An account with this email already exists." };
+    }
+    return { error: error.message };
   }
 
   revalidatePath("/", "layout");
