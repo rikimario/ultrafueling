@@ -33,21 +33,23 @@ export default function AuthPage() {
                 </CardHeader>
                 <CardContent className="grid gap-6">
                   <div className="grid gap-3">
-                    <Label htmlFor="tabs-demo-name">Email</Label>
+                    <Label htmlFor="email">Email</Label>
                     <Input
                       id="email"
                       type="email"
                       name="email"
                       placeholder="John@example.com"
+                      autoComplete="email"
                     />
                   </div>
                   <div className="grid gap-3">
-                    <Label htmlFor="tabs-demo-username">Password</Label>
+                    <Label htmlFor="password">Password</Label>
                     <Input
                       id="password"
                       type="password"
                       name="password"
                       placeholder="********"
+                      autoComplete="password"
                     />
                   </div>
                 </CardContent>
@@ -78,15 +80,30 @@ export default function AuthPage() {
                 <CardContent className="grid gap-6">
                   <div className="grid gap-3">
                     <Label htmlFor="full_name">Username*</Label>
-                    <Input id="full_name" type="text" name="full_name" />
+                    <Input
+                      id="full_name"
+                      type="text"
+                      name="full_name"
+                      autoComplete="text"
+                    />
                   </div>
                   <div className="grid gap-3">
                     <Label htmlFor="email">Email*</Label>
-                    <Input id="email" type="email" name="email" />
+                    <Input
+                      id="email"
+                      type="email"
+                      name="email"
+                      autoComplete="email"
+                    />
                   </div>
                   <div className="grid gap-3">
                     <Label htmlFor="password">Password*</Label>
-                    <Input id="password" type="password" name="password" />
+                    <Input
+                      id="password"
+                      type="password"
+                      name="password"
+                      autoComplete="password"
+                    />
                   </div>
                 </CardContent>
                 <CardFooter className={cn("flex flex-col gap-4")}>
