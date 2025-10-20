@@ -12,8 +12,12 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import getUser from "@/utils/supabase/user";
+import { redirect } from "next/navigation";
 
-export default function AuthPage() {
+export default async function AuthPage() {
+  const user = await getUser();
+  if (user) redirect("/");
   return (
     <section className="flex items-center justify-center mt-10">
       <div className="flex w-full max-w-sm flex-col gap-6">

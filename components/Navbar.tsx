@@ -22,11 +22,6 @@ export default async function Navbar() {
             </Button>
           </Link>
         )}
-        {/* <Link href="/get-started">
-          <Button className={cn("bg-indigo-500 hover:bg-indigo-600")}>
-            Get Started
-          </Button>
-        </Link> */}
       </div>
     </nav>
   );
