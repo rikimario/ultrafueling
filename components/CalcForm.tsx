@@ -125,10 +125,9 @@ export default function CalcForm() {
                 onValueChange={(value) =>
                   handleChange("experienceLevel", value)
                 }
-                defaultValue="intermediate"
               >
                 <SelectTrigger className={cn("w-full")}>
-                  <SelectValue placeholder="Select a experience level" />
+                  <SelectValue placeholder="Select an experience level" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
