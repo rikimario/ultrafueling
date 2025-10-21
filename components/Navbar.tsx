@@ -5,24 +5,29 @@ import Link from "next/link";
 import getUser from "@/utils/supabase/user";
 import { logout } from "@/app/get-started/actions";
 import Image from "next/image";
+import { UserIcon } from "lucide-react";
 
 export default async function Navbar() {
   const user = await getUser();
   return (
-    <nav className="flex justify-between border-b p-4 mb-4">
+    <nav className="flex justify-between items-center border-b p-4 mb-4">
       <Link href="/">
         <span>UltraFueling</span>
       </Link>
       <div className="space-x-4">
         {user ? (
-          <div className="flex gap-2">
-            <Image
-              className="rounded-full"
-              alt="profile_picture"
-              src={user?.user_metadata.picture}
-              width={40}
-              height={40}
-            />
+          <div className="flex gap-2 items-center">
+            {user.user_metadata.picture ? (
+              <Image
+                className="rounded-full"
+                alt="profile_picture"
+                src={user?.user_metadata.picture}
+                width={40}
+                height={40}
+              />
+            ) : (
+              <UserIcon strokeWidth={0.7} width={40} height={40} />
+            )}
 
             <Button onClick={logout}>Logout</Button>
           </div>
