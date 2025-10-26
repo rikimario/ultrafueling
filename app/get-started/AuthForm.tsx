@@ -30,9 +30,9 @@ export default function AuthForm() {
           <form action={loginAction}>
             <Card>
               <CardHeader>
-                <CardTitle>Login</CardTitle>
+                <CardTitle>Login to your account</CardTitle>
                 <CardDescription>
-                  Sign in to you&apos;re account.
+                  Enter you&apos;re email below to login to your account.
                 </CardDescription>
                 {loginState.error && (
                   <p className="text-sm text-red-600">{loginState.error}</p>
@@ -50,7 +50,12 @@ export default function AuthForm() {
                   />
                 </div>
                 <div className="grid gap-3">
-                  <Label htmlFor="password">Password</Label>
+                  <div className="flex justify-between">
+                    <Label htmlFor="password">Password</Label>
+                    <Button variant={"link"} size={"default"}>
+                      Forgot your password?
+                    </Button>
+                  </div>
                   <Input
                     id="password"
                     type="password"
@@ -61,7 +66,7 @@ export default function AuthForm() {
                 </div>
               </CardContent>
               <CardFooter className={cn("flex flex-col gap-4")}>
-                <Button size={"lg"} type="submit">
+                <Button className={cn("w-full")} size={"lg"} type="submit">
                   Login
                 </Button>
                 <Button
@@ -117,7 +122,7 @@ export default function AuthForm() {
                 </div>
               </CardContent>
               <CardFooter className={cn("flex flex-col gap-4")}>
-                <Button size={"lg"} type="submit">
+                <Button className={cn("w-full")} size={"lg"} type="submit">
                   Sign up
                 </Button>
                 <Button
