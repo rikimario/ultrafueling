@@ -93,3 +93,29 @@ export async function logout() {
   revalidatePath("/", "layout");
   redirect("/");
 }
+
+export async function goPremiumAction() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    throw new Error("No authenticated user found");
+  }
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .update({ is_premium: true })
+    .eq("id", user.id)
+    .select();
+
+  if (error) {
+    console.error("❌ Supabase update error:", error);
+    throw error;
+  }
+
+  console.log("✅ Updated profile row:", data);
+  return { success: true };
+}
