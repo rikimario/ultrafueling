@@ -6,6 +6,7 @@ import getUser from "@/utils/supabase/user";
 import { logout } from "@/app/get-started/actions";
 import Image from "next/image";
 import { UserIcon } from "lucide-react";
+import GoPremiumBtn from "./GoPremiumBtn";
 
 export default async function Navbar() {
   const user = await getUser();
@@ -28,7 +29,7 @@ export default async function Navbar() {
             ) : (
               <UserIcon strokeWidth={0.7} width={40} height={40} />
             )}
-
+            <GoPremiumBtn />
             <Button onClick={logout}>Logout</Button>
           </div>
         ) : (
