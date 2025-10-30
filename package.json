@@ -5,13 +5,15 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "next start"
+    "start": "next start",
+    "stripe": "stripe listen --forward-to localhost:3000/api/stripe"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tabs": "^1.1.13",
+    "@stripe/stripe-js": "^8.2.0",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.75.0",
@@ -21,6 +23,7 @@
     "next": "15.5.5",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "stripe": "^19.1.0",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
