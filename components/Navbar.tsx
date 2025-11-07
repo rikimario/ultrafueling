@@ -6,10 +6,10 @@ import getUser from "@/utils/supabase/user";
 import { logout } from "@/app/get-started/actions";
 import Image from "next/image";
 import { UserIcon } from "lucide-react";
-import GoPremiumBtn from "./GoPremiumBtn";
 
 export default async function Navbar() {
   const user = await getUser();
+
   return (
     <nav className="flex justify-between items-center border-b p-4 mb-4">
       <Link href="/">
@@ -29,7 +29,17 @@ export default async function Navbar() {
             ) : (
               <UserIcon strokeWidth={0.7} width={40} height={40} />
             )}
-            <GoPremiumBtn />
+
+            {user?.is_premium === true ? (
+              <Link href="/advanced-calc">
+                <Button>Advanced Calculator</Button>
+              </Link>
+            ) : (
+              <Link href="/get-started">
+                <Button>Advanced Calculator</Button>
+              </Link>
+            )}
+
             <Button onClick={logout}>Logout</Button>
           </div>
         ) : (
