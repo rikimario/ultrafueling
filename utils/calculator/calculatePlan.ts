@@ -22,6 +22,63 @@ export interface PlanResult {
   };
 }
 
+// Calculate Advanced Plan
+export type Experience = "Beginner" | "Intermediate" | "Elite";
+
+export interface AdvancedInput {
+  distanceKm: number;
+  durationHours: number;
+  weightKg: number;
+  temperatureC: number;
+  humidityPct?: number; // optional, 0-100
+  paceMinPerKm?: number; // optional, if provided derive pace factor
+  terrain?: "flat" | "rolling" | "mountain";
+  packWeightKg?: number; // optional additional load
+  sweatRateLPerHour?: number | null; // user-known sweat rate overrides estimate
+  experience?: Experience;
+  goal?: "finish" | "performance"; // conservative vs aggressive fueling
+  hasAidStations?: number;
+  aidStationGapHours?: number;
+}
+
+export interface HourlyPlan {
+  hourIndex: number; // 1..n
+  calories: number;
+  carbsGrams: number;
+  fluidsL: number;
+  sodiumMg: number;
+  notes?: string;
+}
+
+export interface AdvancedResult {
+  distanceKm: number;
+  durationHours: number;
+  weightKg: number;
+  temperatureC: number;
+  totalCalories: number;
+  caloriesPerHour: number;
+  totalFluidsL: number;
+  fluidsPerHour: number;
+  totalSodiumMg: number;
+  sodiumPerHourMg: number;
+  totalCarbsGrams: number;
+  carbsPerHourGrams: number;
+  terrain: string;
+  hourly: HourlyPlan[];
+  raw: {
+    sweatRateLPerHourUsed?: number;
+    sodiumMgPerLUsed?: number;
+    assumptions: Record<string, any>;
+  };
+  packing: {
+    packCalories: number;
+    packCarbsGrams: number;
+    packFluidsL: number;
+    packSodiumMg: number;
+    notes: string;
+  };
+}
+
 export function calculateNutritionPlan(input: RunInput): PlanResult {
   const {
     distanceKm,
@@ -69,5 +126,158 @@ export function calculateNutritionPlan(input: RunInput): PlanResult {
     totalPotassiumMg: Math.round(potassiumMg),
     totalMagnesiumMg: Math.round(magnesiumMg),
     hourly,
+  };
+}
+
+/**
+ * Advanced nutritional calculator
+ */
+export function calculateAdvancedPlan(input: AdvancedInput): AdvancedResult {
+  const {
+    distanceKm,
+    durationHours,
+    weightKg,
+    temperatureC,
+    humidityPct = 50,
+    paceMinPerKm,
+    terrain = "flat",
+    packWeightKg = 0,
+    sweatRateLPerHour,
+    experience = "Intermediate",
+    goal = "finish",
+    hasAidStations,
+    aidStationGapHours = 2,
+  } = input;
+
+  // --- ENERGY (calories) -----------------------------------------------------
+  let kcalPerKgPerKm = 1.0;
+  if (terrain === "rolling") kcalPerKgPerKm *= 1.05;
+  if (terrain === "mountain") kcalPerKgPerKm *= 1.12;
+
+  const packFactor = 1 + Math.min(0.25, packWeightKg / Math.max(20, weightKg));
+  kcalPerKgPerKm *= packFactor;
+
+  const experienceFactor =
+    experience === "Beginner"
+      ? 1.05
+      : experience === "Intermediate"
+      ? 1.0
+      : 0.95;
+  kcalPerKgPerKm *= experienceFactor;
+
+  const totalCalories = Math.round(weightKg * distanceKm * kcalPerKgPerKm);
+  const caloriesPerHour =
+    durationHours > 0
+      ? Math.round(totalCalories / durationHours)
+      : totalCalories;
+
+  // --- SWEAT RATE (liters/hour) ---------------------------------------------
+  let estimatedSweatRate = 0.7;
+  if (temperatureC > 15)
+    estimatedSweatRate += 0.25 * Math.floor((temperatureC - 15) / 5);
+  if ((humidityPct ?? 0) > 70) estimatedSweatRate += 0.2;
+  if (paceMinPerKm) {
+    if (paceMinPerKm <= 5) estimatedSweatRate += 0.2;
+    else if (paceMinPerKm >= 7) estimatedSweatRate -= 0.1;
+  }
+  const sweatUsed = sweatRateLPerHour ?? Number(estimatedSweatRate.toFixed(2));
+
+  // --- FLUIDS/HYDRATION -----------------------------------------------------
+  const replaceFraction = goal === "performance" ? 0.85 : 0.75;
+  const fluidsPerHour = Number((sweatUsed * replaceFraction).toFixed(2));
+  const totalFluidsL = Number((fluidsPerHour * durationHours).toFixed(2));
+
+  // --- SODIUM / ELECTROLYTES -----------------------------------------------
+  let sodiumMgPerL = 600;
+  if (temperatureC >= 25) sodiumMgPerL = 900;
+  if (temperatureC >= 30) sodiumMgPerL = 1100;
+  if ((humidityPct ?? 0) > 80) sodiumMgPerL += 100;
+
+  const totalSodiumMg = Math.round(sodiumMgPerL * totalFluidsL);
+  const sodiumPerHourMg = Math.round(
+    totalSodiumMg / Math.max(1, durationHours)
+  );
+
+  // --- CARBS (grams) --------------------------------------------------------
+  let carbsPerHour = 60;
+  if (durationHours < 2) carbsPerHour = 40;
+  else if (durationHours <= 4) carbsPerHour = 70;
+  else carbsPerHour = goal === "performance" ? 95 : 80;
+
+  if (experience === "Elite")
+    carbsPerHour = Math.min(120, Math.round(carbsPerHour * 1.15));
+  if (experience === "Beginner")
+    carbsPerHour = Math.max(40, Math.round(carbsPerHour * 0.9));
+
+  const totalCarbs = Math.round(carbsPerHour * durationHours);
+
+  // --- Build hourly plan ----------------------------------------------------
+  const hours = Math.ceil(durationHours);
+  const hourly: HourlyPlan[] = [];
+  for (let i = 1; i <= hours; i++) {
+    hourly.push({
+      hourIndex: i,
+      calories: Math.round(caloriesPerHour),
+      carbsGrams: Math.round(carbsPerHour),
+      fluidsL: Number(fluidsPerHour.toFixed(2)),
+      sodiumMg: Math.round(sodiumPerHourMg),
+      notes:
+        i === 1
+          ? "Start with a warm-up fuel (small snack) and small sips."
+          : i % 3 === 0
+          ? "Consider a solid snack (if tolerated) or calorie-dense gel."
+          : undefined,
+    });
+  }
+
+  // --- Aid station / packing logic -----------------------------------------
+  const selfCarryFraction = hasAidStations
+    ? Math.min(1, aidStationGapHours / durationHours)
+    : 1;
+
+  const packCalories = Math.round(totalCalories * selfCarryFraction);
+  const packCarbsGrams = Math.round(totalCarbs * selfCarryFraction);
+  const packFluidsL = Number((totalFluidsL * selfCarryFraction).toFixed(2));
+  const packSodiumMg = Math.round(totalSodiumMg * selfCarryFraction);
+
+  const packingNotes = hasAidStations
+    ? `Assuming aid stations every ${aidStationGapHours} hours, carry ~${Math.round(
+        selfCarryFraction * 100
+      )}% of total nutrition (~${packCarbsGrams} g carbs, ${packFluidsL} L fluids).`
+    : "No aid stations assumed – full self-support load.";
+
+  // --- Return result --------------------------------------------------------
+  return {
+    distanceKm,
+    durationHours,
+    weightKg,
+    temperatureC,
+    totalCalories,
+    terrain,
+    caloriesPerHour,
+    totalFluidsL,
+    fluidsPerHour,
+    totalSodiumMg,
+    sodiumPerHourMg,
+    totalCarbsGrams: totalCarbs,
+    carbsPerHourGrams: carbsPerHour,
+    hourly,
+    raw: {
+      sweatRateLPerHourUsed: sweatUsed,
+      sodiumMgPerLUsed: sodiumMgPerL,
+      assumptions: {
+        kcalPerKgPerKm,
+        packFactor,
+        experienceFactor,
+        replaceFraction,
+      },
+    },
+    packing: {
+      packCalories,
+      packCarbsGrams,
+      packFluidsL,
+      packSodiumMg,
+      notes: packingNotes,
+    },
   };
 }
