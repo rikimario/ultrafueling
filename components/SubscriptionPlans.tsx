@@ -29,7 +29,10 @@ const plans = [
 export default async function SubscriptionPlans() {
   const user = await getUser();
   return (
-    <section className="flex items-center justify-center gap-4 my-12">
+    <section
+      id="subcribe"
+      className="flex items-center justify-center gap-4 my-12"
+    >
       {plans.map((plan, index) => (
         <Card key={index}>
           <CardHeader>

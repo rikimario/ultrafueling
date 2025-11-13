@@ -35,9 +35,9 @@ export default async function Navbar() {
                 <Button>Advanced Calculator</Button>
               </Link>
             ) : (
-              <Link href="/get-started">
+              <a href="#subcribe">
                 <Button>Advanced Calculator</Button>
-              </Link>
+              </a>
             )}
 
             <Button onClick={logout}>Logout</Button>
