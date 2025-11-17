@@ -1,12 +1,21 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 import { Button } from "./ui/button";
 import { AdvancedResult } from "@/utils/calculator/calculatePlan";
+import StyledMarkdown from "./StyledMarkdown";
 
 export default function AdvancedCalcResult({
   results,
+  aiPlan,
 }: {
   results: AdvancedResult;
+  aiPlan: string | null;
 }) {
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -100,14 +109,14 @@ export default function AdvancedCalcResult({
                   </div>
                 )}
 
-                <div className="mt-3 flex gap-2">
+                <CardFooter className="mt-3 flex gap-2">
                   <Button size="sm" variant="ghost">
                     Use gels
                   </Button>
                   <Button size="sm" variant="ghost">
                     Use solids
                   </Button>
-                </div>
+                </CardFooter>
               </div>
             </CardContent>
           </Card>
@@ -115,27 +124,18 @@ export default function AdvancedCalcResult({
       </div>
 
       <div className="mt-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Notes & GI Tips</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="list-decimal pl-5 space-y-2 text-sm">
-              <li>
-                Start fueling within first 20 minutes; small frequent sips
-                (150–200 mL every 10–15 min).
-              </li>
-              <li>
-                If nausea: switch to plain water for 15–30 min, then resume
-                dilute carbs.
-              </li>
-              <li>
-                Use aid stations to refill and swap flavors; carry only 2 h of
-                on-body fuel.
-              </li>
-            </ul>
-          </CardContent>
-        </Card>
+        {aiPlan && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Notes & GI Tips</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <StyledMarkdown temperature={results.temperatureC}>
+                {aiPlan}
+              </StyledMarkdown>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
