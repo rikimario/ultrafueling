@@ -223,10 +223,28 @@ export function calculateAdvancedPlan(input: AdvancedInput): AdvancedResult {
       sodiumMg: Math.round(sodiumPerHourMg),
       notes:
         i === 1
-          ? "Start with a warm-up fuel (small snack) and small sips."
-          : i % 3 === 0
-          ? "Consider a solid snack (if tolerated) or calorie-dense gel."
-          : undefined,
+          ? "🍌 1 small banana + 1 gel + 200 ml water — start fueling early."
+          : i === 2
+          ? "🥤 1 gel + 250 ml electrolyte drink — maintain steady carb intake."
+          : i === 3
+          ? "🍞 Small energy bar or rice cake + 200 ml water — add some solids."
+          : i === 4
+          ? "🥤 1 gel + 250 ml electrolyte drink — keep sodium steady."
+          : i === 5
+          ? "🍪 Half energy bar or dates + 250 ml water — add variety."
+          : i === 6
+          ? "🥤 1 gel + small piece of fruit from checkpoint + 200 ml drink."
+          : i === 7
+          ? "🍞 Small solid (half sandwich or bar) + 200 ml water."
+          : i === 8
+          ? "🥤 1 gel + caffeine (if used) + 250 ml electrolyte drink."
+          : i === 9
+          ? "🍌 Banana or soft chew + 250 ml drink — check for stomach comfort."
+          : i === 10
+          ? "🥤 1 gel + 250 ml electrolyte drink — keep moving consistently."
+          : i > 10 && i % 3 === 0
+          ? "🍪 Small solid snack + 200 ml drink — small energy boost."
+          : "🥤 1 gel + 200 ml water or electrolyte drink — maintain rhythm.",
     });
   }
 
