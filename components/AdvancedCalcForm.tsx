@@ -29,6 +29,8 @@ import React, { useState } from "react";
 import AdvancedCalcResult from "./AdvancedCalcResult";
 
 export default function AdvancedCalcForm({ user }: { user: any }) {
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(false);
   const [aiPlan, setAiPlan] = useState<string | null>(null);
   const [form, setForm] = useState({
@@ -47,6 +49,7 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
     aidStationGapHours: "",
   });
   const [result, setResult] = useState<AdvancedResult | null>(null);
+  const [advancedInputState, setAdvancedInputState] = useState<any>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,6 +73,7 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
       hasAidStations: Number(form.hasAidStations),
       aidStationGapHours: Number(form.aidStationGapHours),
     };
+    setAdvancedInputState(advancedInput);
 
     // Step 1: calculate base plan
     const advancedResult = calculateAdvancedPlan(advancedInput);
@@ -282,7 +286,40 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
         </form>
       </Card>
 
-      {result && <AdvancedCalcResult results={result} />}
+      {result && (
+        <>
+          <AdvancedCalcResult results={result} aiPlan={aiPlan} />
+          <Button
+            disabled={saving || saved}
+            className="mt-4"
+            onClick={async () => {
+              setSaving(true);
+              try {
+                const res = await fetch("/api/save-plan", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    userId: user?.id,
+                    advancedInput: advancedInputState,
+                    advancedResult: result,
+                    aiPlan,
+                  }),
+                });
+
+                const data = await res.json();
+                if (!data.success) throw new Error(data.error);
+                setSaved(true);
+              } catch (err) {
+                console.error("Save error:", err);
+              } finally {
+                setSaving(false);
+              }
+            }}
+          >
+            {saved ? "Saved ✓" : saving ? "Saving..." : "Save Plan"}
+          </Button>
+        </>
+      )}
     </section>
   );
 }
