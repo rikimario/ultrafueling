@@ -5,7 +5,13 @@ import Link from "next/link";
 import getUser from "@/utils/supabase/user";
 import { logout } from "@/app/get-started/actions";
 import Image from "next/image";
-import { UserIcon } from "lucide-react";
+import { CircleUserRound, LogOutIcon, Settings, UserIcon } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 export default async function Navbar() {
   const user = await getUser();
@@ -15,33 +21,52 @@ export default async function Navbar() {
       <Link href="/">
         <span>UltraFueling</span>
       </Link>
-      <div className="space-x-4">
+      <div className="space-x-4 flex justify-center items-center cursor-pointer">
         {user ? (
-          <div className="flex gap-2 items-center">
-            {user.user_metadata.picture ? (
-              <Image
-                className="rounded-full"
-                alt="profile_picture"
-                src={user?.user_metadata.picture}
-                width={40}
-                height={40}
-              />
-            ) : (
-              <UserIcon strokeWidth={0.7} width={40} height={40} />
-            )}
-
+          <DropdownMenu>
             {user?.is_premium === true ? (
               <Link href="/advanced-calc">
                 <Button>Advanced Calculator</Button>
               </Link>
             ) : (
               <a href="#subcribe">
-                <Button>Advanced Calculator</Button>
+                <Button>Go Premium</Button>
               </a>
             )}
-
-            <Button onClick={logout}>Logout</Button>
-          </div>
+            <DropdownMenuTrigger asChild>
+              <div className="flex gap-2 items-center">
+                {user.user_metadata.picture ? (
+                  <Image
+                    className="rounded-full"
+                    alt="profile_picture"
+                    src={user?.user_metadata.picture}
+                    width={40}
+                    height={40}
+                  />
+                ) : (
+                  <CircleUserRound strokeWidth={0.7} width={45} height={45} />
+                )}
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <Link href="/profile">
+                <DropdownMenuItem className="cursor-pointer">
+                  <CircleUserRound strokeWidth={1} />
+                  View Profile
+                </DropdownMenuItem>
+              </Link>
+              <Link href="/account-settings">
+                <DropdownMenuItem className="cursor-pointer">
+                  <Settings strokeWidth={1} />
+                  Manage Account
+                </DropdownMenuItem>
+              </Link>
+              <DropdownMenuItem className="cursor-pointer" onClick={logout}>
+                <LogOutIcon strokeWidth={1} />
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         ) : (
           <Link href="/get-started">
             <Button className={cn("bg-indigo-500 hover:bg-indigo-600")}>
