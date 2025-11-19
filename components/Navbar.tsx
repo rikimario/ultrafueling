@@ -40,8 +40,8 @@ export default async function Navbar() {
                     className="rounded-full"
                     alt="profile_picture"
                     src={user?.user_metadata.picture}
-                    width={40}
-                    height={40}
+                    width={45}
+                    height={45}
                   />
                 ) : (
                   <CircleUserRound strokeWidth={0.7} width={45} height={45} />
