@@ -26,7 +26,7 @@ export default async function Navbar() {
           <DropdownMenu>
             {user?.is_premium === true ? (
               <Link href="/advanced-calc">
-                <Button>Advanced Calculator</Button>
+                <Button variant="main">Advanced Calculator</Button>
               </Link>
             ) : (
               <a href="#subcribe">

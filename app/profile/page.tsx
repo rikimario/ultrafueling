@@ -1,31 +1,53 @@
 import SavedPlans from "@/components/SavedPlans";
-import { Card, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import getUser from "@/utils/supabase/user";
+import { Mail, UserRound } from "lucide-react";
+import Image from "next/image";
 import React from "react";
 
-export default function Profile() {
+export default async function Profile() {
+  const user = await getUser();
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      {/* Header */}
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Your Profile</h1>
 
       <div className="w-full flex gap-6">
         {/* Left Profile Info */}
-        <div className="max-h-96 min-w-64 bg-white p-6 rounded-2xl shadow-md col-span-1">
-          <h2 className="text-xl font-semibold mb-4">Runner Info</h2>
-          <ul className="text-gray-700 space-y-2">
-            <li>
-              <strong>Name:</strong> John Doe
-            </li>
-            <li>
-              <strong>Age:</strong> 29
-            </li>
-            <li>
-              <strong>Weight:</strong> 72 kg
-            </li>
-            <li>
-              <strong>Training Level:</strong> Advanced
-            </li>
-          </ul>
+        <div className="max-h-96 min-w-1/4 bg-white p-6 rounded-2xl shadow-md col-span-1">
+          {user?.user_metadata.picture ? (
+            <Image
+              src={user?.user_metadata.picture}
+              alt="profile_picture"
+              width={100}
+              height={100}
+              className="w-32 h-32 rounded-full mx-auto mb-4 border-3 hover:border-blue-500 transition duration-300 ease-in-out"
+            />
+          ) : (
+            <UserRound
+              className="w-32 h-32 rounded-full mx-auto mb-4 border-3 hover:border-blue-500 transition duration-300 ease-in-out"
+              strokeWidth={0.3}
+              width={100}
+              height={100}
+            />
+          )}
+          <div className="text-center">
+            <p className="mb-2 text-2xl font-semibold">
+              {user?.user_metadata.full_name}
+            </p>
+            <p className="mb-2 text-muted-foreground flex items-center justify-center gap-2">
+              <Mail width={15} height={15} /> {user?.email}
+            </p>
+          </div>
+
+          <div>
+            <Button variant="main" className={cn("w-full mt-4 ")}>
+              Edit Profile
+            </Button>
+            <Button variant={"secondary"} className={cn("w-full mt-2")}>
+              Change Password
+            </Button>
+          </div>
         </div>
 
         {/* Right Saved Results Section */}
