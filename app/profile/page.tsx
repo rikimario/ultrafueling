@@ -21,11 +21,11 @@ export default async function Profile() {
               alt="profile_picture"
               width={100}
               height={100}
-              className="w-32 h-32 rounded-full mx-auto mb-4 border-3 hover:border-blue-500 transition duration-300 ease-in-out"
+              className="w-32 h-32 rounded-full mx-auto mb-4 border-3 hover:border-[#a3ea2a] transition duration-300 ease-in-out"
             />
           ) : (
             <UserRound
-              className="w-32 h-32 rounded-full mx-auto mb-4 border-3 hover:border-blue-500 transition duration-300 ease-in-out"
+              className="w-32 h-32 rounded-full mx-auto mb-4 border-3 hover:border-[#a3ea2a] transition duration-300 ease-in-out"
               strokeWidth={0.3}
               width={100}
               height={100}
@@ -41,7 +41,7 @@ export default async function Profile() {
           </div>
 
           <div>
-            <Button variant="main" className={cn("w-full mt-4 ")}>
+            <Button variant={"main"} className={cn("w-full mt-4 ")}>
               Edit Profile
             </Button>
             <Button variant={"secondary"} className={cn("w-full mt-2")}>
