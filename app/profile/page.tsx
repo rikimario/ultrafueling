@@ -19,9 +19,9 @@ export default async function Profile() {
             <Image
               src={user?.user_metadata.picture}
               alt="profile_picture"
-              width={100}
-              height={100}
-              className="w-32 h-32 rounded-full mx-auto mb-4 border-3 hover:border-[#a3ea2a] transition duration-300 ease-in-out"
+              width={130}
+              height={130}
+              className="rounded-full mx-auto mb-4 border-3 hover:border-[#a3ea2a] transition duration-300 ease-in-out"
             />
           ) : (
             <UserRound
