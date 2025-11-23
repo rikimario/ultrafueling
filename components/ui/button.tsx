@@ -21,7 +21,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         main: "bg-[#a3ea2a] hover:bg-[#a3ea2a]/30 border-1 border-[#a3ea2a] transition duration-300 ease-in-out",
         secondary:
-          "bg-transperant hover:bg-[#a3ea2a] border-1 border-[#a3ea2a] transition duration-300 ease-in-out",
+          "bg-transperant hover:bg-[#a3ea2a]/30 border-1 border-[#a3ea2a] transition duration-300 ease-in-out",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
