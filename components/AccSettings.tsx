@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Preferences } from "@/utils/supabase/savePreferences";
+import { toast } from "sonner";
 
 export default function AccSettings({
   user,
@@ -56,7 +57,7 @@ export default function AccSettings({
     });
 
     const json = await res.json();
-    if (json.success) alert("Preferences saved!");
+    if (json.success) toast.success("Preferences saved!");
   };
   return (
     <div>
@@ -207,7 +208,7 @@ export default function AccSettings({
             </Select>
           </li>
         </ul>
-        <Button onClick={handleSavePreferences} variant={"main"}>
+        <Button type="button" onClick={handleSavePreferences} variant={"main"}>
           Save changes
         </Button>
       </form>
