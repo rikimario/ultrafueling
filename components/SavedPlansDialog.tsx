@@ -75,14 +75,7 @@ export default function SavedPlansDialog({ plans }: { plans: any[] }) {
               <Dialog>
                 <div className="mt-3">
                   <DialogTrigger asChild>
-                    <Button
-                      variant={"default"}
-                      className={cn(
-                        "bg-green-600 hover:bg-green-700 transition"
-                      )}
-                    >
-                      View Details
-                    </Button>
+                    <Button variant={"secondary"}>View Details</Button>
                   </DialogTrigger>
                   {/* <DeleteSavedPlan plan={plan} /> */}
                   <Button

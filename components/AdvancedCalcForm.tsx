@@ -317,29 +317,6 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
             disabled={saving || saved}
             className="mt-4"
             onClick={handleSave}
-            // onClick={async () => {
-            //   setSaving(true);
-            //   try {
-            //     const res = await fetch("/api/save-plan", {
-            //       method: "POST",
-            //       headers: { "Content-Type": "application/json" },
-            //       body: JSON.stringify({
-            //         userId: user?.id,
-            //         advancedInput: advancedInputState,
-            //         advancedResult: result,
-            //         aiPlan,
-            //       }),
-            //     });
-
-            //     const data = await res.json();
-            //     if (!data.success) throw new Error(data.error);
-            //     setSaved(true);
-            //   } catch (err) {
-            //     console.error("Save error:", err);
-            //   } finally {
-            //     setSaving(false);
-            //   }
-            // }}
           >
             {saved ? "Saved ✓" : saving ? "Saving..." : "Save Plan"}
           </Button>

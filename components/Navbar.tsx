@@ -5,7 +5,7 @@ import Link from "next/link";
 import getUser from "@/utils/supabase/user";
 import { logout } from "@/app/get-started/actions";
 import Image from "next/image";
-import { CircleUserRound, LogOutIcon, Settings, UserIcon } from "lucide-react";
+import { CircleUserRound, LogOutIcon, Settings } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,21 +30,26 @@ export default async function Navbar() {
               </Link>
             ) : (
               <a href="#subcribe">
-                <Button>Go Premium</Button>
+                <Button variant="main">Go Premium</Button>
               </a>
             )}
             <DropdownMenuTrigger asChild>
               <div className="flex gap-2 items-center">
                 {user.user_metadata.picture ? (
                   <Image
-                    className="rounded-full"
+                    className="rounded-full border-1 hover:border-[#a3ea2a] transition duration-300 ease-in-out"
                     alt="profile_picture"
                     src={user?.user_metadata.picture}
                     width={45}
                     height={45}
                   />
                 ) : (
-                  <CircleUserRound strokeWidth={0.7} width={45} height={45} />
+                  <CircleUserRound
+                    className="border-3 hover:border-[#a3ea2a] transition duration-300 ease-in-out"
+                    strokeWidth={0.7}
+                    width={45}
+                    height={45}
+                  />
                 )}
               </div>
             </DropdownMenuTrigger>
@@ -69,9 +74,7 @@ export default async function Navbar() {
           </DropdownMenu>
         ) : (
           <Link href="/get-started">
-            <Button className={cn("bg-indigo-500 hover:bg-indigo-600")}>
-              Get Started
-            </Button>
+            <Button variant={"main"}>Get Started</Button>
           </Link>
         )}
       </div>
