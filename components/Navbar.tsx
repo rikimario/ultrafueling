@@ -5,7 +5,7 @@ import Link from "next/link";
 import getUser from "@/utils/supabase/user";
 import { logout } from "@/app/get-started/actions";
 import Image from "next/image";
-import { CircleUserRound, LogOutIcon, Settings } from "lucide-react";
+import { CircleUserRound, LogOutIcon, Settings, UserRound } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,8 +44,8 @@ export default async function Navbar() {
                     height={45}
                   />
                 ) : (
-                  <CircleUserRound
-                    className="border-3 hover:border-[#a3ea2a] transition duration-300 ease-in-out"
+                  <UserRound
+                    className="rounded-full border-1 hover:border-[#a3ea2a] transition duration-300 ease-in-out"
                     strokeWidth={0.7}
                     width={45}
                     height={45}

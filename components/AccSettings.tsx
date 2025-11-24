@@ -1,6 +1,6 @@
 "use client";
 
-import { Settings, UserRound } from "lucide-react";
+import { CircleAlert, Settings, UserRound } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
@@ -73,7 +73,7 @@ export default function AccSettings({
           />
         ) : (
           <UserRound
-            className="w-32 h-32 rounded-full mx-auto mb-4 border-3 hover:border-[#a3ea2a] transition duration-300 ease-in-out"
+            className="rounded-full mb-4 border-3 hover:border-[#a3ea2a] transition duration-300 ease-in-out"
             strokeWidth={0.3}
             width={100}
             height={100}
@@ -212,6 +212,26 @@ export default function AccSettings({
           Save changes
         </Button>
       </form>
+
+      {/* Delete account section */}
+
+      <section className="w-full py-16">
+        <h1 className="flex items-center gap-2 text-2xl font-semibold text-gray-800 py-4">
+          <span>
+            <CircleAlert color="red" />
+          </span>{" "}
+          Delete your account
+        </h1>
+        <p className="pb-10 w-2/3">
+          Deleting your account is permanent. All personal data, saved plans,
+          and preferences will be permanently erased and cannot be recovered.
+          Any active subscriptions will also be canceled. Please make sure you
+          have exported anything important before continuing.
+        </p>
+        <Button type="button" variant={"destructive"}>
+          Delete My account
+        </Button>
+      </section>
     </div>
   );
 }
