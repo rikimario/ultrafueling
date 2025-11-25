@@ -2,7 +2,7 @@
 
 import { CircleAlert, Settings, UserRound } from "lucide-react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -18,14 +18,14 @@ import {
 } from "./ui/select";
 import { Preferences } from "@/utils/supabase/savePreferences";
 import { toast } from "sonner";
+import { useUser } from "@/contexts/UserContext";
 
 export default function AccSettings({
-  user,
   preferences,
 }: {
-  user: any;
   preferences: Preferences;
 }) {
+  const { user, avatarUrl, updateAvatar } = useUser();
   const [form, setForm] = useState({
     username: user?.user_metadata.full_name,
     email: user?.email,
@@ -59,17 +59,53 @@ export default function AccSettings({
     const json = await res.json();
     if (json.success) toast.success("Preferences saved!");
   };
+
+  const handleAvatarUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      return toast.error("File is too big — max 2MB.");
+    }
+
+    const fileExt = file.name.split(".").pop();
+    const fileName = `avatar.${fileExt}`;
+    const filePath = `${user.id}/${fileName}`;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("userId", user.id);
+    formData.append("path", filePath);
+
+    const res = await fetch("/api/upload-avatar", {
+      method: "POST",
+      body: formData,
+      credentials: "include",
+    });
+
+    const json = await res.json();
+
+    if (json.error) {
+      toast.error(json.error);
+    } else {
+      updateAvatar(`${json.url}?t=${Date.now()}`);
+    }
+  };
+
   return (
     <div>
       {/* Avatar section */}
       <div className="flex gap-3">
-        {user?.user_metadata.picture ? (
+        {avatarUrl ? (
           <Image
-            src={user?.user_metadata.picture}
+            onClick={() => document.getElementById("avatarInput")?.click()}
+            src={avatarUrl}
             alt="profile_picture"
             width={100}
             height={100}
-            className="rounded-full mb-4 border-3 hover:border-[#a3ea2a] transition duration-300 ease-in-out"
+            className="w-24 h-24 rounded-full mb-4 border-3 hover:border-[#a3ea2a] transition duration-300 ease-in-out object-cover cursor-pointer"
+            unoptimized
+            priority
           />
         ) : (
           <UserRound
@@ -81,7 +117,19 @@ export default function AccSettings({
         )}
 
         <span className="flex flex-col justify-center gap-1">
-          <Button variant={"secondary"}>Upload Avatar</Button>
+          <Button
+            onClick={() => document.getElementById("avatarInput")?.click()}
+            variant={"secondary"}
+          >
+            Upload Avatar
+          </Button>
+          <input
+            id="avatarInput"
+            type="file"
+            accept="image/jpeg, image/png, image/webp, image/jpg"
+            className="hidden"
+            onChange={(e) => handleAvatarUpload(e)}
+          />
           <p className="text-xs text-muted-foreground">
             Max size 2MB. Formats: JPG, PNG.
           </p>
@@ -94,7 +142,7 @@ export default function AccSettings({
           <span>
             <Settings color="green" />
           </span>
-          General section
+          General Information
         </p>
         <ul className="grid grid-cols-2 py-6 gap-6 space-y-3">
           <li className="space-y-2">

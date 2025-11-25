@@ -1,13 +1,16 @@
+"use client";
+
 import SavedPlans from "@/components/SavedPlans";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/contexts/UserContext";
 import { cn } from "@/lib/utils";
 import getUser from "@/utils/supabase/user";
 import { Mail, UserRound } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
-export default async function Profile() {
-  const user = await getUser();
+export default function Profile() {
+  const { user, avatarUrl } = useUser();
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Your Profile</h1>
@@ -15,13 +18,14 @@ export default async function Profile() {
       <div className="w-full flex gap-6">
         {/* Left Profile Info */}
         <div className="max-h-96 min-w-1/4 bg-white p-6 rounded-2xl shadow-md col-span-1">
-          {user?.user_metadata.picture ? (
+          {avatarUrl ? (
             <Image
-              src={user?.user_metadata.picture}
+              src={avatarUrl}
               alt="profile_picture"
-              width={130}
-              height={130}
-              className="rounded-full mx-auto mb-4 border-3 hover:border-[#a3ea2a] transition duration-300 ease-in-out"
+              width={100}
+              height={100}
+              className="w-32 h-32 rounded-full mx-auto mb-4 border-3 hover:border-[#a3ea2a] transition duration-300 ease-in-out object-cover cursor-pointer"
+              priority
             />
           ) : (
             <UserRound

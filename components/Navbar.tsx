@@ -1,8 +1,8 @@
+"use client";
+
 import React from "react";
 import { Button } from "./ui/button";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
-import getUser from "@/utils/supabase/user";
 import { logout } from "@/app/get-started/actions";
 import Image from "next/image";
 import { CircleUserRound, LogOutIcon, Settings, UserRound } from "lucide-react";
@@ -12,10 +12,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { useUser } from "@/contexts/UserContext";
 
-export default async function Navbar() {
-  const user = await getUser();
-
+export default function Navbar() {
+  const { user, avatarUrl } = useUser();
   return (
     <nav className="flex justify-between items-center border-b p-4 mb-4">
       <Link href="/">
@@ -35,13 +35,14 @@ export default async function Navbar() {
             )}
             <DropdownMenuTrigger asChild>
               <div className="flex gap-2 items-center">
-                {user.user_metadata.picture ? (
+                {avatarUrl ? (
                   <Image
-                    className="rounded-full border-1 hover:border-[#a3ea2a] transition duration-300 ease-in-out"
+                    className="w-14 h-14 rounded-full border-1 hover:border-[#a3ea2a] transition duration-300 ease-in-out object-cover"
                     alt="profile_picture"
-                    src={user?.user_metadata.picture}
-                    width={45}
-                    height={45}
+                    src={avatarUrl}
+                    width={100}
+                    height={100}
+                    priority
                   />
                 ) : (
                   <UserRound
