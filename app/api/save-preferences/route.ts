@@ -1,7 +1,5 @@
-// app/api/save-preferences/route.ts
 import { NextResponse } from "next/server";
 import savePreferences from "@/utils/supabase/savePreferences";
-import { createClient } from "@/utils/supabase/server";
 
 export async function POST(req: Request) {
   try {

@@ -38,6 +38,13 @@ export default function AccSettings({
     exp_lvl: preferences?.exp_lvl,
     goal: preferences?.goal,
   });
+  const [passwordForm, setPasswordForm] = useState({
+    old_password: "",
+    new_password: "",
+    confirm_new_password: "",
+  });
+
+  const [pendingEmailMessage, setPendingEmailMessage] = useState("");
 
   const handleChange = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -92,6 +99,57 @@ export default function AccSettings({
     }
   };
 
+  const handleSaveGeneral = async () => {
+    const res = await fetch("/api/update-user", {
+      method: "POST",
+      body: JSON.stringify({
+        userId: user.id,
+        email: form.email,
+        username: form.username,
+        password: form.password,
+      }),
+    });
+
+    const json = await res.json();
+
+    if (json.pendingEmailChange) {
+      setPendingEmailMessage("Check your inbox to confirm this change.");
+      toast.info(
+        "We emailed you a confirmation link. Your email will update after verification."
+      );
+
+      // DON'T reload – keep showing the new value
+      return;
+    }
+
+    if (json.success) {
+      toast.success("Account details updated!");
+      window.location.reload();
+    } else {
+      toast.error(json.error);
+    }
+  };
+
+  const handlePasswordChange = async () => {
+    const res = await fetch("/api/change-password", {
+      method: "POST",
+      body: JSON.stringify(passwordForm),
+    });
+
+    const json = await res.json();
+
+    if (json.error) {
+      return toast.error(json.error);
+    }
+
+    toast.success("Password updated successfully!");
+    setPasswordForm({
+      old_password: "",
+      new_password: "",
+      confirm_new_password: "",
+    });
+  };
+
   return (
     <div>
       {/* Avatar section */}
@@ -101,10 +159,9 @@ export default function AccSettings({
             onClick={() => document.getElementById("avatarInput")?.click()}
             src={avatarUrl}
             alt="profile_picture"
-            width={100}
-            height={100}
+            width={200}
+            height={200}
             className="w-24 h-24 rounded-full mb-4 border-3 border-gray-500 hover:border-[#a3ea2a] transition duration-300 ease-in-out object-cover cursor-pointer"
-            unoptimized
             priority
           />
         ) : (
@@ -154,6 +211,11 @@ export default function AccSettings({
               value={form.email}
               onChange={(e) => handleChange("email", e.target.value)}
             />
+            {pendingEmailMessage && (
+              <p className="text-sm font-semibold text-yellow-500 ml-2">
+                {pendingEmailMessage}
+              </p>
+            )}
           </li>
           <li className="space-y-2">
             <Label className={cn("ml-2")}>Username</Label>
@@ -164,25 +226,78 @@ export default function AccSettings({
               onChange={(e) => handleChange("username", e.target.value)}
             />
           </li>
-          <li className="space-y-2">
-            <Label className={cn("ml-2")}>Password</Label>
-            <Input
-              type="password"
-              placeholder="password"
-              value={form.password}
-              onChange={(e) => handleChange("password", e.target.value)}
-            />
-          </li>
         </ul>
+        <Button type="button" variant="main" onClick={handleSaveGeneral}>
+          Save changes
+        </Button>
       </form>
 
-      {/* Preferances settings */}
-      <form className="w-full py-2">
+      {/* Change password section */}
+
+      <form className="w-full py-10">
         <p className="flex items-center gap-2 text-xl font-semibold">
           <span>
             <Settings color="green" />
           </span>
-          Preferences section
+          Change Password
+        </p>
+        <ul className="grid grid-cols-2 py-6 gap-6 space-y-3">
+          <li className="space-y-2">
+            <Label>Current Password</Label>
+            <Input
+              type="password"
+              placeholder="Enter your current password"
+              value={passwordForm.old_password}
+              onChange={(e) =>
+                setPasswordForm({
+                  ...passwordForm,
+                  old_password: e.target.value,
+                })
+              }
+            />
+          </li>
+          <li className="space-y-2">
+            <Label>New Password</Label>
+            <Input
+              type="password"
+              placeholder="Enter your new password"
+              value={passwordForm.new_password}
+              onChange={(e) =>
+                setPasswordForm({
+                  ...passwordForm,
+                  new_password: e.target.value,
+                })
+              }
+            />
+          </li>
+          <li className="space-y-2">
+            <Label>Confirm New Password</Label>
+            <Input
+              placeholder="Comfirm your new password"
+              type="password"
+              value={passwordForm.confirm_new_password}
+              onChange={(e) =>
+                setPasswordForm({
+                  ...passwordForm,
+                  confirm_new_password: e.target.value,
+                })
+              }
+            />
+          </li>
+        </ul>
+
+        <Button type="button" onClick={handlePasswordChange} variant={"main"}>
+          Save changes
+        </Button>
+      </form>
+
+      {/* Preferances settings */}
+      <form className="w-full py-10">
+        <p className="flex items-center gap-2 text-xl font-semibold">
+          <span>
+            <Settings color="green" />
+          </span>
+          Preferences
         </p>
         <ul className="grid grid-cols-2 py-6 gap-6 space-y-3">
           <li className="space-y-2">
