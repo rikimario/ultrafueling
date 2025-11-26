@@ -15,6 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import React, { useActionState } from "react";
 import { login, signInWithGoogle, signup } from "./actions";
+import Link from "next/link";
 
 export default function AuthForm() {
   const [loginState, loginAction] = useActionState(login, { error: "" });
@@ -52,9 +53,11 @@ export default function AuthForm() {
                 <div className="grid gap-3">
                   <div className="flex justify-between">
                     <Label htmlFor="password">Password</Label>
-                    <Button variant={"link"} size={"default"}>
-                      Forgot your password?
-                    </Button>
+                    <Link href={"/reset-password-form"}>
+                      <Button variant={"link"} size={"default"}>
+                        Forgot your password?
+                      </Button>
+                    </Link>
                   </div>
                   <Input
                     id="password"
