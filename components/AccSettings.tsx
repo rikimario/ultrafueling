@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleAlert, Settings, UserRound } from "lucide-react";
+import { Settings, UserRound } from "lucide-react";
 import Image from "next/image";
 import React, { ChangeEvent, useState } from "react";
 import { Button } from "./ui/button";
@@ -19,6 +19,7 @@ import {
 import { Preferences } from "@/utils/supabase/savePreferences";
 import { toast } from "sonner";
 import { useUser } from "@/contexts/UserContext";
+import DeleteAccount from "./DeleteAccount";
 
 export default function AccSettings({
   preferences,
@@ -291,7 +292,7 @@ export default function AccSettings({
         </Button>
       </form>
 
-      {/* Preferances settings */}
+      {/* Preferences settings */}
       <form className="w-full py-10">
         <p className="flex items-center gap-2 text-xl font-semibold">
           <span>
@@ -379,23 +380,7 @@ export default function AccSettings({
 
       {/* Delete account section */}
 
-      <section className="w-full py-16">
-        <h1 className="flex items-center gap-2 text-2xl font-semibold text-gray-800 py-4">
-          <span>
-            <CircleAlert color="red" />
-          </span>{" "}
-          Delete your account
-        </h1>
-        <p className="pb-10 w-2/3">
-          Deleting your account is permanent. All personal data, saved plans,
-          and preferences will be permanently erased and cannot be recovered.
-          Any active subscriptions will also be canceled. Please make sure you
-          have exported anything important before continuing.
-        </p>
-        <Button type="button" variant={"destructive"}>
-          Delete My account
-        </Button>
-      </section>
+      <DeleteAccount />
     </div>
   );
 }

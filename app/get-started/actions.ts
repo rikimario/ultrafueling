@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { createClient as createServiceClient } from "@supabase/supabase-js";
 
 import { createClient } from "@/utils/supabase/server";
 
@@ -90,6 +91,67 @@ export async function logout() {
   const supabase = await createClient();
 
   await supabase.auth.signOut();
+  revalidatePath("/", "layout");
+  redirect("/");
+}
+
+export async function deleteAccount() {
+  const supabase = await createClient();
+
+  // Get the current user
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    return { error: "Not authenticated" };
+  }
+
+  try {
+    // Create admin client
+    const supabaseAdmin = createServiceClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false,
+        },
+      }
+    );
+
+    // 1. Delete user data
+    await supabase.from("user_plans").delete().eq("user_id", user.id);
+    await supabase.from("user_preferances").delete().eq("user_id", user.id);
+
+    // 2. Delete avatar files
+    const { data: files } = await supabase.storage
+      .from("avatars")
+      .list(user.id);
+    if (files && files.length > 0) {
+      const filePaths = files.map((file) => `${user.id}/${file.name}`);
+      await supabase.storage.from("avatars").remove(filePaths);
+    }
+
+    // 3. Delete the user account using admin client
+    const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(
+      user.id
+    );
+
+    if (deleteError) {
+      console.error("Error deleting user:", deleteError);
+      return { error: "Failed to delete account. Please try again." };
+    }
+
+    // 4. Sign out
+    await supabase.auth.signOut();
+  } catch (error: any) {
+    console.error("Delete account error:", error);
+    return { error: "An unexpected error occurred." };
+  }
+
+  // 5. Redirect (outside try-catch so it doesn't get caught)
   revalidatePath("/", "layout");
   redirect("/");
 }

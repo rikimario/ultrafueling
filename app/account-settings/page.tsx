@@ -1,11 +1,12 @@
 import AccSettings from "@/components/AccSettings";
 import { getPreferences } from "@/utils/supabase/preferences";
 import getUser from "@/utils/supabase/user";
+import { redirect } from "next/navigation";
 
 export default async function AccountSettings() {
   const user = await getUser();
 
-  if (!user) return null;
+  if (!user) return redirect("/");
 
   const preferences = (await getPreferences(user.id)) ?? {
     weight: null,
