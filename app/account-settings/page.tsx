@@ -21,7 +21,7 @@ export default async function AccountSettings() {
           Account Settings
         </h1>
 
-        <AccSettings user={user} preferences={preferences} />
+        <AccSettings preferences={preferences} />
       </div>
     </div>
   );

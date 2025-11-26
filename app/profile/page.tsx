@@ -4,7 +4,6 @@ import SavedPlans from "@/components/SavedPlans";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/contexts/UserContext";
 import { cn } from "@/lib/utils";
-import getUser from "@/utils/supabase/user";
 import { Mail, UserRound } from "lucide-react";
 import Image from "next/image";
 import React from "react";
@@ -24,12 +23,12 @@ export default function Profile() {
               alt="profile_picture"
               width={100}
               height={100}
-              className="w-32 h-32 rounded-full mx-auto mb-4 border-3 hover:border-[#a3ea2a] transition duration-300 ease-in-out object-cover cursor-pointer"
+              className="w-32 h-32 rounded-full mx-auto mb-4 border-3 border-gray-500 hover:border-[#a3ea2a] transition duration-300 ease-in-out object-cover cursor-pointer"
               priority
             />
           ) : (
             <UserRound
-              className="w-32 h-32 rounded-full mx-auto mb-4 border-3 hover:border-[#a3ea2a] transition duration-300 ease-in-out"
+              className="w-32 h-32 rounded-full mx-auto mb-4 border-3 border-gray-500 hover:border-[#a3ea2a] transition duration-300 ease-in-out"
               strokeWidth={0.3}
               width={100}
               height={100}

@@ -37,7 +37,7 @@ export default function Navbar() {
               <div className="flex gap-2 items-center">
                 {avatarUrl ? (
                   <Image
-                    className="w-14 h-14 rounded-full border-1 hover:border-[#a3ea2a] transition duration-300 ease-in-out object-cover"
+                    className="w-14 h-14 rounded-full border-3 border-gray-500 hover:border-[#a3ea2a] transition duration-300 ease-in-out object-cover"
                     alt="profile_picture"
                     src={avatarUrl}
                     width={100}
@@ -46,7 +46,7 @@ export default function Navbar() {
                   />
                 ) : (
                   <UserRound
-                    className="rounded-full border-1 hover:border-[#a3ea2a] transition duration-300 ease-in-out"
+                    className="rounded-full border-3 border-gray-500 hover:border-[#a3ea2a] transition duration-300 ease-in-out"
                     strokeWidth={0.7}
                     width={45}
                     height={45}

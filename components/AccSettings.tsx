@@ -103,13 +103,14 @@ export default function AccSettings({
             alt="profile_picture"
             width={100}
             height={100}
-            className="w-24 h-24 rounded-full mb-4 border-3 hover:border-[#a3ea2a] transition duration-300 ease-in-out object-cover cursor-pointer"
+            className="w-24 h-24 rounded-full mb-4 border-3 border-gray-500 hover:border-[#a3ea2a] transition duration-300 ease-in-out object-cover cursor-pointer"
             unoptimized
             priority
           />
         ) : (
           <UserRound
-            className="rounded-full mb-4 border-3 hover:border-[#a3ea2a] transition duration-300 ease-in-out"
+            onClick={() => document.getElementById("avatarInput")?.click()}
+            className="w-24 h-24 rounded-full mb-4 border-3 border-gray-500 hover:border-[#a3ea2a] transition duration-300 ease-in-out cursor-pointer"
             strokeWidth={0.3}
             width={100}
             height={100}
