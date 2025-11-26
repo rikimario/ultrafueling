@@ -21,8 +21,8 @@ export default function Profile() {
             <Image
               src={avatarUrl}
               alt="profile_picture"
-              width={100}
-              height={100}
+              width={200}
+              height={200}
               className="w-32 h-32 rounded-full mx-auto mb-4 border-3 border-gray-500 hover:border-[#a3ea2a] transition duration-300 ease-in-out object-cover cursor-pointer"
               priority
             />

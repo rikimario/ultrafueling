@@ -40,8 +40,8 @@ export default function Navbar() {
                     className="w-14 h-14 rounded-full border-3 border-gray-500 hover:border-[#a3ea2a] transition duration-300 ease-in-out object-cover"
                     alt="profile_picture"
                     src={avatarUrl}
-                    width={100}
-                    height={100}
+                    width={200}
+                    height={200}
                     priority
                   />
                 ) : (
