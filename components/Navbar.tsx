@@ -29,7 +29,7 @@ export default function Navbar() {
                 <Button variant="main">Advanced Calculator</Button>
               </Link>
             ) : (
-              <a href="#subcribe">
+              <a href="/#subcribe">
                 <Button variant="main">Go Premium</Button>
               </a>
             )}
