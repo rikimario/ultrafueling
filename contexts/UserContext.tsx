@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 
 type UserContextType = {
   user: any;
@@ -20,6 +26,10 @@ export function UserProvider({
   const [avatarUrl, setAvatarUrl] = useState<string | null>(
     user?.user_metadata?.picture || null
   );
+
+  useEffect(() => {
+    setAvatarUrl(user?.user_metadata?.picture || null);
+  }, [user?.id, user?.user_metadata?.picture]);
 
   const updateAvatar = (url: string) => {
     setAvatarUrl(url);
