@@ -40,7 +40,6 @@ export default function SavedPlansDialog({ plans }: { plans: any[] }) {
       </CardTitle>
 
       {/* Example Saved Result Card */}
-      {plans.length > 0 && <p>You have {plans.length} saved results</p>}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {plans.map((plan) => {
@@ -244,11 +243,6 @@ export default function SavedPlansDialog({ plans }: { plans: any[] }) {
             </div>
           );
         })}
-      </div>
-
-      {/* Additional Placeholder for More Results */}
-      <div className="text-gray-500 text-sm italic">
-        More results will appear as you save them...
       </div>
     </Card>
   );

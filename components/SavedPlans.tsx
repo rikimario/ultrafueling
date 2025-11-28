@@ -2,9 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 
-import getUser from "@/utils/supabase/user";
-import getSavedPlans from "@/utils/supabase/savedPlans";
-
 import SavedPlansDialog from "./SavedPlansDialog";
 import { useUser } from "@/contexts/UserContext";
 
