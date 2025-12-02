@@ -33,8 +33,8 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <UserProvider user={user}>
-          <div className="max-w-[1440px] mx-auto p-4">
-            <Navbar />
+          <Navbar />
+          <div className="max-w-[1440px] mx-auto py-4">
             {children}
             <Toaster position="top-right" />
           </div>
