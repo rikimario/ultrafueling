@@ -34,7 +34,7 @@ export default function DeleteAccount() {
   };
   return (
     <section className="w-full py-16">
-      <h1 className="flex items-center gap-2 text-2xl font-semibold text-gray-800 py-4">
+      <h1 className="flex items-center gap-2 text-2xl font-semibold text-gray-800 dark:text-white py-4">
         <span>
           <CircleAlert color="red" />
         </span>{" "}

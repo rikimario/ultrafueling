@@ -228,7 +228,12 @@ export default function AccSettings({
             />
           </li>
         </ul>
-        <Button type="button" variant="main" onClick={handleSaveGeneral}>
+        <Button
+          className={cn("text-gray-800 dark:hover:text-white")}
+          type="button"
+          variant="main"
+          onClick={handleSaveGeneral}
+        >
           Save changes
         </Button>
       </form>
@@ -287,7 +292,12 @@ export default function AccSettings({
           </li>
         </ul>
 
-        <Button type="button" onClick={handlePasswordChange} variant={"main"}>
+        <Button
+          className={cn("text-gray-800 dark:hover:text-white")}
+          type="button"
+          onClick={handlePasswordChange}
+          variant={"main"}
+        >
           Save changes
         </Button>
       </form>
@@ -373,7 +383,12 @@ export default function AccSettings({
             </Select>
           </li>
         </ul>
-        <Button type="button" onClick={handleSavePreferences} variant={"main"}>
+        <Button
+          className={cn("text-gray-800 dark:hover:text-white")}
+          type="button"
+          onClick={handleSavePreferences}
+          variant={"main"}
+        >
           Save changes
         </Button>
       </form>
