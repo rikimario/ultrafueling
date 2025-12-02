@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import SavedPlansDialog from "./SavedPlansDialog";
 import { useUser } from "@/contexts/UserContext";
+import { Card } from "./ui/card";
 
 export default function SavedPlans() {
   const { user } = useUser();
@@ -42,9 +43,9 @@ export default function SavedPlans() {
 
   if (loading) {
     return (
-      <div className="w-full bg-white p-6 rounded-xl">
-        <p className="text-gray-500">Loading your saved plans...</p>
-      </div>
+      <Card className="w-full p-6 rounded-xl">
+        <p className="text-muted-foreground">Loading your saved plans...</p>
+      </Card>
     );
   }
 

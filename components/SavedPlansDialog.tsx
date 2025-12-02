@@ -34,7 +34,7 @@ export default function SavedPlansDialog({ plans }: { plans: any[] }) {
     window.location.reload();
   };
   return (
-    <Card className="w-full bg-white p-6">
+    <Card className="w-full p-6">
       <CardTitle className="text-xl font-semibold mb-4">
         Saved Calculator Results
       </CardTitle>
@@ -47,29 +47,29 @@ export default function SavedPlansDialog({ plans }: { plans: any[] }) {
           const result = plan.result;
 
           return (
-            <div
-              key={plan.id}
-              className="bg-gray-100 p-4 rounded-xl mb-4 shadow-sm"
-            >
-              <h3 className="font-semibold text-lg">
+            <Card key={plan.id} className="p-4 rounded-xl mb-4 shadow-sm">
+              <CardTitle className="font-semibold text-lg">
                 {input?.distanceKm} km Ultra
-              </h3>
+              </CardTitle>
 
-              <p className="text-gray-600 text-sm mt-1">
+              <p className="text-muted-foreground text-sm mt-1">
                 Saved: {new Date(plan.created_at).toISOString().split("T")[0]}
               </p>
 
-              <div className="mt-3 space-y-1 text-gray-700 text-sm">
-                <p>
-                  <strong>Calories:</strong> {result?.totalCalories} kcal
+              <CardContent className="mt-3 w-1/2 space-y-1 text-sm px-0">
+                <p className="flex justify-between gap-4">
+                  <strong className="text-muted-foreground">Calories:</strong>{" "}
+                  {result?.totalCalories} kcal
                 </p>
-                <p>
-                  <strong>Carbs:</strong> {result?.totalCarbsGrams} g
+                <p className="flex justify-between gap-4">
+                  <strong className="text-muted-foreground">Carbs:</strong>{" "}
+                  {result?.totalCarbsGrams} g
                 </p>
-                <p>
-                  <strong>Hydration:</strong> {result?.totalFluidsL} L
+                <p className="flex justify-between gap-4">
+                  <strong className="text-muted-foreground">Hydration:</strong>{" "}
+                  {result?.totalFluidsL} L
                 </p>
-              </div>
+              </CardContent>
 
               <Dialog>
                 <div className="mt-3">
@@ -240,7 +240,7 @@ export default function SavedPlansDialog({ plans }: { plans: any[] }) {
                   </ScrollArea>
                 </DialogContent>
               </Dialog>
-            </div>
+            </Card>
           );
         })}
       </div>
