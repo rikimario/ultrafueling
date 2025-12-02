@@ -2,16 +2,16 @@
 
 import SavedPlans from "@/components/SavedPlans";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { useUser } from "@/contexts/UserContext";
 import { cn } from "@/lib/utils";
 import {
   Calendar,
   Clock,
+  Footprints,
   Mail,
   Target,
   TrendingUp,
-  Trophy,
   UserRound,
 } from "lucide-react";
 import Image from "next/image";
@@ -63,13 +63,15 @@ export default function Profile() {
     }),
   };
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Your Profile</h1>
+    <div className="min-h-screen p-6">
+      <CardTitle className="text-3xl font-bold mb-6 px-6">
+        Your Profile
+      </CardTitle>
 
-      <div className="w-full flex gap-6">
+      <CardContent className="w-full flex gap-6">
         {/* Left Profile Info */}
         <div className="w-1/4">
-          <div className="max-h-96 bg-white p-6 rounded-2xl shadow-md col-span-1">
+          <Card className="max-h-96 p-6 rounded-2xl shadow-md col-span-1">
             {avatarUrl ? (
               <Image
                 src={avatarUrl}
@@ -101,19 +103,22 @@ export default function Profile() {
             </div>
 
             <Link href="/account-settings">
-              <Button variant={"main"} className={cn("w-full mt-4 ")}>
+              <Button
+                variant={"main"}
+                className={cn("w-full text-gray-800 dark:hover:text-white")}
+              >
                 Edit Profile
               </Button>
             </Link>
-          </div>
+          </Card>
 
           {/* Quick Stats Card */}
-          <Card className="bg-white p-6 rounded-2xl shadow-md mt-4">
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          <Card className="p-6 rounded-2xl shadow-md mt-4">
+            <CardTitle className="text-lg font-semibold mb-4 flex items-center justify-center gap-2">
               <TrendingUp className="w-5 h-5 text-[#a3ea2a]" />
               Quick Stats
-            </h3>
-            <div className="space-y-3">
+            </CardTitle>
+            <CardContent className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground flex items-center gap-2">
                   <Target className="w-4 h-4" />
@@ -123,8 +128,8 @@ export default function Profile() {
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground flex items-center gap-2">
-                  <Trophy className="w-4 h-4" />
-                  Kilometers Ran
+                  <Footprints className="w-4 h-4" />
+                  Distnace
                 </span>
                 <span className="font-semibold">{stats.distanceRun}</span>
               </div>
@@ -135,13 +140,13 @@ export default function Profile() {
                 </span>
                 <span className="font-semibold">{stats.totalHours}</span>
               </div>
-            </div>
+            </CardContent>
           </Card>
         </div>
 
         {/* Right Saved Results Section */}
         <SavedPlans />
-      </div>
+      </CardContent>
     </div>
   );
 }
