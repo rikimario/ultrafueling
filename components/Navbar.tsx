@@ -28,8 +28,8 @@ export default function Navbar({}: {}) {
   const darkMode = useDarkMode();
 
   return (
-    <nav className="bg-[#212c42] border-b p-4 mb-4">
-      <div className="flex justify-between items-center max-w-[1440px] mx-auto px-4">
+    <nav className="bg-[#212c42] p-4">
+      <div className="flex justify-between items-center max-w-[1320px] mx-auto px-6">
         <Link href="/">
           <span className="text-white">UltraFueling</span>
         </Link>
