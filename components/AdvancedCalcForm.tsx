@@ -47,6 +47,19 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
     goal: "",
     hasAidStations: "",
     aidStationGapHours: "",
+    distanceKmError: "",
+    durationHoursError: "",
+    weightKgError: "",
+    temperatureCError: "",
+    humidityPctError: "",
+    paceMinPerKmError: "",
+    terrainError: "",
+    packWeightKgError: "",
+    sweatRateLPerHourError: "",
+    experienceLevelError: "",
+    goalError: "",
+    hasAidStationsError: "",
+    aidStationGapHoursError: "",
   });
   const [result, setResult] = useState<AdvancedResult | null>(null);
   const [advancedInputState, setAdvancedInputState] = useState<any>(null);
@@ -54,6 +67,67 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    const setFormWithErrors = (errors: Partial<{ [key: string]: string }>) => {
+      setForm((prev) => ({
+        ...prev,
+        ...errors,
+      }));
+    };
+
+    if (
+      !form.distanceKm ||
+      !form.durationHours ||
+      !form.weightKg ||
+      !form.temperatureC ||
+      !form.humidityPct ||
+      !form.paceMinPerKm ||
+      !form.terrain ||
+      !form.packWeightKg ||
+      !form.sweatRateLPerHour ||
+      !form.experienceLevel ||
+      !form.goal ||
+      !form.hasAidStations ||
+      !form.aidStationGapHours
+    ) {
+      // Display an error message
+      setFormWithErrors({
+        distanceKmError: form.distanceKm
+          ? ""
+          : "This field should not be empty!",
+        durationHoursError: form.durationHours
+          ? ""
+          : "This field should not be empty!",
+        weightKgError: form.weightKg ? "" : "This field should not be empty!",
+        temperatureCError: form.temperatureC
+          ? ""
+          : "This field should not be empty!",
+        humidityPctError: form.humidityPct
+          ? ""
+          : "This field should not be empty!",
+        paceMinPerKmError: form.paceMinPerKm
+          ? ""
+          : "This field should not be empty!",
+        terrainError: form.terrain ? "" : "This field should not be empty!",
+        packWeightKgError: form.packWeightKg
+          ? ""
+          : "This field should not be empty!",
+        sweatRateLPerHourError: form.sweatRateLPerHour
+          ? ""
+          : "This field should not be empty!",
+        experienceLevelError: form.experienceLevel
+          ? ""
+          : "This field should not be empty!",
+        goalError: form.goal ? "" : "This field should not be empty!",
+        hasAidStationsError: form.hasAidStations
+          ? ""
+          : "This field should not be empty!",
+        aidStationGapHoursError: form.aidStationGapHours
+          ? ""
+          : "This field should not be empty!",
+      });
+      return;
+    }
 
     const advancedInput = {
       distanceKm: Number(form.distanceKm),
@@ -99,6 +173,23 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
     } finally {
       setLoading(false);
     }
+
+    setForm((prev) => ({
+      ...prev,
+      distanceKmError: "",
+      durationHoursError: "",
+      weightKgError: "",
+      temperatureCError: "",
+      humidityPctError: "",
+      paceMinPerKmError: "",
+      terrainError: "",
+      packWeightKgError: "",
+      sweatRateLPerHourError: "",
+      experienceLevelError: "",
+      goalError: "",
+      hasAidStationsError: "",
+      aidStationGapHoursError: "",
+    }));
   };
 
   const handleChange = (field: string, value: string) => {
@@ -154,6 +245,11 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
                 value={form.distanceKm}
                 onChange={(e) => handleChange("distanceKm", e.target.value)}
               />
+              {form.distanceKmError && (
+                <p className="text-destructive text-xs ml-2">
+                  {form.distanceKmError}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label className={cn("px-1")}>
@@ -165,6 +261,11 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
                 value={form.durationHours}
                 onChange={(e) => handleChange("durationHours", e.target.value)}
               />
+              {form.durationHoursError && (
+                <p className="text-destructive text-xs ml-2">
+                  {form.durationHoursError}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label className={cn("px-1")}>
@@ -176,6 +277,11 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
                 value={form.weightKg}
                 onChange={(e) => handleChange("weightKg", e.target.value)}
               />
+              {form.weightKgError && (
+                <p className="text-destructive text-xs ml-2">
+                  {form.weightKgError}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label className={cn("px-1")}>
@@ -187,6 +293,11 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
                 value={form.temperatureC}
                 onChange={(e) => handleChange("temperatureC", e.target.value)}
               />
+              {form.temperatureCError && (
+                <p className="text-destructive text-xs ml-2">
+                  {form.temperatureCError}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label className={cn("px-1")}>Experience level</Label>
@@ -207,6 +318,11 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
                   </SelectGroup>
                 </SelectContent>
               </Select>
+              {form.experienceLevelError && (
+                <p className="text-destructive text-xs ml-2">
+                  {form.experienceLevelError}
+                </p>
+              )}
             </div>
           </CardContent>
 
@@ -235,6 +351,11 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
                   </SelectGroup>
                 </SelectContent>
               </Select>
+              {form.terrainError && (
+                <p className="text-destructive text-xs ml-2">
+                  {form.terrainError}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label className={cn("px-1")}>
@@ -246,6 +367,11 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
                 value={form.packWeightKg}
                 onChange={(e) => handleChange("packWeightKg", e.target.value)}
               />
+              {form.packWeightKgError && (
+                <p className="text-destructive text-xs ml-2">
+                  {form.packWeightKgError}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label className={cn("px-1")}>
@@ -259,6 +385,11 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
                   handleChange("sweatRateLPerHour", e.target.value)
                 }
               />
+              {form.sweatRateLPerHourError && (
+                <p className="text-destructive text-xs ml-2">
+                  {form.sweatRateLPerHourError}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label className={cn("px-1")}>Goal</Label>
@@ -278,6 +409,11 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
                   </SelectGroup>
                 </SelectContent>
               </Select>
+              {form.goalError && (
+                <p className="text-destructive text-xs ml-2">
+                  {form.goalError}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label className={cn("px-1")}>Aid stations</Label>
@@ -287,6 +423,11 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
                 placeholder="Enter aid stations"
                 onChange={(e) => handleChange("hasAidStations", e.target.value)}
               />
+              {form.hasAidStationsError && (
+                <p className="text-destructive text-xs ml-2">
+                  {form.hasAidStationsError}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label className={cn("px-1")}>
@@ -300,10 +441,15 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
                   handleChange("aidStationGapHours", e.target.value)
                 }
               />
+              {form.aidStationGapHoursError && (
+                <p className="text-destructive text-xs ml-2">
+                  {form.aidStationGapHoursError}
+                </p>
+              )}
             </div>
           </CardContent>
           <CardFooter className="flex justify-center my-4">
-            <Button type="submit" className="w-1/2">
+            <Button variant={"main"} type="submit" className={cn("w-1/2")}>
               Calculate
             </Button>
           </CardFooter>

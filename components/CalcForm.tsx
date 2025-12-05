@@ -66,17 +66,17 @@ export default function CalcForm() {
       setFormWithErrors({
         distanceKmError: form.distanceKm
           ? ""
-          : "This field should not be empty",
+          : "This field should not be empty!",
         durationHoursError: form.durationHours
           ? ""
-          : "This field should not be empty",
-        weightKgError: form.weightKg ? "" : "This field should not be empty",
+          : "This field should not be empty!",
+        weightKgError: form.weightKg ? "" : "This field should not be empty!",
         temperatureCError: form.temperatureC
           ? ""
-          : "This field should not be empty",
+          : "This field should not be empty!",
         experienceLevelError: form.experienceLevel
           ? ""
-          : "This field should not be empty",
+          : "This field should not be empty!",
       });
       return;
     }
