@@ -25,13 +25,7 @@ export default function Hero() {
           daily meals to race-day fueling strategies.
         </p>
         <div className="flex gap-4">
-          <Button
-            className={cn(
-              "hover:shadow-[0_0_80px_#a3ea2a]/40 hover:scale-105 transition-all duration-300"
-            )}
-            variant={"main"}
-            size="xxl"
-          >
+          <Button variant={"main"} size="xxl">
             Try Now
           </Button>
           <Button variant="secondary" size={"xxl"}>
