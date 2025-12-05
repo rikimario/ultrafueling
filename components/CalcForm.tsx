@@ -31,10 +31,22 @@ export default function CalcForm() {
     durationHours: "",
     weightKg: "",
     temperatureC: "",
-    experienceLevel: "intermediate",
+    experienceLevel: "",
+    distanceKmError: "",
+    durationHoursError: "",
+    weightKgError: "",
+    temperatureCError: "",
+    experienceLevelError: "",
   });
 
   const [result, setResult] = useState<any>(null);
+
+  const setFormWithErrors = (errors: Partial<{ [key: string]: string }>) => {
+    setForm((prev) => ({
+      ...prev,
+      ...errors,
+    }));
+  };
 
   const handleChange = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -42,6 +54,32 @@ export default function CalcForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (
+      !form.distanceKm ||
+      !form.durationHours ||
+      !form.weightKg ||
+      !form.temperatureC ||
+      !form.experienceLevel
+    ) {
+      // Display an error message
+      setFormWithErrors({
+        distanceKmError: form.distanceKm
+          ? ""
+          : "This field should not be empty",
+        durationHoursError: form.durationHours
+          ? ""
+          : "This field should not be empty",
+        weightKgError: form.weightKg ? "" : "This field should not be empty",
+        temperatureCError: form.temperatureC
+          ? ""
+          : "This field should not be empty",
+        experienceLevelError: form.experienceLevel
+          ? ""
+          : "This field should not be empty",
+      });
+      return;
+    }
 
     const userInput = {
       distanceKm: Number(form.distanceKm),
@@ -58,6 +96,19 @@ export default function CalcForm() {
     setResult({
       ...data,
       suggestions: getFuelingSuggestions(data),
+    });
+
+    setForm({
+      distanceKm: "",
+      durationHours: "",
+      weightKg: "",
+      temperatureC: "",
+      experienceLevel: "",
+      distanceKmError: "",
+      durationHoursError: "",
+      weightKgError: "",
+      temperatureCError: "",
+      experienceLevelError: "",
     });
   };
 
@@ -85,6 +136,11 @@ export default function CalcForm() {
                 value={form.distanceKm}
                 onChange={(e) => handleChange("distanceKm", e.target.value)}
               />
+              {form.distanceKmError && (
+                <p className="text-destructive text-xs ml-2">
+                  {form.distanceKmError}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label className={cn("px-1")}>
@@ -96,6 +152,11 @@ export default function CalcForm() {
                 value={form.durationHours}
                 onChange={(e) => handleChange("durationHours", e.target.value)}
               />
+              {form.durationHoursError && (
+                <p className="text-destructive text-xs ml-2">
+                  {form.durationHoursError}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label className={cn("px-1")}>
@@ -107,6 +168,11 @@ export default function CalcForm() {
                 value={form.weightKg}
                 onChange={(e) => handleChange("weightKg", e.target.value)}
               />
+              {form.weightKgError && (
+                <p className="text-destructive text-xs ml-2">
+                  {form.weightKgError}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label className={cn("px-1")}>
@@ -118,6 +184,11 @@ export default function CalcForm() {
                 value={form.temperatureC}
                 onChange={(e) => handleChange("temperatureC", e.target.value)}
               />
+              {form.temperatureCError && (
+                <p className="text-destructive text-xs ml-2">
+                  {form.temperatureCError}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label className={cn("px-1")}>Experience level</Label>
@@ -138,10 +209,15 @@ export default function CalcForm() {
                   </SelectGroup>
                 </SelectContent>
               </Select>
+              {form.experienceLevelError && (
+                <p className="text-destructive text-xs ml-2">
+                  {form.experienceLevelError}
+                </p>
+              )}
             </div>
           </CardContent>
           <CardFooter className="flex justify-center my-4">
-            <Button type="submit" className="w-1/2">
+            <Button variant={"main"} type="submit" className={cn("w-1/2")}>
               Calculate
             </Button>
           </CardFooter>
