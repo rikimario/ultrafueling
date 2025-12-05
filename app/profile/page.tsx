@@ -63,7 +63,7 @@ export default function Profile() {
     }),
   };
   return (
-    <div className="min-h-screen p-6">
+    <div className="min-h-screen py-6">
       <CardTitle className="text-3xl font-bold mb-6 px-6">
         Your Profile
       </CardTitle>
@@ -103,10 +103,7 @@ export default function Profile() {
             </div>
 
             <Link href="/account-settings">
-              <Button
-                variant={"main"}
-                className={cn("w-full text-gray-800 dark:hover:text-white")}
-              >
+              <Button variant={"main"} className={cn("w-full")}>
                 Edit Profile
               </Button>
             </Link>
