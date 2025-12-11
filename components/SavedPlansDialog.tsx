@@ -1,13 +1,6 @@
 "use client";
 
-import React from "react";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import {
   Dialog,
   DialogContent,
@@ -21,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { ScrollArea } from "./ui/scroll-area";
 import { HourlyPlan } from "@/utils/calculator/calculatePlan";
 import StyledMarkdown from "./StyledMarkdown";
+import { exportPlan } from "@/utils/exportPlan";
 
 export default function SavedPlansDialog({ plans }: { plans: any[] }) {
   const handleDelete = async (id: string) => {
@@ -33,6 +27,11 @@ export default function SavedPlansDialog({ plans }: { plans: any[] }) {
     // Optional: refresh UI
     window.location.reload();
   };
+
+  const handleExport = (plan: any) => {
+    exportPlan(plan);
+  };
+
   return (
     <Card className="w-full p-6">
       <CardTitle className="text-xl font-semibold mb-4">
@@ -140,7 +139,11 @@ export default function SavedPlansDialog({ plans }: { plans: any[] }) {
                               {result.packing.notes}
                             </p>
                             <div className="mt-3">
-                              <Button variant="outline" size="sm">
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                onClick={() => handleExport(plan)}
+                              >
                                 Export Checklist
                               </Button>
                             </div>
@@ -202,19 +205,10 @@ export default function SavedPlansDialog({ plans }: { plans: any[] }) {
                               </div>
 
                               {h.notes && (
-                                <div className="mt-2 text-sm rounded-md bg-muted/20 p-2">
+                                <div className="mt-2 text-sm rounded-md dark:bg-gray-600 p-2">
                                   {h.notes}
                                 </div>
                               )}
-
-                              <CardFooter className="mt-3 flex gap-2">
-                                <Button size="sm" variant="ghost">
-                                  Use gels
-                                </Button>
-                                <Button size="sm" variant="ghost">
-                                  Use solids
-                                </Button>
-                              </CardFooter>
                             </div>
                           </CardContent>
                         </Card>

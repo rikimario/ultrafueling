@@ -1,14 +1,8 @@
-import React from "react";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { AdvancedResult } from "@/utils/calculator/calculatePlan";
 import StyledMarkdown from "./StyledMarkdown";
+import { exportPlan } from "@/utils/exportPlan";
 
 export default function AdvancedCalcResult({
   results,
@@ -17,6 +11,9 @@ export default function AdvancedCalcResult({
   results: AdvancedResult;
   aiPlan: string | null;
 }) {
+  const handleExport = (plan: any) => {
+    exportPlan(plan);
+  };
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <Card className="mb-6">
@@ -63,7 +60,11 @@ export default function AdvancedCalcResult({
                 {results.packing.notes}
               </p>
               <div className="mt-3">
-                <Button variant="outline" size="sm">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  // onClick={() => handleExport(plan)}
+                >
                   Export Checklist
                 </Button>
               </div>
@@ -104,19 +105,10 @@ export default function AdvancedCalcResult({
                 </div>
 
                 {h.notes && (
-                  <div className="mt-2 text-sm rounded-md bg-muted/20 p-2">
+                  <div className="mt-2 text-sm rounded-md dark:bg-gray-600 p-2">
                     {h.notes}
                   </div>
                 )}
-
-                <CardFooter className="mt-3 flex gap-2">
-                  <Button size="sm" variant="ghost">
-                    Use gels
-                  </Button>
-                  <Button size="sm" variant="ghost">
-                    Use solids
-                  </Button>
-                </CardFooter>
               </div>
             </CardContent>
           </Card>
