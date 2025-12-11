@@ -27,6 +27,7 @@ import {
 } from "@/utils/calculator/calculatePlan";
 import React, { useState } from "react";
 import AdvancedCalcResult from "./AdvancedCalcResult";
+import { Checkbox } from "./ui/checkbox";
 
 export default function AdvancedCalcForm({ user }: { user: any }) {
   const [saving, setSaving] = useState(false);
@@ -233,6 +234,13 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
+          <span className="flex items-center gap-2 px-6 py-2">
+            <Checkbox id="hasAidStations" />
+            <Label className={cn("px-1 text-sm")}>
+              Auto fill profile preferences for weight, sweat rate, experience
+              level and goal
+            </Label>
+          </span>
           <p className="text-lg font-medium p-6">Basic Info</p>
           <CardContent className={cn("grid grid-cols-2 gap-4 space-y-3")}>
             <div className="space-y-2">
