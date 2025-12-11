@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 
 import { createClient } from "@/utils/supabase/server";
+import { stripe } from "@/lib/stripe";
 
 export async function login(prevState: any, formData: FormData) {
   const supabase = await createClient();
@@ -109,7 +110,28 @@ export async function deleteAccount() {
   }
 
   try {
-    // Create admin client
+    const customers = await stripe.customers.list({
+      email: user.email!,
+      limit: 1,
+    });
+
+    const customer = customers.data[0];
+
+    if (customer) {
+      const subs = await stripe.subscriptions.list({
+        customer: customer.id,
+        status: "active",
+      });
+
+      for (const sub of subs.data) {
+        await stripe.subscriptions.cancel(sub.id);
+      }
+    }
+  } catch (err: any) {
+    return { error: err.message };
+  }
+
+  try {
     const supabaseAdmin = createServiceClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!,
@@ -151,7 +173,6 @@ export async function deleteAccount() {
     return { error: "An unexpected error occurred." };
   }
 
-  // 5. Redirect (outside try-catch so it doesn't get caught)
   revalidatePath("/", "layout");
   redirect("/");
 }
