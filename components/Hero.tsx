@@ -2,7 +2,6 @@
 
 import { Button } from "./ui/button";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
 import { useDarkMode } from "@/hooks/useDarkMode";
 
 export default function Hero() {
@@ -13,7 +12,7 @@ export default function Hero() {
   return (
     <section className="flex items-center justify-between text-center py-16 px-6">
       <div className="flex flex-col items-center">
-        <h1 className="relative text-3xl font-semibold md:text-9xl mb-4">
+        <h1 className="relative text-3xl font-bold md:text-9xl mb-4">
           <span className="absolute inset-0 -z-10 m-auto h-[420px] w-[620px] rounded-full bg-emerald-400/20 blur-3xl"></span>
           Fuel Smarter. <br />{" "}
           <span className="bg-gradient-to-r from-emerald-300 to-emerald-500 bg-clip-text text-transparent">
