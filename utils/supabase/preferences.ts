@@ -1,11 +1,10 @@
-// utils/supabase/preferences.ts
 import { createClient } from "./server";
 
 export async function getPreferences(userId: string) {
   const supabase = await createClient();
 
   const { data, error } = await supabase
-    .from("user_preferances")
+    .from("user_preferences")
     .select("*")
     .eq("user_id", userId)
     .maybeSingle();

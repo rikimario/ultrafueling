@@ -10,9 +10,9 @@ export default async function AccountSettings() {
   if (!user) return redirect("/");
 
   const preferences = (await getPreferences(user.id)) ?? {
-    weight: null,
-    sweat_rate: null,
-    exp_lvl: null,
+    weightKg: null,
+    sweatRateLPerHour: null,
+    experienceLevel: null,
     goal: null,
   };
 

@@ -123,7 +123,7 @@ export async function deleteAccount() {
 
     // 1. Delete user data
     await supabase.from("user_plans").delete().eq("user_id", user.id);
-    await supabase.from("user_preferances").delete().eq("user_id", user.id);
+    await supabase.from("user_preferences").delete().eq("user_id", user.id);
 
     // 2. Delete avatar files
     const { data: files } = await supabase.storage

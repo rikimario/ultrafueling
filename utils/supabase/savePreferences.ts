@@ -1,9 +1,9 @@
 import { createClient } from "./server";
 
 export type Preferences = {
-  weight: number | null;
-  sweat_rate: number | null;
-  exp_lvl: "Beginner" | "Intermediate" | "Elite" | null;
+  weightKg: number | null;
+  sweatRateLPerHour: number | null;
+  experienceLevel: "Beginner" | "Intermediate" | "Elite" | null;
   goal: "finish" | "performance" | null;
 };
 
@@ -13,7 +13,7 @@ export default async function savePreferences(
 ) {
   const supabase = await createClient();
 
-  const { error } = await supabase.from("user_preferances").upsert({
+  const { error } = await supabase.from("user_preferences").upsert({
     user_id: userId,
     ...preferences,
     updated_at: new Date().toISOString(),

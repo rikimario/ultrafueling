@@ -27,7 +27,7 @@ import {
 } from "@/utils/calculator/calculatePlan";
 import React, { useState } from "react";
 import AdvancedCalcResult from "./AdvancedCalcResult";
-import { Checkbox } from "./ui/checkbox";
+import PrefCheckbox from "./PrefCheckbox";
 
 export default function AdvancedCalcForm({ user }: { user: any }) {
   const [saving, setSaving] = useState(false);
@@ -64,6 +64,7 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
   });
   const [result, setResult] = useState<AdvancedResult | null>(null);
   const [advancedInputState, setAdvancedInputState] = useState<any>(null);
+  const [usePreferences, setUsePreferences] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -221,6 +222,42 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
     }
   };
 
+  const loadPreferences = async () => {
+    const res = await fetch("/api/check-preferences");
+    const data = await res.json();
+
+    if (!data?.preferences) return;
+
+    const p = data.preferences;
+
+    setForm((prev) => ({
+      ...prev,
+      weightKg: p.weightKg?.toString() || "",
+      sweatRateLPerHour: p.sweatRateLPerHour?.toString() || "",
+      experienceLevel: p.experienceLevel || "",
+      goal: p.goal || "",
+    }));
+  };
+  const resetPrefFields = () => {
+    setForm((prev) => ({
+      ...prev,
+      weightKg: "",
+      sweatRateLPerHour: "",
+      experienceLevel: "",
+      goal: "",
+    }));
+  };
+
+  const handlePrefToggle = async (checked: boolean) => {
+    setUsePreferences(checked);
+
+    if (checked) {
+      await loadPreferences();
+    } else {
+      resetPrefFields();
+    }
+  };
+
   return (
     <section className="flex flex-col items-center justify-center my-12">
       <Card className={cn("lg:w-1/2")}>
@@ -235,11 +272,10 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <span className="flex items-center gap-2 px-6 py-2">
-            <Checkbox id="hasAidStations" />
-            <Label className={cn("px-1 text-sm")}>
-              Auto fill profile preferences for weight, sweat rate, experience
-              level and goal
-            </Label>
+            <PrefCheckbox
+              checked={usePreferences}
+              onChange={handlePrefToggle}
+            />
           </span>
           <p className="text-lg font-medium p-6">Basic Info</p>
           <CardContent className={cn("grid grid-cols-2 gap-4 space-y-3")}>
@@ -310,6 +346,7 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
             <div className="space-y-2">
               <Label className={cn("px-1")}>Experience level</Label>
               <Select
+                value={form.experienceLevel}
                 onValueChange={(value) =>
                   handleChange("experienceLevel", value)
                 }
@@ -340,6 +377,7 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
             <div className="space-y-2">
               <Label className={cn("px-1")}>Terrain</Label>
               <Select
+                value={form.terrain}
                 onValueChange={(value) =>
                   handleChange(
                     "terrain",
@@ -402,6 +440,7 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
             <div className="space-y-2">
               <Label className={cn("px-1")}>Goal</Label>
               <Select
+                value={form.goal}
                 onValueChange={(value) =>
                   handleChange("goal", value as "finish" | "performance")
                 }

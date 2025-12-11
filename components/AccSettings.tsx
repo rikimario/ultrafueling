@@ -34,9 +34,9 @@ export default function AccSettings({
   });
 
   const [prefForm, setPrefForm] = useState({
-    weight: preferences?.weight,
-    sweat_rate: preferences?.sweat_rate,
-    exp_lvl: preferences?.exp_lvl,
+    weightKg: preferences?.weightKg,
+    sweatRateLPerHour: preferences?.sweatRateLPerHour,
+    experienceLevel: preferences?.experienceLevel,
     goal: preferences?.goal,
   });
   const [passwordForm, setPasswordForm] = useState({
@@ -313,11 +313,11 @@ export default function AccSettings({
             <Input
               type="number"
               placeholder="Enter your weight"
-              value={prefForm.weight ?? ""}
+              value={prefForm.weightKg ?? ""}
               onChange={(e) =>
                 setPrefForm((prev) => ({
                   ...prev,
-                  weight: Number(e.target.value),
+                  weightKg: Number(e.target.value),
                 }))
               }
             />
@@ -329,11 +329,11 @@ export default function AccSettings({
             <Input
               type="number"
               placeholder="Enter your sweat rate"
-              value={prefForm.sweat_rate ?? ""}
+              value={prefForm.sweatRateLPerHour ?? ""}
               onChange={(e) =>
                 setPrefForm((prev) => ({
                   ...prev,
-                  sweat_rate: Number(e.target.value),
+                  sweatRateLPerHour: Number(e.target.value),
                 }))
               }
             />
@@ -341,8 +341,10 @@ export default function AccSettings({
           <li className="space-y-2">
             <Label className={cn("px-1")}>Experience level</Label>
             <Select
-              value={prefForm.exp_lvl ?? undefined}
-              onValueChange={(value) => handlePrefChange("exp_lvl", value)}
+              value={prefForm.experienceLevel ?? undefined}
+              onValueChange={(value) =>
+                handlePrefChange("experienceLevel", value)
+              }
             >
               <SelectTrigger className={cn("w-full")}>
                 <SelectValue placeholder="Select an experience level" />
