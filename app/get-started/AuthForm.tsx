@@ -13,9 +13,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import React, { useActionState } from "react";
+import { useActionState } from "react";
 import { login, signInWithGoogle, signup } from "./actions";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function AuthForm() {
   const [loginState, loginAction] = useActionState(login, { error: "" });
@@ -46,7 +47,7 @@ export default function AuthForm() {
                     id="email"
                     type="email"
                     name="email"
-                    placeholder="John@example.com"
+                    placeholder="john@example.com"
                     autoComplete="email"
                   />
                 </div>
@@ -69,14 +70,25 @@ export default function AuthForm() {
                 </div>
               </CardContent>
               <CardFooter className={cn("flex flex-col gap-4")}>
-                <Button className={cn("w-full")} size={"lg"} type="submit">
+                <Button
+                  variant={"secondary"}
+                  className={cn("w-full")}
+                  size={"lg"}
+                  type="submit"
+                >
                   Login
                 </Button>
                 <Button
                   variant={"outline"}
-                  className={cn("w-full")}
+                  className={cn("w-full bg-gray-200 dark:bg-gray-600")}
                   onClick={signInWithGoogle}
                 >
+                  <Image
+                    src="/google-svg.svg"
+                    width={20}
+                    height={20}
+                    alt="google"
+                  />
                   Sign in with Google
                 </Button>
               </CardFooter>
@@ -125,14 +137,25 @@ export default function AuthForm() {
                 </div>
               </CardContent>
               <CardFooter className={cn("flex flex-col gap-4")}>
-                <Button className={cn("w-full")} size={"lg"} type="submit">
+                <Button
+                  variant={"main"}
+                  className={cn("w-full")}
+                  size={"lg"}
+                  type="submit"
+                >
                   Sign up
                 </Button>
                 <Button
                   variant={"outline"}
-                  className={cn("w-full")}
+                  className={cn("w-full bg-gray-200 dark:bg-gray-600")}
                   onClick={signInWithGoogle}
                 >
+                  <Image
+                    src="/google-svg.svg"
+                    width={20}
+                    height={20}
+                    alt="google"
+                  />
                   Sign in with Google
                 </Button>
               </CardFooter>
