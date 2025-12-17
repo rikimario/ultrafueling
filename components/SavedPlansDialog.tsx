@@ -56,7 +56,7 @@ export default function SavedPlansDialog({ plans }: { plans: any[] }) {
               </p>
 
               <CardContent className="mt-3 w-1/2 space-y-1 text-sm px-0">
-                <p className="flex justify-between gap-4">
+                <p className="flex justify-between gap-2">
                   <strong className="text-muted-foreground">Calories:</strong>{" "}
                   {result?.totalCalories} kcal
                 </p>

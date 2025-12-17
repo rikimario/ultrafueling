@@ -3,6 +3,7 @@
 import { Button } from "./ui/button";
 import Image from "next/image";
 import { useDarkMode } from "@/hooks/useDarkMode";
+import Link from "next/link";
 
 export default function Hero() {
   const { isDark } = useDarkMode();
@@ -24,9 +25,11 @@ export default function Hero() {
           daily meals to race-day fueling strategies.
         </p>
         <div className="flex gap-4">
-          <Button variant={"main"} size="xxl">
-            Try Now
-          </Button>
+          <Link href={"#freeCalc"}>
+            <Button variant={"main"} size="xxl">
+              Try Now
+            </Button>
+          </Link>
           <Button variant="secondary" size={"xxl"}>
             Learn More
           </Button>

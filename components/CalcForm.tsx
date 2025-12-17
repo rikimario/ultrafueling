@@ -113,7 +113,10 @@ export default function CalcForm() {
   };
 
   return (
-    <section className="flex flex-col items-center justify-center my-12">
+    <section
+      id="freeCalc"
+      className="flex flex-col items-center justify-center my-12"
+    >
       <Card className={cn("lg:w-1/2")}>
         <CardHeader className={cn("text-center")}>
           <CardTitle className={cn("text-3xl font-bold")}>
