@@ -1,20 +1,17 @@
 "use client";
 
 import { Button } from "./ui/button";
-import Image from "next/image";
-import { useDarkMode } from "@/hooks/useDarkMode";
 import Link from "next/link";
+import GlassQuickStats from "./GlassQuickStats";
+import GlassSavedPlans from "./GlassSavedPlans";
+import GlassHourlyPlan from "./GlassHourlyPlan";
 
 export default function Hero() {
-  const { isDark } = useDarkMode();
-
-  if (isDark === null) return null;
-
   return (
-    <section className="flex items-center justify-between text-center py-16 px-6">
-      <div className="flex flex-col items-center">
-        <h1 className="relative text-3xl font-bold md:text-9xl mb-4">
-          <span className="absolute inset-0 -z-10 m-auto h-[420px] w-[620px] rounded-full bg-emerald-400/20 blur-3xl"></span>
+    <section className="relative flex items-center justify-between text-center py-16 px-6 gap-20">
+      {/* <span className="absolute inset-0 -z-10 m-auto h-screen rounded-full bg-emerald-50 dark:bg-emerald-300/5 blur-3xl"></span> */}
+      <div className="flex flex-col items-center w-full">
+        <h1 className="text-3xl font-bold md:text-8xl mb-4">
           Fuel Smarter. <br />{" "}
           <span className="bg-gradient-to-r from-emerald-300 to-emerald-500 bg-clip-text text-transparent">
             Run Farther.
@@ -38,17 +35,56 @@ export default function Hero() {
 
       {/* Right Side*/}
 
-      <div className="relative w-[400px] h-[500px]">
-        <Image
-          key={isDark ? "dark" : "light"}
-          className=" rounded-2xl transform-gpu transform-3d shadow-xl shadow-emerald-500/30 oobject-cover"
-          src={isDark ? "/advanced-calc.png" : "/advanced-calc-light.png"}
-          alt="calculator-preview"
-          sizes="(max-width: 768px) 100vw, 400px"
-          priority
-          fill
-          quality={100}
-        />
+      <div className="relative w-full h-[520px]">
+        {/* Decorative background */}
+        <span className="absolute -z-10 top-10 right-20 w-72 h-72 rounded-full bg-emerald-300/20 blur-3xl" />
+        <span className="absolute -z-10 bottom-20 left-10 w-96 h-96 rounded-full bg-emerald-400/10 blur-[100px]" />
+
+        {/* Glass Rings */}
+        <span className="absolute top-0 left-0 w-96 h-96 rounded-full border border-white/5 backdrop-blur-sm" />
+        <span className="absolute bottom-0 right-0 w-96 h-96 rounded-full border border-white/5 backdrop-blur-sm" />
+
+        {/* Floating particles */}
+        <span className="absolute top-10 right-48 w-2 h-2 rounded-full bg-white/70 shadow-[0_0_12px_rgba(255,255,255,0.8)] animate-pulse" />
+        <span className="absolute bottom-10 left-40 w-2 h-2 rounded-full bg-white/70 shadow-[0_0_12px_rgba(255,255,255,0.8)] animate-pulse" />
+        <span className="absolute top-72 right-24 w-1.5 h-1.5 rounded-full bg-emerald-300 shadow-[0_0_10px_rgba(16,185,129,0.7)] animate-pulse" />
+        <span className="absolute top-32 left-48 w-1 h-1 rounded-full bg-white/50 animate-pulse" />
+
+        {/* Quick Stats – top right */}
+        <div
+          className="absolute top-0 right-0 animate-float-rotate"
+          style={
+            { "--rotate": "3deg", animationDelay: "0s" } as React.CSSProperties
+          }
+        >
+          <GlassQuickStats />
+        </div>
+
+        {/* Saved Plans – middle left */}
+        <div
+          className="absolute top-[190px] left-0 animate-float-rotate"
+          style={
+            {
+              "--rotate": "-2deg",
+              animationDelay: "0.4s",
+            } as React.CSSProperties
+          }
+        >
+          <GlassSavedPlans />
+        </div>
+
+        {/* Hourly Plan – bottom left */}
+        <div
+          className="absolute top-[280px] right-0 animate-float-rotate z-50"
+          style={
+            {
+              "--rotate": "3deg",
+              animationDelay: "0.8s",
+            } as React.CSSProperties
+          }
+        >
+          <GlassHourlyPlan />
+        </div>
       </div>
     </section>
   );

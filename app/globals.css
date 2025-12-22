@@ -117,6 +117,22 @@
   transform: perspective(1000px) rotateY(-35deg) rotateX(8deg);
 }
 
+@keyframes float-rotate {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(var(--rotate));
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+.animate-float-rotate {
+  animation: float-rotate 8s ease-in-out infinite;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
