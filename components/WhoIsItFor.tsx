@@ -12,7 +12,7 @@ export default function WhoIsItFor() {
       `}
         >
           <MountainSnow strokeWidth={0.7} fill="#6a7282" className="w-6 h-6" />
-          Who <span className="text-emerald-500">UltraFueling</span> is for?
+          Who is<span className="text-emerald-500">UltraFueling</span>for?
         </div>
       </h3>
 
