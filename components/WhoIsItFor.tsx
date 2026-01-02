@@ -1,4 +1,3 @@
-import { MountainSnow } from "lucide-react";
 import { Card, CardContent, CardTitle } from "./ui/card";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -6,22 +5,21 @@ import Image from "next/image";
 export default function WhoIsItFor() {
   return (
     <div className="p-12">
-      <h3 className="mt-10 mb-4">
-        <div
-          className={`flex items-center gap-3 px-4 py-2 font-bold text-xl
-      `}
-        >
-          <MountainSnow strokeWidth={0.7} fill="#6a7282" className="w-6 h-6" />
-          Who is<span className="text-emerald-500">UltraFueling</span>for?
-        </div>
-      </h3>
+      <div className="flex justify-center pb-10">
+        <h1 className="font-bold text-4xl">
+          <div
+            className={`flex items-center gap-3 px-4 py-2 font-bold text-4xl
+            `}
+          >
+            Who is<span className="text-emerald-500">UltraFueling</span>for?
+          </div>
+        </h1>
+      </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <Card
-          className={cn(
-            "p-4 flex flex-row border-gray-500 hover:border-gray-600 cursor-pointer"
-          )}
-        >
+        <Card className={cn("relative p-4 flex flex-row border-gray-500")}>
+          <span className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#99CCFF] to-transparent]" />
+
           <Image
             src="/long-distance-people-jogging.jpg"
             alt="marathon"
@@ -40,11 +38,9 @@ export default function WhoIsItFor() {
             </CardContent>
           </div>
         </Card>
-        <Card
-          className={cn(
-            "p-4 flex flex-row border-gray-500 hover:border-gray-600 cursor-pointer"
-          )}
-        >
+        <Card className={cn("relative p-4 flex flex-row border-gray-500")}>
+          <span className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#99CCFF] to-transparent]" />
+
           <Image
             src="/trail.jpg"
             alt="marathon"
@@ -63,11 +59,9 @@ export default function WhoIsItFor() {
             </CardContent>
           </div>
         </Card>
-        <Card
-          className={cn(
-            "p-4 flex flex-row border-gray-500 hover:border-gray-600 cursor-pointer"
-          )}
-        >
+        <Card className={cn("relative p-4 flex flex-row border-gray-500")}>
+          <span className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#99CCFF] to-transparent]" />
+
           <Image
             src="/hydration3.jpg"
             alt="marathon"
@@ -86,11 +80,9 @@ export default function WhoIsItFor() {
             </CardContent>
           </div>
         </Card>
-        <Card
-          className={cn(
-            "p-4 flex flex-row border-gray-500 hover:border-gray-600 cursor-pointer"
-          )}
-        >
+        <Card className={cn("relative p-4 flex flex-row border-gray-500")}>
+          <span className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#99CCFF] to-transparent]" />
+
           <Image
             src="/data-fueling.png"
             alt="marathon"

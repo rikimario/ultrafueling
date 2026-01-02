@@ -115,9 +115,12 @@ export default function CalcForm() {
   return (
     <section
       id="freeCalc"
-      className="flex flex-col items-center justify-center my-12"
+      className="relative flex flex-col items-center justify-center my-12"
     >
-      <Card className={cn("lg:w-1/2")}>
+      <h1 className="font-bold text-4xl py-10">Try the free calculator</h1>
+      <Card className={cn("relative lg:w-1/2")}>
+        {/* Decorative top line */}
+        <span className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#99CCFF] to-transparent]" />
         <CardHeader className={cn("text-center")}>
           <CardTitle className={cn("text-3xl font-bold")}>
             Calculate Your Running Nutrition
@@ -131,7 +134,7 @@ export default function CalcForm() {
           <CardContent className={cn("grid grid-cols-2 gap-4 space-y-3")}>
             <div className="space-y-2">
               <Label className={cn("px-1")}>
-                Distance (<span className="text-gray-500">km</span>)
+                Distance (<span className="text-[#99CCFF]">km</span>)
               </Label>
               <Input
                 type="number"
@@ -147,7 +150,7 @@ export default function CalcForm() {
             </div>
             <div className="space-y-2">
               <Label className={cn("px-1")}>
-                Duration (<span className="text-gray-500">hours</span>)
+                Duration (<span className="text-[#99CCFF]">hours</span>)
               </Label>
               <Input
                 type="number"
@@ -163,7 +166,7 @@ export default function CalcForm() {
             </div>
             <div className="space-y-2">
               <Label className={cn("px-1")}>
-                Weight (<span className="text-gray-500">kg</span>)
+                Weight (<span className="text-[#99CCFF]">kg</span>)
               </Label>
               <Input
                 type="number"
@@ -179,7 +182,7 @@ export default function CalcForm() {
             </div>
             <div className="space-y-2">
               <Label className={cn("px-1")}>
-                Temperature (<span className="text-gray-500">°C</span>)
+                Temperature (<span className="text-[#99CCFF]">°C</span>)
               </Label>
               <Input
                 type="number"
