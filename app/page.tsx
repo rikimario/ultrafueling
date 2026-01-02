@@ -1,5 +1,6 @@
 import CalcForm from "@/components/CalcForm";
 import Hero from "@/components/Hero";
+import HowItWorks from "@/components/HowItWorks";
 import SubscriptionPlans from "@/components/SubscriptionPlans";
 import WhoIsItFor from "@/components/WhoIsItFor";
 
@@ -8,6 +9,7 @@ export default async function Home() {
     <main>
       <Hero />
       <WhoIsItFor />
+      <HowItWorks />
       <CalcForm />
       <SubscriptionPlans />
     </main>
