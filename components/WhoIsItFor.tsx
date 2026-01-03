@@ -4,16 +4,19 @@ import Image from "next/image";
 
 export default function WhoIsItFor() {
   return (
-    <div className="p-12">
-      <div className="flex justify-center pb-10">
+    <div className="relative py-20">
+      {/* Background Glow */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="w-[700px] h-[600px] bg-[#0080ff11] blur-3xl rounded-full" />
+      </div>
+      <div className="text-center my-10 space-y-4">
         <h1 className="font-bold text-4xl">
-          <div
-            className={`flex items-center gap-3 px-4 py-2 font-bold text-4xl
-            `}
-          >
-            Who is<span className="text-emerald-500">UltraFueling</span>for?
-          </div>
+          Who is <span className="text-emerald-500">UltraFueling</span> for?
         </h1>
+        <p className="text-muted-foreground text-center text-xl max-w-2xl mx-auto">
+          UltraFueling is built for endurance athletes who want a smarter, more
+          reliable way to fuel - no guesswork, no generic advice.
+        </p>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
