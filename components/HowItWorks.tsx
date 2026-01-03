@@ -5,8 +5,12 @@ import { Calculator, SquareChartGantt } from "lucide-react";
 export default function HowItWorks() {
   return (
     <>
-      <div className="flex justify-center py-10">
+      <div className="text-center my-10 space-y-4">
         <h1 className="font-bold text-4xl">How It Works</h1>
+        <p className="text-muted-foreground text-center text-xl max-w-2xl mx-auto">
+          UltraFueling turns your race details into a personalized fueling
+          strategy - so you know exactly what to eat and drink, and when.
+        </p>
       </div>
       <section className="relative flex justify-center item-center h-[500px] py-4 overflwow-hidden">
         {/* Glow Effect */}
