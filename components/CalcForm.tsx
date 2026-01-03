@@ -117,7 +117,17 @@ export default function CalcForm() {
       id="freeCalc"
       className="relative flex flex-col items-center justify-center my-12"
     >
-      <h1 className="font-bold text-4xl py-10">Try the free calculator</h1>
+      {/* Background Glow */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="w-[700px] h-[600px] bg-[#0080ff11] blur-3xl rounded-full" />
+      </div>
+      <div className="text-center my-10 space-y-4">
+        <h1 className="font-bold text-4xl">Try the free calculator</h1>
+        <p className="text-muted-foreground text-center text-xl max-w-2xl mx-auto">
+          Get an instant fueling estimate based on your race, pace, and
+          conditions - no account required.
+        </p>
+      </div>
       <Card className={cn("relative lg:w-1/2")}>
         {/* Decorative top line */}
         <span className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#99CCFF] to-transparent]" />
