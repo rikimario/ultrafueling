@@ -13,7 +13,7 @@ export default function Hero() {
       <div className="flex flex-col items-center w-full">
         <h1 className="text-3xl font-bold md:text-8xl mb-4">
           Fuel Smarter. <br />{" "}
-          <span className="bg-gradient-to-r from-emerald-300 to-emerald-500 bg-clip-text text-transparent">
+          <span className="bg-emerald-500 bg-clip-text text-transparent">
             Run Farther.
           </span>
         </h1>
@@ -37,8 +37,8 @@ export default function Hero() {
 
       <div className="relative w-full h-[520px]">
         {/* Decorative background */}
-        <span className="absolute -z-10 top-10 right-20 w-72 h-72 rounded-full bg-emerald-300/20 blur-3xl" />
-        <span className="absolute -z-10 bottom-20 left-10 w-96 h-96 rounded-full bg-emerald-400/10 blur-[100px]" />
+        <span className="absolute -z-10 top-10 right-20 w-72 h-72 rounded-full bg-[#0080ff11] blur-3xl" />
+        <span className="absolute -z-10 bottom-20 left-10 w-96 h-96 rounded-full bg-[#0080ff11] blur-3xl" />
 
         {/* Glass Rings */}
         <span className="absolute top-0 left-0 w-96 h-96 rounded-full border border-white/5 backdrop-blur-sm" />
