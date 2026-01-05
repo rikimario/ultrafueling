@@ -5,7 +5,7 @@ import { Calculator, SquareChartGantt } from "lucide-react";
 export default function HowItWorks() {
   return (
     <>
-      <div className="text-center my-10 space-y-4">
+      <div className="text-center pt-20 pb-10 space-y-4">
         <h1 className="font-bold text-4xl">How It Works</h1>
         <p className="text-muted-foreground text-center text-xl max-w-2xl mx-auto">
           UltraFueling turns your race details into a personalized fueling
@@ -49,7 +49,7 @@ export default function HowItWorks() {
               strokeWidth="0.5"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="lucide lucide-form-icon lucide-form text-muted-foreground"
+              className="lucide lucide-form-icon lucide-form text-[#99CCFF]"
             >
               <path d="M4 14h6" />
               <path d="M4 2h10" />
@@ -77,7 +77,7 @@ export default function HowItWorks() {
 
             <Calculator
               strokeWidth={0.5}
-              className="w-32 h-32 text-muted-foreground"
+              className="w-32 h-32 text-[#99CCFF]"
             />
           </Card>
           <Card
@@ -99,7 +99,7 @@ export default function HowItWorks() {
             </CardDescription>
             <SquareChartGantt
               strokeWidth={0.5}
-              className="w-32 h-32 text-muted-foreground"
+              className="w-32 h-32 text-[#99CCFF]"
             />
           </Card>
         </div>

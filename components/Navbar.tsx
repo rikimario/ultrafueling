@@ -28,10 +28,17 @@ export default function Navbar({}: {}) {
   const darkMode = useDarkMode();
 
   return (
-    <nav className="bg-[#212c42] p-4">
+    <nav className="bg-[#212c42] px-4 pt-2">
       <div className="flex justify-between items-center max-w-[1320px] mx-auto px-6">
         <Link href="/">
-          <span className="text-white">UltraFueling</span>
+          <Image
+            src="/ultra-fueling-logo.svg"
+            alt="logo"
+            width={90}
+            height={40}
+            priority
+            className=""
+          />
         </Link>
         <div className="space-x-4 flex justify-center items-center cursor-pointer">
           {user ? (

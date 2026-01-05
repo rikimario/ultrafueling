@@ -47,7 +47,7 @@ export default function SubscribeBtn({
 
   return (
     <Button
-      variant={popular ? "default" : "secondary"}
+      variant={popular ? "main" : "secondary"}
       className={cn("w-full border-[#2b3b55]/95 hover:bg-[#2b3b55]/20")}
       onClick={handleSubscribe}
     >
