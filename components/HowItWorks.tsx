@@ -5,7 +5,7 @@ import { data } from "@/lib/howItWorks";
 export default function HowItWorks() {
   return (
     <>
-      <div className="text-center pt-20 pb-10 space-y-4">
+      <div id="howItWorks" className="text-center pt-20 pb-10 space-y-4">
         <h1 className="font-bold text-4xl">How It Works</h1>
         <p className="text-muted-foreground text-center text-xl max-w-2xl mx-auto">
           UltraFueling turns your race details into a personalized fueling

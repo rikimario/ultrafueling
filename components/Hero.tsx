@@ -26,9 +26,11 @@ export default function Hero() {
               Try Now
             </Button>
           </Link>
-          <Button variant="secondary" size={"xxl"}>
-            Learn More
-          </Button>
+          <Link href={"#howItWorks"}>
+            <Button variant="secondary" size={"xxl"}>
+              Learn More
+            </Button>
+          </Link>
         </div>
       </div>
 
