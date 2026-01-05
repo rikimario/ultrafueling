@@ -17,7 +17,7 @@ export function GlassCard({
         border border-white/20 dark:border-white/10
         bg-white/10 dark:bg-transparent
         backdrop-blur-[1px]
-        shadow-lg shadow-emerald-500/30
+        shadow-lg shadow-[#0080ff11]
         overflow-hidden
         `,
         className
