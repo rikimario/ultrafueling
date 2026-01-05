@@ -1,6 +1,6 @@
 import { Card, CardContent, CardTitle } from "./ui/card";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+import { data } from "@/lib/whoIsItFor";
 
 export default function WhoIsItFor() {
   return (
@@ -19,91 +19,35 @@ export default function WhoIsItFor() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <Card className={cn("relative p-4 flex flex-row border-gray-500")}>
-          <span className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#99CCFF] to-transparent]" />
+      <div className="grid grid-cols-2 max-w-5xl mx-auto gap-4">
+        {data.map((item, index) => {
+          const Icon = item.icon;
+          return (
+            <Card
+              key={index}
+              className={cn(
+                "relative flex flex-row min-h-36 gap-6 p-4 border-gray-500"
+              )}
+            >
+              <span className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#99CCFF] to-transparent]" />
 
-          <Image
-            src="/long-distance-people-jogging.jpg"
-            alt="marathon"
-            width={500}
-            height={500}
-            className={cn("w-1/2 object-cover")}
-          />
-          <div>
-            <CardTitle className="text-xl md:text-2xl">
-              You race long distances
-            </CardTitle>
-            <CardContent className={cn("p-0")}>
-              <p className="mt-2 text-lg text-muted-foreground">
-                Marathons, ultras, trail races, stage races
-              </p>
-            </CardContent>
-          </div>
-        </Card>
-        <Card className={cn("relative p-4 flex flex-row border-gray-500")}>
-          <span className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#99CCFF] to-transparent]" />
+              <div className="w-24 h-24 rounded-xl flex-shrink-0 flex items-center justify-center">
+                <Icon className="w-18 h-18 text-[#99CCFF]" strokeWidth={0.5} />
+              </div>
 
-          <Image
-            src="/trail.jpg"
-            alt="marathon"
-            width={500}
-            height={500}
-            className={cn("w-1/2 object-cover")}
-          />
-          <div>
-            <CardTitle className="text-xl md:text-2xl">
-              Your races aren’t flat or predictable
-            </CardTitle>
-            <CardContent className={cn("p-0")}>
-              <p className="mt-2 text-lg text-muted-foreground">
-                Trail, elevation, heat, cold, or technical terrain
-              </p>
-            </CardContent>
-          </div>
-        </Card>
-        <Card className={cn("relative p-4 flex flex-row border-gray-500")}>
-          <span className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#99CCFF] to-transparent]" />
-
-          <Image
-            src="/hydration3.jpg"
-            alt="marathon"
-            width={500}
-            height={500}
-            className={cn("w-1/2 object-cover")}
-          />
-          <div>
-            <CardTitle className="text-xl md:text-2xl">
-              You struggle with hydration or cramping
-            </CardTitle>
-            <CardContent className={cn("p-0")}>
-              <p className="mt-2 text-lg text-muted-foreground">
-                Trail, elevation, heat, cold, or technical terrain
-              </p>
-            </CardContent>
-          </div>
-        </Card>
-        <Card className={cn("relative p-4 flex flex-row border-gray-500")}>
-          <span className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#99CCFF] to-transparent]" />
-
-          <Image
-            src="/data-fueling.png"
-            alt="marathon"
-            width={500}
-            height={500}
-            className={cn("w-1/2 object-cover")}
-          />
-          <div>
-            <CardTitle className="text-xl md:text-2xl">
-              You want data, not guesswork
-            </CardTitle>
-            <CardContent className={cn("p-0")}>
-              <p className="mt-2 text-lg text-muted-foreground">
-                Science-based fueling instead of “take a gel every hour”
-              </p>
-            </CardContent>
-          </div>
-        </Card>
+              <div className="flex-1">
+                <CardTitle className="text-xl md:text-xl">
+                  {item.title}
+                </CardTitle>
+                <CardContent className={cn("p-0")}>
+                  <p className="mt-2 text-lg text-muted-foreground">
+                    {item.text}
+                  </p>
+                </CardContent>
+              </div>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );

@@ -9,7 +9,6 @@ import GlassHourlyPlan from "./GlassHourlyPlan";
 export default function Hero() {
   return (
     <section className="relative flex items-center justify-between text-center py-16 px-6 gap-20">
-      {/* <span className="absolute inset-0 -z-10 m-auto h-screen rounded-full bg-emerald-50 dark:bg-emerald-300/5 blur-3xl"></span> */}
       <div className="flex flex-col items-center w-full">
         <h1 className="text-3xl font-bold md:text-8xl mb-4">
           Fuel Smarter. <br />{" "}
