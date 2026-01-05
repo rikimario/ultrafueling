@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import { Toaster } from "sonner";
 import getUser from "@/utils/supabase/user";
 import { UserProvider } from "@/contexts/UserContext";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,6 +39,7 @@ export default async function RootLayout({
             {children}
             <Toaster position="top-right" />
           </div>
+          <Footer />
         </UserProvider>
       </body>
     </html>
