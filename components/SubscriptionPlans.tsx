@@ -16,7 +16,7 @@ import { Plans } from "@/lib/subPlans";
 export default async function SubscriptionPlans() {
   const user = await getUser();
   return (
-    <section id="subcribe" className="relative gap-4 py-20 max-w-5xl mx-auto">
+    <section id="subscribe" className="relative gap-4 py-20 max-w-5xl mx-auto">
       {/* Background Glow */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="w-[600px] h-[400px] bg-[#0080ff11] blur-3xl rounded-full" />

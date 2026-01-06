@@ -53,14 +53,14 @@ export default function Navbar({}: {}) {
                   </Button>
                 </Link>
               ) : (
-                <a href="/#subcribe">
+                <Link href="/#subscribe">
                   <Button
                     className="hover:text-white text-gray-800"
                     variant="main"
                   >
                     Go Premium
                   </Button>
-                </a>
+                </Link>
               )}
               <DropdownMenuTrigger asChild>
                 <div className="flex gap-2 items-center">
