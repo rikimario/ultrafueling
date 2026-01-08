@@ -29,7 +29,7 @@ export default function Footer() {
 
         {/* Product */}
         <div>
-          <h4 className="font-semibold mb-3">Product</h4>
+          <h4 className="font-semibold mb-3 text-gray-200">Product</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <Link href="/#freeCalc">
               <li className="hover:text-gray-300 pb-2">Free Calculator</li>
@@ -45,18 +45,26 @@ export default function Footer() {
 
         {/* Company */}
         <div>
-          <h4 className="font-semibold mb-3">Company</h4>
+          <h4 className="font-semibold mb-3 text-gray-200">Company</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li>FAQ</li>
-            <li>Contact</li>
-            <li>Privacy Policy</li>
-            <li>Terms of Service</li>
+            <Link href="/#faq">
+              <li className="hover:text-gray-300 pb-2">FAQ</li>
+            </Link>
+            <Link href="/#">
+              <li className="hover:text-gray-300 pb-2">Contact</li>
+            </Link>
+            <Link href="/#">
+              <li className="hover:text-gray-300 pb-2">Privacy Policy</li>
+            </Link>
+            <Link href="/#">
+              <li className="hover:text-gray-300 pb-2">Terms of Service</li>
+            </Link>
           </ul>
         </div>
 
         {/* CTA */}
         <div>
-          <h4 className="font-semibold mb-3">Get Started</h4>
+          <h4 className="font-semibold mb-3 text-gray-200">Get Started</h4>
           <p className="text-sm text-muted-foreground mb-4">
             Build your fueling plan in minutes.
           </p>
@@ -85,9 +93,6 @@ export default function Footer() {
               <Button variant={"main"}>Get Started</Button>
             </Link>
           )}
-          {/* <Link href="/#freeCalc">
-            <Button variant="main">Try Free Calculator</Button>
-          </Link> */}
         </div>
       </div>
 

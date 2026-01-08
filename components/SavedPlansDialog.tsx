@@ -12,11 +12,19 @@ import {
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "./ui/scroll-area";
-import { HourlyPlan } from "@/utils/calculator/calculatePlan";
+import { AdvancedResult, HourlyPlan } from "@/utils/calculator/calculatePlan";
 import StyledMarkdown from "./StyledMarkdown";
 import { exportPlan } from "@/utils/exportPlan";
 
-export default function SavedPlansDialog({ plans }: { plans: any[] }) {
+type SavedPlan = {
+  id: string;
+  created_at: string;
+  input: any;
+  result: AdvancedResult;
+  ai_plan: string | null;
+};
+
+export default function SavedPlansDialog({ plans }: { plans: SavedPlan[] }) {
   const handleDelete = async (id: string) => {
     await fetch("/api/delete-plan", {
       method: "POST",
@@ -28,7 +36,10 @@ export default function SavedPlansDialog({ plans }: { plans: any[] }) {
     window.location.reload();
   };
 
-  const handleExport = (plan: any) => {
+  const handleExport = (plan: {
+    results: AdvancedResult;
+    aiPlan: string | null;
+  }) => {
     exportPlan(plan);
   };
 
@@ -142,7 +153,12 @@ export default function SavedPlansDialog({ plans }: { plans: any[] }) {
                               <Button
                                 variant="secondary"
                                 size="sm"
-                                onClick={() => handleExport(plan)}
+                                onClick={() =>
+                                  handleExport({
+                                    results: plan.result,
+                                    aiPlan: plan.ai_plan,
+                                  })
+                                }
                               >
                                 Export Checklist
                               </Button>

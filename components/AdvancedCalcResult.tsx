@@ -11,7 +11,10 @@ export default function AdvancedCalcResult({
   results: AdvancedResult;
   aiPlan: string | null;
 }) {
-  const handleExport = (plan: any) => {
+  const handleExport = (plan: {
+    results: AdvancedResult;
+    aiPlan: string | null;
+  }) => {
     exportPlan(plan);
   };
   return (
@@ -63,7 +66,7 @@ export default function AdvancedCalcResult({
                 <Button
                   variant="secondary"
                   size="sm"
-                  // onClick={() => handleExport(plan)}
+                  onClick={() => handleExport({ results, aiPlan })}
                 >
                   Export Checklist
                 </Button>

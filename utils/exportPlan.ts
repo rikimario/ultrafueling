@@ -1,11 +1,16 @@
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+import { AdvancedResult } from "./calculator/calculatePlan";
 
 pdfMake.vfs = pdfFonts.vfs;
 
-export const exportPlan = (plan: any) => {
-  const result = plan.result;
-
+export const exportPlan = ({
+  results,
+  aiPlan,
+}: {
+  results: AdvancedResult;
+  aiPlan: string | null;
+}) => {
   // Build hourly rows
   const hourlyRows = [
     [
@@ -16,7 +21,7 @@ export const exportPlan = (plan: any) => {
       { text: "Sodium (mg)", style: "tableHeader" },
       { text: "Notes", style: "tableHeader" },
     ],
-    ...result.hourly.map((h: any) => [
+    ...results.hourly.map((h: any) => [
       h.hourIndex.toString(),
       h.calories.toString(),
       h.carbsGrams.toString(),
@@ -56,14 +61,14 @@ export const exportPlan = (plan: any) => {
               {
                 stack: [
                   { text: "Distance", style: "summaryTitle" },
-                  { text: `${result.distanceKm} km`, style: "summaryValue" },
+                  { text: `${results.distanceKm} km`, style: "summaryValue" },
                 ],
               },
               {
                 stack: [
                   { text: "Duration", style: "summaryTitle" },
                   {
-                    text: `${result.durationHours} hours`,
+                    text: `${results.durationHours} hours`,
                     style: "summaryValue",
                   },
                 ],
@@ -73,13 +78,13 @@ export const exportPlan = (plan: any) => {
               {
                 stack: [
                   { text: "Terrain", style: "summaryTitle" },
-                  { text: result.terrain, style: "summaryValue" },
+                  { text: results.terrain, style: "summaryValue" },
                 ],
               },
               {
                 stack: [
                   { text: "Temperature", style: "summaryTitle" },
-                  { text: `${result.temperatureC}°C`, style: "summaryValue" },
+                  { text: `${results.temperatureC}°C`, style: "summaryValue" },
                 ],
               },
             ],
@@ -115,13 +120,17 @@ export const exportPlan = (plan: any) => {
       },
 
       // -------- AI Notes --------
-      plan.ai_plan && {
-        text: "AI Notes",
-        style: "sectionHeader",
-        margin: [0, 15, 0, 30],
-      },
-      plan.ai_plan && { text: plan.ai_plan, style: "aiNotes" },
-    ].filter(Boolean),
+      ...(aiPlan
+        ? [
+            {
+              text: "AI Notes",
+              style: "sectionHeader",
+              margin: [0, 10, 0, 5],
+            },
+            { text: aiPlan, style: "aiNotes" },
+          ]
+        : []),
+    ],
 
     // -------- Styles --------
     styles: {
@@ -164,5 +173,7 @@ export const exportPlan = (plan: any) => {
   };
 
   // Create & download
-  pdfMake.createPdf(docDefinition).download(`ultra_plan_${plan.id}.pdf`);
+  pdfMake
+    .createPdf(docDefinition)
+    .download(`ultra_plan_${results.distanceKm}km.pdf`);
 };
