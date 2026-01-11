@@ -19,7 +19,7 @@ export default function WhoIsItFor() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 max-w-5xl mx-auto gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:px-10 max-w-5xl mx-auto gap-4">
         {data.map((item, index) => {
           const Icon = item.icon;
           return (
@@ -36,11 +36,11 @@ export default function WhoIsItFor() {
               </div>
 
               <div className="flex-1">
-                <CardTitle className="text-xl md:text-xl">
+                <CardTitle className="text-lg md:text-xl">
                   {item.title}
                 </CardTitle>
                 <CardContent className={cn("p-0")}>
-                  <p className="mt-2 text-lg text-muted-foreground">
+                  <p className="mt-2 lg:text-lg text-muted-foreground">
                     {item.text}
                   </p>
                 </CardContent>

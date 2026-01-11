@@ -7,7 +7,8 @@ export const data = [
     description:
       "Distance, duration, terrain, weather, and your body stats. No guessing, no complicated setup.",
     icon: SquareChartGantt,
-    className: "-translate-x-85 rotate-[-6deg] w-[320px] p-4 z-10",
+    className:
+      "lg:-translate-x-80 xl:-translate-x-85 lg:rotate-[-6deg] lg:w-[320px] w-full lg:p-4 p-2 lg:z-10 text-center",
   },
   {
     step: "02",
@@ -15,7 +16,8 @@ export const data = [
     description:
       "Our algorithm adapts calories, carbs, fluids, and sodium based on effort, terrain, and conditions.",
     icon: Calculator,
-    className: "-translate-y-5 w-[340px] p-5 z-20",
+    className:
+      "lg:-translate-y-5 xl:-translate-y-5 lg:w-[340px] w-full lg:p-5 p-2 lg:z-20 text-center",
   },
   {
     step: "03",
@@ -23,6 +25,7 @@ export const data = [
     description:
       "Get a clear, hour-by-hour fueling plan you can follow during training or race day.",
     icon: ChartGantt,
-    className: "translate-x-85 rotate-[6deg] w-[320px] p-4 z-10",
+    className:
+      "lg:translate-x-80 xl:translate-x-85 lg:rotate-[6deg] lg:w-[320px] w-full lg:p-4 px-2 lg:z-10 text-center",
   },
 ];

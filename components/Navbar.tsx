@@ -28,7 +28,7 @@ export default function Navbar({}: {}) {
   const darkMode = useDarkMode();
 
   return (
-    <nav className="bg-[#212c42] px-4 pt-2">
+    <nav className="bg-[#212c42] md:px-4 pt-2">
       <div className="flex justify-between items-center max-w-[1320px] mx-auto px-6">
         <Link href="/">
           <Image

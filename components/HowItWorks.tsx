@@ -12,7 +12,7 @@ export default function HowItWorks() {
           strategy - so you know exactly what to eat and drink, and when.
         </p>
       </div>
-      <section className="relative flex justify-center item-center h-[500px] py-4 overflwow-hidden">
+      <section className="relative flex px-8 flex-col lg:flex-row gap-6 lg:gap-0 justify-center item-center lg:h-[500px] py-4 overflwow-hidden">
         {/* Glow Effect */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full bg-[#0080ff11] blur-3xl"></span>
@@ -20,14 +20,14 @@ export default function HowItWorks() {
 
         {/* Cards */}
 
-        <div className="relative flex justify-center items-center">
+        <div className="relative flex flex-col md:px-32 lg:flex-row gap-6 justify-center items-center">
           {data.map((item, index) => {
             const Icon = item.icon;
             return (
               <Card
                 key={index}
                 className={cn(
-                  "absolute flex flex-col items-center",
+                  "relative lg:absolute flex flex-col items-center",
                   item.className
                 )}
               >

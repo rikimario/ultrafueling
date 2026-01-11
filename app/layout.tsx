@@ -35,7 +35,7 @@ export default async function RootLayout({
       >
         <UserProvider user={user}>
           <Navbar />
-          <div className="max-w-[1320px] mx-auto py-4">
+          <div className="max-w-[1320px] px-4 lg:px-0 mx-auto py-4">
             {children}
             <Toaster position="top-right" />
           </div>

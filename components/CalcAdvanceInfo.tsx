@@ -23,7 +23,9 @@ interface Props {
 
 export default function CalcAdvanceInfo({ form, handleChange }: Props) {
   return (
-    <CardContent className={cn("grid grid-cols-2 gap-4 space-y-3")}>
+    <CardContent
+      className={cn("grid grid-cols-1 md:grid-cols-2 gap-4 space-y-3")}
+    >
       <div className="space-y-2">
         <Label className={cn("px-1")}>Terrain</Label>
         <Select

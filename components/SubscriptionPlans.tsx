@@ -28,7 +28,7 @@ export default async function SubscriptionPlans() {
           to your training goals.
         </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 justify-center gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 md:px-6 justify-center gap-4 lg:gap-6">
         {Plans.map((plan, index) => {
           const Icon = plan.icon;
           return (

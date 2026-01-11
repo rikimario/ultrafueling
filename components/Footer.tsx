@@ -43,8 +43,8 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Company */}
         <div>
+          {/* Company */}
           <h4 className="font-semibold mb-3 text-gray-200">Company</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <Link href="/#faq">
@@ -72,7 +72,7 @@ export default function Footer() {
             user?.is_premium === true ? (
               <Link href="/advanced-calc">
                 <Button
-                  className="hover:text-white text-gray-800"
+                  className="hover:text-white text-gray-800 w-full"
                   variant="main"
                 >
                   Advanced Calculator
@@ -81,7 +81,7 @@ export default function Footer() {
             ) : (
               <Link href="/#subscribe">
                 <Button
-                  className="hover:text-white text-gray-800"
+                  className="hover:text-white text-gray-800 w-full"
                   variant="main"
                 >
                   Go Premium
@@ -90,7 +90,9 @@ export default function Footer() {
             )
           ) : (
             <Link href="/get-started">
-              <Button variant={"main"}>Get Started</Button>
+              <Button className="w-full" variant={"main"}>
+                Get Started
+              </Button>
             </Link>
           )}
         </div>

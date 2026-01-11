@@ -129,7 +129,7 @@ export default function CalcForm() {
           conditions - no account required.
         </p>
       </div>
-      <Card className={cn("relative lg:w-1/2")}>
+      <Card className={cn("relative w-full md:w-2/3 lg:w-1/2")}>
         {/* Decorative top line */}
         <span className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#99CCFF] to-transparent]" />
         <CardHeader className={cn("text-center")}>
@@ -142,7 +142,9 @@ export default function CalcForm() {
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className={cn("grid grid-cols-2 gap-4 space-y-3")}>
+          <CardContent
+            className={cn("grid grid-cols-1 md:grid-cols-2 gap-4 space-y-3")}
+          >
             <div className="space-y-2">
               <Label className={cn("px-1")}>
                 Distance (<span className="text-[#99CCFF]">km</span>)
