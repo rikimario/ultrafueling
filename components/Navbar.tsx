@@ -46,7 +46,7 @@ export default function Navbar({}: {}) {
               {user?.is_premium === true ? (
                 <Link href="/advanced-calc">
                   <Button
-                    className="hover:text-white text-gray-800"
+                    className="hover:text-white hidden md:block text-gray-800"
                     variant="main"
                   >
                     Advanced Calculator
@@ -104,6 +104,38 @@ export default function Navbar({}: {}) {
                     Manage Account
                   </DropdownMenuItem>
                 </Link>
+                {user?.is_premium === true ? (
+                  <Link href="/advanced-calc">
+                    <DropdownMenuItem
+                      className={cn(
+                        "flex items-center cursor-pointer md:hidden font-semibold text-[16px]"
+                      )}
+                    >
+                      <Button
+                        className="hover:text-white md:hidden block w-full text-gray-800"
+                        variant="main"
+                      >
+                        Advanced Calculator
+                      </Button>
+                    </DropdownMenuItem>
+                  </Link>
+                ) : (
+                  <Link href="/#subscribe">
+                    <DropdownMenuItem
+                      className={cn(
+                        "flex items-center cursor-pointer md:hidden font-semibold text-[16px]"
+                      )}
+                    >
+                      <Button
+                        className="hover:text-white md:hidden block w-full text-gray-800"
+                        variant="main"
+                      >
+                        Go Premium
+                      </Button>
+                    </DropdownMenuItem>
+                  </Link>
+                )}
+
                 <div className="flex items-center justify-between cursor-pointer font-semibold px-2 pt-1.5 pb-3 border-b border-gray-200">
                   <Label className={cn("text-[16px]")}>
                     <MoonIcon
@@ -115,6 +147,7 @@ export default function Navbar({}: {}) {
                   </Label>
                   <Switch onCheckedChange={darkMode.toggleDarkMode} />
                 </div>
+
                 <DropdownMenuItem
                   className={cn(
                     "flex items-center cursor-pointer font-semibold text-[16px]"

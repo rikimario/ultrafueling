@@ -68,10 +68,10 @@ export default function Profile() {
         Your Profile
       </CardTitle>
 
-      <CardContent className="w-full flex gap-6">
+      <CardContent className="w-full grid grid-cols-1 lg:grid-cols-[1fr_3fr] gap-6">
         {/* Left Profile Info */}
-        <div className="w-1/4">
-          <Card className="max-h-96 p-6 rounded-2xl shadow-md col-span-1">
+        <div className="md:flex gap-12 lg:flex-col md:justify-between">
+          <Card className="max-h-96 md:w-full p-6 rounded-2xl shadow-md col-span-1">
             {avatarUrl ? (
               <Image
                 src={avatarUrl}
@@ -110,12 +110,12 @@ export default function Profile() {
           </Card>
 
           {/* Quick Stats Card */}
-          <Card className="p-6 rounded-2xl shadow-md mt-4">
+          <Card className="p-6 rounded-2xl shadow-md mt-4 md:w-full md:h-2/3 md:mt-0">
             <CardTitle className="text-lg font-semibold mb-4 flex items-center justify-center gap-2">
               <TrendingUp className="w-5 h-5 text-[#a3ea2a]" />
               Quick Stats
             </CardTitle>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-3 h-1/2">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground flex items-center gap-2">
                   <Target className="w-4 h-4" />
