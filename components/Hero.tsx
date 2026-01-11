@@ -10,7 +10,7 @@ export default function Hero() {
   return (
     <section className="relative flex items-center justify-between text-center py-16 md:px-6 gap-20">
       <div className="flex flex-col items-center w-full">
-        <h1 className="text-6xl font-bold md:text-8xl mb-4">
+        <h1 className="text-5xl font-bold md:text-8xl mb-4">
           Fuel Smarter. <br />{" "}
           <span className="bg-emerald-500 bg-clip-text text-transparent">
             Run Farther.
