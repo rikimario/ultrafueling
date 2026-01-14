@@ -31,15 +31,15 @@ export default function Footer() {
         <div>
           <h4 className="font-semibold mb-3 text-gray-200">Product</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <Link href="/#freeCalc">
-              <li className="hover:text-gray-300 pb-2">Free Calculator</li>
-            </Link>
-            <Link href="/#howItWorks">
-              <li className="hover:text-gray-300 pb-2">How It Works</li>
-            </Link>
-            <Link href="/#subscribe">
-              <li className="hover:text-gray-300 pb-2">Pricing</li>
-            </Link>
+            <li className="hover:text-gray-300 pb-2">
+              <Link href="/#freeCalc">Free Calculator</Link>
+            </li>
+            <li className="hover:text-gray-300 pb-2">
+              <Link href="/#howItWorks">How It Works</Link>
+            </li>
+            <li className="hover:text-gray-300 pb-2">
+              <Link href="/#subscribe">Pricing</Link>
+            </li>
           </ul>
         </div>
 
@@ -47,18 +47,18 @@ export default function Footer() {
           {/* Company */}
           <h4 className="font-semibold mb-3 text-gray-200">Company</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <Link href="/#faq">
-              <li className="hover:text-gray-300 pb-2">FAQ</li>
-            </Link>
-            <Link href="/#">
-              <li className="hover:text-gray-300 pb-2">Contact</li>
-            </Link>
-            <Link href="/#">
-              <li className="hover:text-gray-300 pb-2">Privacy Policy</li>
-            </Link>
-            <Link href="/#">
-              <li className="hover:text-gray-300 pb-2">Terms of Service</li>
-            </Link>
+            <li className="hover:text-gray-300 pb-2">
+              <Link href="/#faq">FAQ</Link>
+            </li>
+            <li className="hover:text-gray-300 pb-2">
+              <Link href="/contact">Contact</Link>
+            </li>
+            <li className="hover:text-gray-300 pb-2">
+              <Link href="/privacy-policy">Privacy Policy</Link>
+            </li>
+            <li className="hover:text-gray-300 pb-2">
+              <Link href="/terms">Terms & Conditions</Link>
+            </li>
           </ul>
         </div>
 
