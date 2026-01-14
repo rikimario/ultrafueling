@@ -14,7 +14,7 @@ export default function FQA() {
         <div className="w-[600px] h-[400px] bg-[#0080ff11] blur-3xl rounded-full" />
       </div>
       <div className="text-center my-10 space-y-4">
-        <h1 className="font-bold text-4xl">Frequently Asked Questions</h1>
+        <h2 className="font-bold text-4xl">Frequently Asked Questions</h2>
         <p className="text-muted-foreground text-center text-xl max-w-2xl mx-auto">
           Everything you need to know about using UltraFueling - simplified and
           transparent.
