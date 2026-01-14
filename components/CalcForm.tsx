@@ -210,13 +210,16 @@ export default function CalcForm() {
               )}
             </div>
             <div className="space-y-2">
-              <Label className={cn("px-1")}>Experience level</Label>
+              <Label htmlFor="experianceLevel" className={cn("px-1")}>
+                Experience level
+              </Label>
               <Select
+                value={form.experienceLevel}
                 onValueChange={(value) =>
                   handleChange("experienceLevel", value)
                 }
               >
-                <SelectTrigger className={cn("w-full")}>
+                <SelectTrigger id="experianceLevel" className={cn("w-full")}>
                   <SelectValue placeholder="Select an experience level" />
                 </SelectTrigger>
                 <SelectContent>

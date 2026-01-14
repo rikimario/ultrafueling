@@ -37,7 +37,6 @@ export default function Navbar({}: {}) {
             width={90}
             height={40}
             priority
-            className=""
           />
         </Link>
         <div className="space-x-4 flex justify-center items-center cursor-pointer">
@@ -63,7 +62,10 @@ export default function Navbar({}: {}) {
                 </Link>
               )}
               <DropdownMenuTrigger asChild>
-                <div className="flex gap-2 items-center">
+                <button
+                  type="button"
+                  className="flex gap-2 items-center cursor-pointer"
+                >
                   {avatarUrl ? (
                     <Image
                       className="w-14 h-14 rounded-full border-3 border-gray-500 hover:border-[#a3ea2a] transition duration-300 ease-in-out object-cover"
@@ -81,7 +83,7 @@ export default function Navbar({}: {}) {
                       height={45}
                     />
                   )}
-                </div>
+                </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <Link href="/profile">
