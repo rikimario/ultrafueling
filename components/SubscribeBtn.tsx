@@ -34,15 +34,8 @@ export default function SubscribeBtn({
   }
 
   const handleSubscribe = async () => {
-    try {
-      if (!priceId) return;
-
-      const { url } = await subscribeAction({ priceId, userId });
-      window.location.href = url;
-    } catch (err) {
-      console.error("❌ Checkout error:", err);
-      alert("Something went wrong. Please try again.");
-    }
+    const { url } = await subscribeAction({ priceId, userId });
+    window.location.href = url;
   };
 
   return (
