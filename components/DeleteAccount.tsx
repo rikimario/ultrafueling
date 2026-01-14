@@ -40,7 +40,7 @@ export default function DeleteAccount() {
         </span>{" "}
         Delete your account
       </h1>
-      <p className="pb-10 w-2/3">
+      <p className="pb-10 xl:w-2/3">
         Deleting your account is permanent. All personal data, saved plans, and
         preferences will be permanently erased and cannot be recovered. Any
         active subscriptions will also be canceled. Please make sure you have

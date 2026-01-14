@@ -17,9 +17,9 @@ export default async function AccountSettings() {
   };
 
   return (
-    <div className="min-h-screen w-full px-4 py-4">
-      <Card className="w-full shadow-md rounded-2xl py-6 px-16 space-y-8">
-        <CardTitle className="text-2xl font-semibold">
+    <div className="min-h-screen w-full p-4">
+      <Card className="w-full shadow-md rounded-2xl px-4 md:py-6 md:px-10 space-y-8">
+        <CardTitle className="text-2xl text-center md:text-left font-semibold">
           Account Settings
         </CardTitle>
 

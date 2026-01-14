@@ -52,7 +52,7 @@ export default function SavedPlansDialog({ plans }: { plans: SavedPlan[] }) {
       {/* Example Saved Result Card */}
 
       <ScrollArea className="max-h-[70vh]">
-        <div className="grid grid-cols-1 max-h-[70vh] md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {plans.map((plan) => {
             const input = plan.input;
             const result = plan.result;
@@ -100,7 +100,7 @@ export default function SavedPlansDialog({ plans }: { plans: SavedPlan[] }) {
                     </Button>
                   </div>
                   <DialogContent className={cn("sm:max-w-7xl sm:max-h-full")}>
-                    <ScrollArea className="max-h-[85vh] p-6">
+                    <ScrollArea className="max-h-[85vh] md:p-6">
                       <DialogHeader>
                         <DialogTitle></DialogTitle>
                         <DialogDescription></DialogDescription>

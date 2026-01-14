@@ -154,7 +154,7 @@ export default function AccSettings({
   return (
     <div>
       {/* Avatar section */}
-      <div className="flex gap-3">
+      <div className="md:flex-row flex flex-col items-center gap-3">
         {avatarUrl ? (
           <Image
             onClick={() => document.getElementById("avatarInput")?.click()}
@@ -203,7 +203,7 @@ export default function AccSettings({
           </span>
           General Information
         </p>
-        <ul className="grid grid-cols-2 py-6 gap-6 space-y-3">
+        <ul className="grid grid-cols-1 md:grid-cols-2 py-6 gap-6 space-y-3">
           <li className="space-y-2">
             <Label className={cn("ml-2")}>Email</Label>
             <Input
@@ -247,7 +247,7 @@ export default function AccSettings({
           </span>
           Change Password
         </p>
-        <ul className="grid grid-cols-2 py-6 gap-6 space-y-3">
+        <ul className="grid grid-cols-1 md:grid-cols-2 py-6 gap-6 space-y-3">
           <li className="space-y-2">
             <Label>Current Password</Label>
             <Input
@@ -305,7 +305,7 @@ export default function AccSettings({
           </span>
           Preferences
         </p>
-        <ul className="grid grid-cols-2 py-6 gap-6 space-y-3">
+        <ul className="grid grid-cols-1 md:grid-cols-2 py-6 gap-6 space-y-3">
           <li className="space-y-2">
             <Label className={cn("ml-2 pr-1")}>
               Weight (<span className="text-gray-500">kg</span>)

@@ -95,6 +95,8 @@ export default function AuthForm() {
             </Card>
           </form>
         </TabsContent>
+
+        {/* Sign up */}
         <TabsContent value="Sign up">
           <form action={signupAction}>
             <Card>

@@ -41,7 +41,7 @@ export default function StyledMarkdown({
     <div
       className={`
         prose prose-neutral dark:prose-invert max-w-none
-        relative p-4
+        relative p-0
         before:absolute before:inset-0 before:bg-[url('/textures/elevation-lines.svg')]
         before:opacity-10 before:pointer-events-none
       `}
@@ -52,7 +52,7 @@ export default function StyledMarkdown({
             <div className="mt-10 mb-4">
               <div
                 className={`
-                  flex items-center gap-3 px-4 py-2 rounded-xl shadow 
+                  flex items-center gap-3 px-1 py-2 rounded-xl shadow 
                   text-white font-bold text-xl
                   bg-gradient-to-r ${theme.accent}
                   animate-fadeIn
