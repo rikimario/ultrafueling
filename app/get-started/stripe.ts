@@ -2,6 +2,7 @@
 
 import { stripe } from "@/lib/stripe";
 import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
 type Props = {
   priceId: string;
@@ -17,7 +18,9 @@ export async function subscribeAction({
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) throw new Error("Not logged in");
+  // if (!user) throw new Error("Not logged in");
+
+  if (!user) redirect("/get-started");
 
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
