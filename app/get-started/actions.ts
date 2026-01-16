@@ -52,7 +52,13 @@ export async function signup(prevState: any, formData: FormData) {
     email,
     password,
     options: {
-      data: { full_name },
+      data: {
+        full_name,
+        terms_accepted: true,
+        terms_accepted_at: new Date().toISOString(),
+        terms_version: "v1.0",
+        privacy_accepted: true,
+      },
     },
   });
 

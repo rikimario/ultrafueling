@@ -139,6 +139,24 @@ export default function AuthForm() {
                 </div>
               </CardContent>
               <CardFooter className={cn("flex flex-col gap-4")}>
+                {/* Terms and conditions */}
+                <p className="text-xs text-muted-foreground mt-3">
+                  By creating an account, you agree to our{" "}
+                  <Link
+                    href="/terms"
+                    className="underline hover:text-white text-sm"
+                  >
+                    Terms & Conditions
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    href="/privacy-policy"
+                    className="underline hover:text-white text-sm"
+                  >
+                    Privacy Policy
+                  </Link>
+                  .
+                </p>
                 <Button
                   variant={"main"}
                   className={cn("w-full")}
