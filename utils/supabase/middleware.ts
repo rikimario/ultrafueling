@@ -16,17 +16,17 @@ export async function updateSession(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) =>
-            request.cookies.set(name, value)
+            request.cookies.set(name, value),
           );
           supabaseResponse = NextResponse.next({
             request,
           });
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
+            supabaseResponse.cookies.set(name, value, options),
           );
         },
       },
-    }
+    },
   );
 
   // Do not run code between createServerClient and
@@ -38,6 +38,47 @@ export async function updateSession(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  // Check terms & privacy acceptance
+  const pathname = request.nextUrl.pathname;
+
+  if (user) {
+    const hasAcceptedTerms =
+      user.user_metadata?.terms_accepted === true &&
+      user.user_metadata?.privacy_accepted === true;
+
+    const allowedPaths = [
+      "/terms",
+      "/privacy",
+      "/accept-terms",
+      "/auth",
+      "/logout",
+    ];
+
+    const isAllowed =
+      pathname === "/" ||
+      allowedPaths.some((path) => pathname.startsWith(path));
+
+    if (!hasAcceptedTerms && !isAllowed) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/";
+      return NextResponse.redirect(url);
+    }
+  }
+
+  if (
+    !user &&
+    !pathname.startsWith("/get-started") &&
+    !pathname.startsWith("/auth") &&
+    !pathname.startsWith("/error") &&
+    pathname !== "/"
+  ) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/get-started";
+    return NextResponse.redirect(url);
+  }
+
+  // Check if user is authenticated
 
   if (
     !user &&
