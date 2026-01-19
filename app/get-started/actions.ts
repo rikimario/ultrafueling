@@ -6,6 +6,7 @@ import { createClient as createServiceClient } from "@supabase/supabase-js";
 
 import { createClient } from "@/utils/supabase/server";
 import { stripe } from "@/lib/stripe";
+import { CURRENT_TERMS_VERSION } from "@/utils/terms";
 
 export async function login(prevState: any, formData: FormData) {
   const supabase = await createClient();
@@ -56,7 +57,7 @@ export async function signup(prevState: any, formData: FormData) {
         full_name,
         terms_accepted: true,
         terms_accepted_at: new Date().toISOString(),
-        terms_version: "v1.0",
+        terms_version: CURRENT_TERMS_VERSION,
         privacy_accepted: true,
       },
     },
@@ -146,7 +147,7 @@ export async function deleteAccount() {
           autoRefreshToken: false,
           persistSession: false,
         },
-      }
+      },
     );
 
     // 1. Delete user data
@@ -164,7 +165,7 @@ export async function deleteAccount() {
 
     // 3. Delete the user account using admin client
     const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(
-      user.id
+      user.id,
     );
 
     if (deleteError) {

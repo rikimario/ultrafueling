@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import getUser from "@/utils/supabase/user";
 import { UserProvider } from "@/contexts/UserContext";
 import Footer from "@/components/Footer";
+import TermsGate from "@/components/TermsGate";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +35,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <UserProvider user={user}>
+          <TermsGate />
           <Navbar />
           <div className="max-w-[1320px] px-4 mx-auto py-4">
             {children}
