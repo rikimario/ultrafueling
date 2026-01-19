@@ -11,7 +11,6 @@ export const Plans = [
       "Basic fueling calcurator",
       "Standard recommendations",
       "Email support",
-      "Standard recommendations",
     ],
     popular: false,
     icon: Zap,

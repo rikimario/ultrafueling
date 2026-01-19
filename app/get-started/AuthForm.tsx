@@ -22,7 +22,7 @@ export default function AuthForm() {
   const [loginState, loginAction] = useActionState(login, { error: "" });
   const [signupState, signupAction] = useActionState(signup, { error: "" });
   return (
-    <div className="flex w-full max-w-sm flex-col gap-6">
+    <div className="flex w-full min-h-screen max-w-sm flex-col gap-6">
       <Tabs defaultValue="Login">
         <TabsList>
           <TabsTrigger value="Login">Login</TabsTrigger>
