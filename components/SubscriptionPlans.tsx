@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -8,50 +10,67 @@ import {
 } from "./ui/card";
 
 import SubscribeBtn from "./SubscribeBtn";
-import getUser from "@/utils/supabase/user";
+// import getUser from "@/utils/supabase/user";
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
 import { Plans } from "@/lib/subPlans";
+import { createClient } from "@/utils/supabase/server";
+import { useProfile } from "@/hooks/useProfile";
 
-export default async function SubscriptionPlans() {
-  const user = await getUser();
+export default function SubscriptionPlans() {
+  const { profile, loading } = useProfile();
+
+  if (loading) return null;
+  // const user = await getUser();
+  // let profile = null;
+
+  // // Fetch profile data for button states
+  // if (user) {
+  //   const supabase = await createClient();
+  //   const { data } = await supabase
+  //     .from("profiles")
+  //     .select("subscription_status, subscription_plan, trial_ends_at")
+  //     .eq("id", user.id)
+  //     .single();
+  //   profile = data;
+  // }
   return (
-    <section id="subscribe" className="relative gap-4 py-20 max-w-5xl mx-auto">
+    <section id="subscribe" className="relative mx-auto max-w-5xl gap-4 py-20">
       {/* Background Glow */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[600px] h-[400px] bg-[#0080ff11] blur-3xl rounded-full" />
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <div className="h-[400px] w-[600px] rounded-full bg-[#0080ff11] blur-3xl" />
       </div>
-      <div className="text-center my-10 space-y-4">
-        <h1 className="font-bold text-4xl">Choose your plan</h1>
-        <p className="text-muted-foreground text-center text-xl max-w-2xl mx-auto">
+      <div className="my-10 space-y-4 text-center">
+        <h1 className="text-4xl font-bold">Choose your plan</h1>
+        <p className="text-muted-foreground mx-auto max-w-2xl text-center text-xl">
           Unlock your full potential with personalized nutrition plans tailored
           to your training goals.
         </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:px-6 justify-center gap-4 lg:gap-6">
+      <div className="grid grid-cols-1 justify-center gap-4 md:grid-cols-3 lg:gap-6 lg:px-6">
         {Plans.map((plan, index) => {
           const Icon = plan.icon;
           return (
             <Card
               key={index}
               className={cn(
-                "flex flex-col relative hover:shadow-[#66b3ff]/95 border-1 border-[#2b3b55]/95 hover:border-[#66b3ff]/95 hover:translate-y-[-4px] transition-all duration-300 ease-in-out",
-                plan.popular && "border-1 border-[#66b3ff]/95"
+                "relative flex flex-col border-1 border-[#2b3b55]/95 transition-all duration-300 ease-in-out hover:translate-y-[-4px] hover:border-[#66b3ff]/95 hover:shadow-[#66b3ff]/95",
+                plan.popular && "border-1 border-[#66b3ff]/95",
               )}
             >
               {/* Decorative top line */}
-              <span className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#99CCFF] to-transparent]" />
+              <span className="to-transparent] absolute top-0 right-0 left-0 h-[2px] bg-gradient-to-r from-transparent via-[#99CCFF]" />
               {/* Most Popular */}
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="px-4 py-1 text-xs font-semibold text-gray-900 rounded-full bg-gradient-to-r from-[#a4e534] to-[#8acb1a]">
+                  <span className="rounded-full bg-gradient-to-r from-[#a4e534] to-[#8acb1a] px-4 py-1 text-xs font-semibold text-gray-900">
                     Most Popular
                   </span>
                 </div>
               )}
-              <CardHeader className={cn("text-center pb-2")}>
-                <div className="mx-auto mb-3 w-12 h-12 rounded-xl flex items-center justify-center bg-primary/20">
-                  <Icon className="w-6 h-6" />
+              <CardHeader className={cn("pb-2 text-center")}>
+                <div className="bg-primary/20 mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl">
+                  <Icon className="h-6 w-6" />
                 </div>
                 <CardTitle className={cn("text-2xl font-bold")}>
                   {plan.name}
@@ -60,20 +79,20 @@ export default async function SubscriptionPlans() {
                   {plan.description}
                 </CardDescription>
               </CardHeader>
-              <CardContent className={cn("flex-1 flex flex-col")}>
+              <CardContent className={cn("flex flex-1 flex-col")}>
                 {/* Price */}
-                <div className="text-center mb-6">
+                <div className="mb-6 text-center">
                   <span className="text-4xl font-bold">${plan.price}</span>
                   <span className="text-muted-foreground">{plan.duration}</span>
                 </div>
                 {/* Features */}
-                <ul className="space-y-3 mb-6 flex-1">
-                  {plan.featurese.map((feature, idx) => (
+                <ul className="mb-6 flex-1 space-y-3">
+                  {plan.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-3">
-                      <div className="mt-0.5 w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-                        <Check className="w-3 h-3" />
+                      <div className="bg-primary/20 mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full">
+                        <Check className="h-3 w-3" />
                       </div>
-                      <span className="text-sm text-muted-foreground">
+                      <span className="text-muted-foreground text-sm">
                         {feature}
                       </span>
                     </li>
@@ -81,10 +100,13 @@ export default async function SubscriptionPlans() {
                 </ul>
                 <CardFooter>
                   <SubscribeBtn
-                    priceId={plan.priceId ?? ""}
-                    userId={user?.id ?? ""}
-                    planName={plan.name}
+                    key={plan.name}
+                    priceId={plan.priceId}
+                    profile={profile}
                     popular={plan.popular}
+                    trialDays={plan.trialDays}
+                    isTrial={plan.isTrial}
+                    loading={loading}
                   />
                 </CardFooter>
               </CardContent>

@@ -42,6 +42,10 @@ export async function updateSession(request: NextRequest) {
   // Check terms & privacy acceptance
   const pathname = request.nextUrl.pathname;
 
+  if (pathname.startsWith("/api/stripe/webhook")) {
+    return NextResponse.next();
+  }
+
   if (user) {
     const hasAcceptedTerms =
       user.user_metadata?.terms_accepted === true &&

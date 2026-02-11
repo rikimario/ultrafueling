@@ -1,13 +1,17 @@
-import getUser from "@/utils/supabase/user";
+// import getUser from "@/utils/supabase/user";
 import { redirect } from "next/navigation";
 import AuthForm from "./AuthForm";
+import { createClient } from "@/utils/supabase/server";
 
 export default async function AuthPage() {
-  const user = await getUser();
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (user) redirect("/");
 
   return (
-    <section className="flex items-center justify-center mt-10">
+    <section className="mt-10 flex items-center justify-center">
       <AuthForm />
     </section>
   );

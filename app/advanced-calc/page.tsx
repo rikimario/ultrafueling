@@ -1,12 +1,31 @@
-import AdvancedCalcForm from "@/components/AdvancedCalcForm";
-import getUser from "@/utils/supabase/user";
+import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import AdvancedCalcForm from "@/components/AdvancedCalcForm";
 
-export default async function AdvancedCalc() {
-  const user = await getUser();
+export default async function AdvancedCalcPage() {
+  const supabase = await createClient();
 
-  if (!user?.is_premium) {
-    redirect("/");
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/get-started");
   }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("subscription_status")
+    .eq("id", user.id)
+    .single();
+
+  const allowed =
+    profile?.subscription_status === "active" ||
+    profile?.subscription_status === "trialing";
+
+  if (!allowed) {
+    redirect("/#subscribe");
+  }
+
   return <AdvancedCalcForm user={user} />;
 }

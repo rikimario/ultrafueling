@@ -3,10 +3,12 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { Toaster } from "sonner";
-import getUser from "@/utils/supabase/user";
+// import getUser from "@/utils/supabase/user";
 import { UserProvider } from "@/contexts/UserContext";
 import Footer from "@/components/Footer";
 import TermsGate from "@/components/TermsGate";
+import { supabaseAdmin } from "@/utils/supabase/admin";
+import getUser from "@/utils/supabase/user";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,6 +31,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const user = await getUser();
+  // const {
+  //   data: { user },
+  // } = await supabaseAdmin.auth.getUser();
   return (
     <html lang="en">
       <body
@@ -37,7 +42,7 @@ export default async function RootLayout({
         <UserProvider user={user}>
           <TermsGate />
           <Navbar />
-          <div className="max-w-[1320px] px-4 mx-auto py-4">
+          <div className="mx-auto max-w-[1320px] px-4 py-4">
             {children}
             <Toaster position="top-right" />
           </div>

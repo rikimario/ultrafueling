@@ -7,7 +7,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   // process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
 );
 
 export async function POST(req: Request) {
@@ -21,11 +21,15 @@ export async function POST(req: Request) {
     // verify user is premium in Supabase
     const { data: profile, error } = await supabase
       .from("profiles")
-      .select("id, email, is_premium")
+      .select("id, email, subscription_status")
       .eq("id", userId)
       .single();
 
-    if (error || !profile || !profile.is_premium) {
+    const allowed =
+      profile?.subscription_status === "active" ||
+      profile?.subscription_status === "trialing";
+
+    if (error || !profile || !allowed) {
       return NextResponse.json({ error: "User not premium" }, { status: 403 });
     }
 
@@ -94,7 +98,7 @@ Constraints:
     console.error("AI Plan Error:", err);
     return NextResponse.json(
       { error: err.message || "Server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

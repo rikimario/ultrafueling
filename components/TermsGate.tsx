@@ -12,9 +12,9 @@ export default function TermsGate() {
   if (!user) return null;
 
   const hasAcceptedTerms =
-    user.user_metadata?.terms_accepted === true &&
-    user.user_metadata?.privacy_accepted === true &&
-    user.user_metadata?.terms_version === CURRENT_TERMS_VERSION;
+    user.terms_accepted === true &&
+    user.privacy_accepted === true &&
+    user.terms_version === CURRENT_TERMS_VERSION;
 
   const isLegalPage =
     pathname.startsWith("/accept-terms") ||

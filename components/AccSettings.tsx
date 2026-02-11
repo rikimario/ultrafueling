@@ -28,7 +28,7 @@ export default function AccSettings({
 }) {
   const { user, avatarUrl, updateAvatar } = useUser();
   const [form, setForm] = useState({
-    username: user?.user_metadata.full_name,
+    username: user?.full_name,
     email: user?.email,
     password: "",
   });
@@ -116,7 +116,7 @@ export default function AccSettings({
     if (json.pendingEmailChange) {
       setPendingEmailMessage("Check your inbox to confirm this change.");
       toast.info(
-        "We emailed you a confirmation link. Your email will update after verification."
+        "We emailed you a confirmation link. Your email will update after verification.",
       );
 
       // DON'T reload – keep showing the new value
@@ -154,7 +154,7 @@ export default function AccSettings({
   return (
     <div>
       {/* Avatar section */}
-      <div className="md:flex-row flex flex-col items-center gap-3">
+      <div className="flex flex-col items-center gap-3 md:flex-row">
         {avatarUrl ? (
           <Image
             onClick={() => document.getElementById("avatarInput")?.click()}
@@ -162,13 +162,13 @@ export default function AccSettings({
             alt="profile_picture"
             width={200}
             height={200}
-            className="w-24 h-24 rounded-full mb-4 border-3 border-gray-500 hover:border-[#a3ea2a] transition duration-300 ease-in-out object-cover cursor-pointer"
+            className="mb-4 h-24 w-24 cursor-pointer rounded-full border-3 border-gray-500 object-cover transition duration-300 ease-in-out hover:border-[#a3ea2a]"
             priority
           />
         ) : (
           <UserRound
             onClick={() => document.getElementById("avatarInput")?.click()}
-            className="w-24 h-24 rounded-full mb-4 border-3 border-gray-500 hover:border-[#a3ea2a] transition duration-300 ease-in-out cursor-pointer"
+            className="mb-4 h-24 w-24 cursor-pointer rounded-full border-3 border-gray-500 transition duration-300 ease-in-out hover:border-[#a3ea2a]"
             strokeWidth={0.3}
             width={100}
             height={100}
@@ -189,7 +189,7 @@ export default function AccSettings({
             className="hidden"
             onChange={(e) => handleAvatarUpload(e)}
           />
-          <p className="text-xs text-muted-foreground">
+          <p className="text-muted-foreground text-xs">
             Max size 2MB. Formats: JPG, PNG.
           </p>
         </span>
@@ -203,7 +203,7 @@ export default function AccSettings({
           </span>
           General Information
         </p>
-        <ul className="grid grid-cols-1 md:grid-cols-2 py-6 gap-6 space-y-3">
+        <ul className="grid grid-cols-1 gap-6 space-y-3 py-6 md:grid-cols-2">
           <li className="space-y-2">
             <Label className={cn("ml-2")}>Email</Label>
             <Input
@@ -213,7 +213,7 @@ export default function AccSettings({
               onChange={(e) => handleChange("email", e.target.value)}
             />
             {pendingEmailMessage && (
-              <p className="text-sm font-semibold text-yellow-500 ml-2">
+              <p className="ml-2 text-sm font-semibold text-yellow-500">
                 {pendingEmailMessage}
               </p>
             )}
@@ -247,7 +247,7 @@ export default function AccSettings({
           </span>
           Change Password
         </p>
-        <ul className="grid grid-cols-1 md:grid-cols-2 py-6 gap-6 space-y-3">
+        <ul className="grid grid-cols-1 gap-6 space-y-3 py-6 md:grid-cols-2">
           <li className="space-y-2">
             <Label>Current Password</Label>
             <Input
@@ -305,7 +305,7 @@ export default function AccSettings({
           </span>
           Preferences
         </p>
-        <ul className="grid grid-cols-1 md:grid-cols-2 py-6 gap-6 space-y-3">
+        <ul className="grid grid-cols-1 gap-6 space-y-3 py-6 md:grid-cols-2">
           <li className="space-y-2">
             <Label className={cn("ml-2 pr-1")}>
               Weight (<span className="text-gray-500">kg</span>)

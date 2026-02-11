@@ -96,10 +96,10 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
   };
 
   return (
-    <section className="relative flex flex-col items-center justify-center my-12">
-      <Card className={cn("relative lg:w-1/2 z-10")}>
+    <section className="relative my-12 flex flex-col items-center justify-center">
+      <Card className={cn("relative z-10 lg:w-1/2")}>
         {/* Decorative top line */}
-        <span className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#99CCFF] to-transparent]" />
+        <span className="to-transparent] absolute top-0 right-0 left-0 h-[2px] bg-gradient-to-r from-transparent via-[#99CCFF]" />
         <CardHeader className={cn("text-center")}>
           <CardTitle className={cn("text-3xl font-bold")}>
             Advanced Ultra Fueling Calculator
@@ -118,15 +118,15 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
           </span>
 
           {/* Basic Info */}
-          <p className="text-lg font-medium p-6">Basic Info</p>
+          <p className="p-6 text-lg font-medium">Basic Info</p>
           <CalcBasicInfo form={form} handleChange={handleChange} />
 
           {/* Advanced Info */}
-          <p className="text-lg font-medium p-6">Advanced Info</p>
+          <p className="p-6 text-lg font-medium">Advanced Info</p>
           <CalcAdvanceInfo form={form} handleChange={handleChange} />
 
           {/* Footer */}
-          <CardFooter className="flex justify-center my-4">
+          <CardFooter className="my-4 flex justify-center">
             <Button
               variant={"main"}
               type="submit"

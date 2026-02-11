@@ -2,26 +2,31 @@ import { Crown, Sparkles, Zap } from "lucide-react";
 
 export const Plans = [
   {
-    name: "Free",
-    description: "Perfect for getting started",
-    priceId: "",
+    name: "Free Trial",
+    description: "Try all premium features free",
+    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_MONTHLY!,
     price: 0,
-    duration: "",
-    featurese: [
-      "Basic fueling calcurator",
-      "Standard recommendations",
-      "Email support",
+    duration: "/7 days",
+    features: [
+      "Unlimited fueling plans",
+      "Hour-by-hour breakdown",
+      "Terrain + temperature adjustments",
+      "AI-generated fueling notes",
+      "Save plans",
+      "Export plans as PDF",
     ],
+    trialDays: 7,
     popular: false,
     icon: Zap,
+    isTrial: true,
   },
   {
     name: "Monthly",
     description: "Best for regular training",
-    priceId: process.env.STRIPE_PRICE_ID1,
+    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_MONTHLY!,
     price: 9,
     duration: "/month",
-    featurese: [
+    features: [
       "Unlimited fueling plans",
       "Hour-by-hour breakdown",
       "Terrain + temperature adjustments",
@@ -35,10 +40,10 @@ export const Plans = [
   {
     name: "Yearly",
     description: "Save 27% annually",
-    priceId: process.env.STRIPE_PRICE_ID2,
+    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_YEARLY!,
     price: 79,
     duration: "/year",
-    featurese: [
+    features: [
       "Unlimited fueling plans",
       "Hour-by-hour breakdown",
       "Terrain + temperature adjustments",

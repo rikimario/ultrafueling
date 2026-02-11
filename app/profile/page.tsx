@@ -64,39 +64,37 @@ export default function Profile() {
   };
   return (
     <div className="min-h-screen py-6">
-      <CardTitle className="text-3xl font-bold mb-6 px-6">
+      <CardTitle className="mb-6 px-6 text-3xl font-bold">
         Your Profile
       </CardTitle>
 
-      <CardContent className="w-full grid grid-cols-1 lg:grid-cols-[1fr_3fr] gap-6">
+      <CardContent className="grid w-full grid-cols-1 gap-6 lg:grid-cols-[1fr_3fr]">
         {/* Left Profile Info */}
-        <div className="md:flex gap-12 lg:flex-col md:justify-between">
-          <Card className="max-h-96 md:w-full p-6 rounded-2xl shadow-md col-span-1">
+        <div className="gap-12 md:flex md:justify-between lg:flex-col">
+          <Card className="col-span-1 max-h-96 rounded-2xl p-6 shadow-md md:w-full">
             {avatarUrl ? (
               <Image
                 src={avatarUrl}
                 alt="profile_picture"
                 width={200}
                 height={200}
-                className="w-32 h-32 rounded-full mx-auto mb-4 border-3 border-gray-500 hover:border-[#a3ea2a] transition duration-300 ease-in-out object-cover cursor-pointer"
+                className="mx-auto mb-4 h-32 w-32 cursor-pointer rounded-full border-3 border-gray-500 object-cover transition duration-300 ease-in-out hover:border-[#a3ea2a]"
                 priority
               />
             ) : (
               <UserRound
-                className="w-32 h-32 rounded-full mx-auto mb-4 border-3 border-gray-500 hover:border-[#a3ea2a] transition duration-300 ease-in-out"
+                className="mx-auto mb-4 h-32 w-32 rounded-full border-3 border-gray-500 transition duration-300 ease-in-out hover:border-[#a3ea2a]"
                 strokeWidth={0.3}
                 width={100}
                 height={100}
               />
             )}
             <div className="text-center">
-              <p className="mb-2 text-2xl font-semibold">
-                {user?.user_metadata.full_name}
-              </p>
-              <p className="mb-2 text-muted-foreground flex items-center justify-center gap-2">
+              <p className="mb-2 text-2xl font-semibold">{user?.full_name}</p>
+              <p className="text-muted-foreground mb-2 flex items-center justify-center gap-2">
                 <Mail width={15} height={15} /> {user?.email}
               </p>
-              <p className="text-sm text-muted-foreground flex items-center justify-center gap-1 mt-2">
+              <p className="text-muted-foreground mt-2 flex items-center justify-center gap-1 text-sm">
                 <Calendar width={14} height={14} />
                 Member since {stats.memberSince}
               </p>
@@ -110,29 +108,29 @@ export default function Profile() {
           </Card>
 
           {/* Quick Stats Card */}
-          <Card className="p-6 rounded-2xl shadow-md mt-4 md:w-full md:h-2/3 md:mt-0">
-            <CardTitle className="text-lg font-semibold mb-4 flex items-center justify-center gap-2">
-              <TrendingUp className="w-5 h-5 text-[#a3ea2a]" />
+          <Card className="mt-4 rounded-2xl p-6 shadow-md md:mt-0 md:h-2/3 md:w-full">
+            <CardTitle className="mb-4 flex items-center justify-center gap-2 text-lg font-semibold">
+              <TrendingUp className="h-5 w-5 text-[#a3ea2a]" />
               Quick Stats
             </CardTitle>
-            <CardContent className="space-y-3 h-1/2">
+            <CardContent className="h-1/2 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground flex items-center gap-2">
-                  <Target className="w-4 h-4" />
+                <span className="text-muted-foreground flex items-center gap-2 text-sm">
+                  <Target className="h-4 w-4" />
                   Saved Plans
                 </span>
                 <span className="font-semibold">{stats.totalPlans}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground flex items-center gap-2">
-                  <Footprints className="w-4 h-4" />
+                <span className="text-muted-foreground flex items-center gap-2 text-sm">
+                  <Footprints className="h-4 w-4" />
                   Distnace
                 </span>
                 <span className="font-semibold">{stats.distanceRun}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground flex items-center gap-2">
-                  <Clock className="w-4 h-4" />
+                <span className="text-muted-foreground flex items-center gap-2 text-sm">
+                  <Clock className="h-4 w-4" />
                   Total Hours
                 </span>
                 <span className="font-semibold">{stats.totalHours}</span>

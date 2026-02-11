@@ -22,14 +22,16 @@ import { Switch } from "./ui/switch";
 import { Label } from "./ui/label";
 import { cn } from "@/lib/utils";
 import { useDarkMode } from "@/hooks/useDarkMode";
+import { useProfile } from "@/hooks/useProfile";
 
 export default function Navbar({}: {}) {
   const { user, avatarUrl } = useUser();
+  const { profile, loading } = useProfile();
   const darkMode = useDarkMode();
 
   return (
-    <nav className="bg-[#212c42] md:px-4 pt-2">
-      <div className="flex justify-between items-center max-w-[1320px] mx-auto px-6">
+    <nav className="bg-[#212c42] pt-2 md:px-4">
+      <div className="mx-auto flex max-w-[1320px] items-center justify-between px-6">
         <Link href="/">
           <Image
             src="/ultra-fueling-logo.svg"
@@ -39,13 +41,14 @@ export default function Navbar({}: {}) {
             priority
           />
         </Link>
-        <div className="space-x-4 flex justify-center items-center cursor-pointer">
-          {user ? (
+        <div className="flex cursor-pointer items-center justify-center space-x-4">
+          {profile ? (
             <DropdownMenu>
-              {user?.is_premium === true ? (
+              {profile?.subscription_status === "active" ||
+              profile?.subscription_status === "trialing" ? (
                 <Link href="/advanced-calc">
                   <Button
-                    className="hover:text-white hidden md:block text-gray-800"
+                    className="hidden text-gray-800 hover:text-white md:block"
                     variant="main"
                   >
                     Advanced Calculator
@@ -54,7 +57,7 @@ export default function Navbar({}: {}) {
               ) : (
                 <Link href="/#subscribe">
                   <Button
-                    className="hover:text-white text-gray-800"
+                    className="text-gray-800 hover:text-white"
                     variant="main"
                   >
                     Go Premium
@@ -64,11 +67,11 @@ export default function Navbar({}: {}) {
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="flex gap-2 items-center cursor-pointer"
+                  className="flex cursor-pointer items-center gap-2"
                 >
                   {avatarUrl ? (
                     <Image
-                      className="w-14 h-14 rounded-full border-3 border-gray-500 hover:border-[#a3ea2a] transition duration-300 ease-in-out object-cover"
+                      className="h-14 w-14 rounded-full border-3 border-gray-500 object-cover transition duration-300 ease-in-out hover:border-[#a3ea2a]"
                       alt="profile_picture"
                       src={avatarUrl}
                       width={200}
@@ -77,7 +80,7 @@ export default function Navbar({}: {}) {
                     />
                   ) : (
                     <UserRound
-                      className="rounded-full border-3 border-gray-500 hover:border-[#a3ea2a] transition duration-300 ease-in-out"
+                      className="rounded-full border-3 border-gray-500 transition duration-300 ease-in-out hover:border-[#a3ea2a]"
                       strokeWidth={0.7}
                       width={45}
                       height={45}
@@ -89,7 +92,7 @@ export default function Navbar({}: {}) {
                 <Link href="/profile">
                   <DropdownMenuItem
                     className={cn(
-                      "flex items-center cursor-pointer font-semibold text-[16px]"
+                      "flex cursor-pointer items-center text-[16px] font-semibold",
                     )}
                   >
                     <CircleUserRound strokeWidth={2} />
@@ -99,22 +102,23 @@ export default function Navbar({}: {}) {
                 <Link href="/account-settings">
                   <DropdownMenuItem
                     className={cn(
-                      "flex items-center cursor-pointer font-semibold text-[16px]"
+                      "flex cursor-pointer items-center text-[16px] font-semibold",
                     )}
                   >
                     <Settings strokeWidth={2} />
                     Manage Account
                   </DropdownMenuItem>
                 </Link>
-                {user?.is_premium === true ? (
+                {profile?.subscription_status === "active" ||
+                profile?.subscription_status === "trialing" ? (
                   <Link href="/advanced-calc">
                     <DropdownMenuItem
                       className={cn(
-                        "flex items-center cursor-pointer md:hidden font-semibold text-[16px]"
+                        "flex cursor-pointer items-center text-[16px] font-semibold md:hidden",
                       )}
                     >
                       <Button
-                        className="hover:text-white md:hidden block w-full text-gray-800"
+                        className="block w-full text-gray-800 hover:text-white md:hidden"
                         variant="main"
                       >
                         Advanced Calculator
@@ -125,11 +129,11 @@ export default function Navbar({}: {}) {
                   <Link href="/#subscribe">
                     <DropdownMenuItem
                       className={cn(
-                        "flex items-center cursor-pointer md:hidden font-semibold text-[16px]"
+                        "flex cursor-pointer items-center text-[16px] font-semibold md:hidden",
                       )}
                     >
                       <Button
-                        className="hover:text-white md:hidden block w-full text-gray-800"
+                        className="block w-full text-gray-800 hover:text-white md:hidden"
                         variant="main"
                       >
                         Go Premium
@@ -138,7 +142,7 @@ export default function Navbar({}: {}) {
                   </Link>
                 )}
 
-                <div className="flex items-center justify-between cursor-pointer font-semibold px-2 pt-1.5 pb-3 border-b border-gray-200">
+                <div className="flex cursor-pointer items-center justify-between border-b border-gray-200 px-2 pt-1.5 pb-3 font-semibold">
                   <Label className={cn("text-[16px]")}>
                     <MoonIcon
                       className="text-muted-foreground"
@@ -152,7 +156,7 @@ export default function Navbar({}: {}) {
 
                 <DropdownMenuItem
                   className={cn(
-                    "flex items-center cursor-pointer font-semibold text-[16px]"
+                    "flex cursor-pointer items-center text-[16px] font-semibold",
                   )}
                   onClick={logout}
                 >

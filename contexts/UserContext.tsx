@@ -24,11 +24,11 @@ export function UserProvider({
   user: any;
 }) {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(
-    user?.user_metadata?.picture || null
+    user?.picture || null,
   );
 
   useEffect(() => {
-    setAvatarUrl(user?.user_metadata?.picture || null);
+    setAvatarUrl(user?.picture || null);
   }, [user?.id, user?.user_metadata?.picture]);
 
   const updateAvatar = (url: string) => {
