@@ -8,7 +8,7 @@ import { useProfile } from "@/hooks/useProfile";
 
 export default function Footer() {
   // const { user } = useUser();
-  const { profile } = useProfile();
+  const { profile, hasPremiumAccess } = useProfile();
   return (
     <footer className="border-border mt-20 border-t bg-[#212c42]">
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 px-6 py-12 md:grid-cols-4">
@@ -71,8 +71,7 @@ export default function Footer() {
             Build your fueling plan in minutes.
           </p>
           {profile ? (
-            profile?.subscription_status === "active" ||
-            profile?.subscription_status === "trialing" ? (
+            hasPremiumAccess ? (
               <Link href="/advanced-calc">
                 <Button
                   className="w-full text-gray-800 hover:text-white"

@@ -26,7 +26,7 @@ import { useProfile } from "@/hooks/useProfile";
 
 export default function Navbar({}: {}) {
   const { user, avatarUrl } = useUser();
-  const { profile, loading } = useProfile();
+  const { profile, loading, hasPremiumAccess } = useProfile();
   const darkMode = useDarkMode();
 
   return (
@@ -44,8 +44,7 @@ export default function Navbar({}: {}) {
         <div className="flex cursor-pointer items-center justify-center space-x-4">
           {profile ? (
             <DropdownMenu>
-              {profile?.subscription_status === "active" ||
-              profile?.subscription_status === "trialing" ? (
+              {hasPremiumAccess ? (
                 <Link href="/advanced-calc">
                   <Button
                     className="hidden text-gray-800 hover:text-white md:block"
@@ -109,8 +108,7 @@ export default function Navbar({}: {}) {
                     Manage Account
                   </DropdownMenuItem>
                 </Link>
-                {profile?.subscription_status === "active" ||
-                profile?.subscription_status === "trialing" ? (
+                {hasPremiumAccess ? (
                   <Link href="/advanced-calc">
                     <DropdownMenuItem
                       className={cn(

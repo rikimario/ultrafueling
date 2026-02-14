@@ -61,6 +61,14 @@ export default function SubscribeBtn({
       : null;
 
   const handleSubscribe = async () => {
+    // If switching plans, show confirmation
+    if (isActive && !isCurrentPlan && !isTrial) {
+      const confirmed = window.confirm(
+        `Switch to ${isTrial ? "Free Trial" : "this plan"}? You'll be charged the prorated difference.`,
+      );
+      if (!confirmed) return;
+    }
+
     if (submitting) return;
 
     if (!isLoggedIn) {
@@ -75,13 +83,15 @@ export default function SubscribeBtn({
       trialDays: isTrial && !hasHadTrial ? trialDays : undefined,
     });
 
-    if (res.url) {
-      window.location.href = res.url;
+    // If switching plans (no URL returned), reload the page
+    if (!res.url && !res.error) {
+      setTimeout(() => window.location.reload(), 1000);
       return;
     }
 
-    if (res.error) {
-      alert(res.error);
+    if (res.url) {
+      window.location.href = res.url;
+      return;
     }
 
     setSubmitting(false);
@@ -104,6 +114,9 @@ export default function SubscribeBtn({
       } else if (hasHadTrial) {
         // Trial was used (don't check isCurrentPlan for trial button)
         label = "Trial Used";
+        disabled = true;
+      } else if (isCurrentPlan && !hasHadTrial) {
+        label = "Trial Unavailable";
         disabled = true;
       } else {
         label = "Start Free Trial";
