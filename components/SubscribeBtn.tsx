@@ -115,7 +115,7 @@ export default function SubscribeBtn({
         // Trial was used (don't check isCurrentPlan for trial button)
         label = "Trial Used";
         disabled = true;
-      } else if (isCurrentPlan && !hasHadTrial) {
+      } else if (isActive && !hasHadTrial) {
         label = "Trial Unavailable";
         disabled = true;
       } else {
