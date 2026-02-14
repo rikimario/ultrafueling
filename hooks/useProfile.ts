@@ -32,5 +32,9 @@ export function useProfile() {
     load();
   }, []);
 
-  return { profile, loading };
+  const hasPremiumAccess =
+    profile?.subscription_status === "active" ||
+    profile?.subscription_status === "trialing";
+
+  return { profile, loading, hasPremiumAccess };
 }
