@@ -21,29 +21,14 @@ export async function subscribeAction({
 
   if (!user) redirect("/get-started");
 
-  // Fetch profile to check for existing customer and trial usage
   const { data: profile } = await supabase
     .from("profiles")
-    .select("stripe_customer_id, trial_ends_at, subscription_status")
+    .select(
+      "stripe_customer_id, stripe_subscription_id, trial_ends_at, subscription_status, subscription_plan",
+    )
     .eq("id", user.id)
     .single();
 
-  if (profile?.stripe_customer_id) {
-    const subs = await stripe.subscriptions.list({
-      customer: profile.stripe_customer_id,
-      status: "active",
-      limit: 1,
-    });
-
-    if (subs.data.length > 0) {
-      return {
-        url: null,
-        error: "You already have a subscription",
-      };
-    }
-  }
-
-  // Prevent multiple trials
   const hasHadTrial = profile?.trial_ends_at !== null;
 
   if (trialDays && hasHadTrial) {
@@ -55,15 +40,55 @@ export async function subscribeAction({
 
   const shouldApplyTrial = trialDays && !hasHadTrial;
 
-  // If user already has active subscription, redirect to customer portal
-  if (profile?.subscription_status === "active") {
-    const portalSession = await stripe.billingPortal.sessions.create({
-      customer: profile.stripe_customer_id!,
-      return_url: `${process.env.NEXT_PUBLIC_SITE_URL}`,
-    });
-    return { url: portalSession.url };
+  // ✅ USER HAS ACTIVE PAID SUBSCRIPTION - SWITCH IT
+  if (
+    profile?.stripe_subscription_id &&
+    profile?.subscription_status === "active" &&
+    !shouldApplyTrial // Don't switch if they're trying to start a trial
+  ) {
+    try {
+      const currentSub = await stripe.subscriptions.retrieve(
+        profile.stripe_subscription_id,
+      );
+
+      const updatedSubscription = await stripe.subscriptions.update(
+        profile.stripe_subscription_id,
+        {
+          items: [
+            {
+              id: currentSub.items.data[0].id,
+              price: priceId,
+            },
+          ],
+          proration_behavior: "create_prorations",
+        },
+      );
+
+      await supabase
+        .from("profiles")
+        .update({
+          subscription_plan: priceId,
+        })
+        .eq("id", user.id);
+
+      return {
+        url: null,
+        error: undefined,
+      };
+    } catch (error: any) {
+      console.error("Subscription update error:", error);
+      return {
+        url: null,
+        error: "Failed to switch plan. Please try again.",
+      };
+    }
   }
 
+  // ✅ USER ON TRIAL - UPGRADING TO PAID
+  // Don't cancel the trial, just let them add payment method
+  // The trial will convert to paid subscription automatically
+
+  // ✅ CREATE NEW SUBSCRIPTION OR CHECKOUT
   const sessionConfig: any = {
     mode: "subscription",
     payment_method_types: ["card"],
@@ -71,7 +96,7 @@ export async function subscribeAction({
     success_url: `${process.env.NEXT_PUBLIC_SITE_URL}?success=true`,
     cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}?canceled=true`,
     metadata: {
-      userId: user.id, // ← CRITICAL: Add this for webhooks
+      userId: user.id,
     },
     subscription_data: {
       metadata: { userId: user.id },
@@ -79,28 +104,21 @@ export async function subscribeAction({
     allow_promotion_codes: true,
   };
 
-  // Apply trial if eligible
   if (shouldApplyTrial) {
     sessionConfig.subscription_data = {
       trial_period_days: trialDays,
       metadata: { userId: user.id },
       trial_settings: {
         end_behavior: {
-          missing_payment_method: "cancel",
+          missing_payment_method: "cancel", // Cancel trial if no payment
         },
       },
     };
     sessionConfig.payment_method_collection = "if_required";
-  } else {
-    // Regular paid subscription
-    sessionConfig.subscription_data = {
-      metadata: { userId: user.id },
-    };
   }
 
   let customerId = profile?.stripe_customer_id;
 
-  // Create or find customer
   if (!customerId) {
     const existingCustomers = await stripe.customers.list({
       email: user.email!,
@@ -117,7 +135,6 @@ export async function subscribeAction({
       customerId = customer.id;
     }
 
-    // ✅ ONLY save customer ID and set status to "pending"
     await supabase
       .from("profiles")
       .update({

@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
             ? subscription.customer
             : subscription.customer.id;
 
-        const { data, error } = await supabase
+        await supabase
           .from("profiles")
           .update({
             stripe_customer_id: customerId,
@@ -52,33 +52,40 @@ export async function POST(req: NextRequest) {
           })
           .eq("id", userId);
 
-        if (error) {
-          console.error("❌ Database update error:", error);
-        } else {
-          console.log("✅ Database updated successfully!", data);
-        }
-
         break;
       }
 
       case "customer.subscription.updated": {
         const sub = event.data.object as Stripe.Subscription;
 
-        const { data, error } = await supabase
-          .from("profiles")
-          .update({
-            subscription_status: sub.status,
-            subscription_plan: sub.items.data[0].price.id,
-            trial_ends_at: sub.trial_end
-              ? new Date(sub.trial_end * 1000).toISOString()
-              : null,
-          })
-          .eq("stripe_subscription_id", sub.id);
+        // Check if trial just ended
+        const previousAttributes = (event as any).data.previous_attributes;
+        const trialJustEnded =
+          previousAttributes?.status === "trialing" &&
+          sub.status === "canceled";
 
-        if (error) {
-          console.error("❌ Database update error:", error);
+        if (trialJustEnded) {
+          // Trial ended without payment - set to pending
+          await supabase
+            .from("profiles")
+            .update({
+              subscription_status: "pending",
+              subscription_plan: null,
+              stripe_subscription_id: null,
+            })
+            .eq("stripe_subscription_id", sub.id);
         } else {
-          console.log("✅ Subscription updated!", data);
+          // Normal subscription update
+          await supabase
+            .from("profiles")
+            .update({
+              subscription_status: sub.status,
+              subscription_plan: sub.items.data[0].price.id,
+              trial_ends_at: sub.trial_end
+                ? new Date(sub.trial_end * 1000).toISOString()
+                : null,
+            })
+            .eq("stripe_subscription_id", sub.id);
         }
 
         break;
@@ -87,12 +94,14 @@ export async function POST(req: NextRequest) {
       case "customer.subscription.deleted": {
         const sub = event.data.object as Stripe.Subscription;
 
+        // Subscription canceled or trial expired
         await supabase
           .from("profiles")
           .update({
             subscription_status: "canceled",
             subscription_plan: null,
             stripe_subscription_id: null,
+            // Keep trial_ends_at to prevent re-trials
           })
           .eq("stripe_subscription_id", sub.id);
 
@@ -112,18 +121,13 @@ export async function POST(req: NextRequest) {
             ? line.subscription
             : line.subscription.id;
 
-        const { data, error } = await supabase
+        // Payment succeeded - set to active
+        await supabase
           .from("profiles")
           .update({
             subscription_status: "active",
           })
           .eq("stripe_subscription_id", subscriptionId);
-
-        if (error) {
-          console.error("❌ Database update error:", error);
-        } else {
-          console.log("✅ Set to active!", data);
-        }
 
         break;
       }
