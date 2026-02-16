@@ -7,6 +7,7 @@ import {
   ReactNode,
   useEffect,
 } from "react";
+import { createClient } from "@/utils/supabase/client";
 
 type UserContextType = {
   user: any;
@@ -18,17 +19,33 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({
   children,
-  user,
+  initialUser,
 }: {
   children: ReactNode;
-  user: any;
+  initialUser: any;
 }) {
+  const supabase = createClient();
+  const [user, setUser] = useState(initialUser);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(
-    user?.picture || null,
+    initialUser?.user_metadata?.picture || null,
   );
 
+  // ✅ Listen for auth state changes
   useEffect(() => {
-    setAvatarUrl(user?.picture || null);
+    // Set up auth listener
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+      setAvatarUrl(session?.user?.user_metadata?.picture || null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase]);
+
+  // Update avatar when user changes
+  useEffect(() => {
+    setAvatarUrl(user?.user_metadata?.picture || null);
   }, [user?.id, user?.user_metadata?.picture]);
 
   const updateAvatar = (url: string) => {

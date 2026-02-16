@@ -29,6 +29,15 @@ export default function Navbar({}: {}) {
   const { profile, loading, hasPremiumAccess } = useProfile();
   const darkMode = useDarkMode();
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      // Redirect throws an error in Next.js, catch it and manually redirect
+      window.location.href = "/";
+    }
+  };
+
   return (
     <nav className="bg-[#212c42] pt-2 md:px-4">
       <div className="mx-auto flex max-w-[1320px] items-center justify-between px-6">
@@ -156,7 +165,7 @@ export default function Navbar({}: {}) {
                   className={cn(
                     "flex cursor-pointer items-center text-[16px] font-semibold",
                   )}
-                  onClick={logout}
+                  onClick={handleLogout}
                 >
                   <LogOutIcon strokeWidth={2} />
                   Logout

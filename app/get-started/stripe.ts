@@ -29,7 +29,15 @@ export async function subscribeAction({
     .eq("id", user.id)
     .single();
 
-  const hasHadTrial = profile?.trial_ends_at !== null;
+  // ✅ Check trial history table by email (survives account deletion)
+  const { data: trialHistory } = await supabase
+    .from("trial_history")
+    .select("trial_ends_at")
+    .eq("email", user.email!)
+    .limit(1)
+    .single();
+
+  const hasHadTrial = profile?.trial_ends_at !== null || trialHistory !== null;
 
   if (trialDays && hasHadTrial) {
     return {

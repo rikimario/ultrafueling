@@ -39,6 +39,11 @@ export async function POST(req: NextRequest) {
             ? subscription.customer
             : subscription.customer.id;
 
+        // Get user email
+        const { data: userData } =
+          await supabase.auth.admin.getUserById(userId);
+        const userEmail = userData.user?.email;
+
         await supabase
           .from("profiles")
           .update({
@@ -51,6 +56,17 @@ export async function POST(req: NextRequest) {
               : null,
           })
           .eq("id", userId);
+
+        // ✅ Record trial in separate table if this was a trial
+        if (subscription.trial_end && userEmail) {
+          await supabase.from("trial_history").insert({
+            email: userEmail,
+            user_id: userId,
+            trial_ends_at: new Date(
+              subscription.trial_end * 1000,
+            ).toISOString(),
+          });
+        }
 
         break;
       }

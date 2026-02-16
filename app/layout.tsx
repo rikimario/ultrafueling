@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import TermsGate from "@/components/TermsGate";
 import { supabaseAdmin } from "@/utils/supabase/admin";
 import getUser from "@/utils/supabase/user";
+import { createClient } from "@/utils/supabase/server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,16 +31,17 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getUser();
-  // const {
-  //   data: { user },
-  // } = await supabaseAdmin.auth.getUser();
+  const supabase = await createClient();
+  // const user = await getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <UserProvider user={user}>
+        <UserProvider initialUser={user} key={user?.id || "anonymous"}>
           <TermsGate />
           <Navbar />
           <div className="mx-auto max-w-[1320px] px-4 py-4">

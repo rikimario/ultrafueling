@@ -13,16 +13,45 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { login, signInWithGoogle, signup } from "./actions";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function AuthForm() {
-  const [loginState, loginAction] = useActionState(login, { error: "" });
-  const [signupState, signupAction] = useActionState(signup, { error: "" });
+  const router = useRouter();
+  const [loginState, loginAction, isLoginPending] = useActionState(login, {
+    error: "",
+  });
+  const [signupState, signupAction, isSignupPending] = useActionState(signup, {
+    error: "",
+  });
+
+  // Handle successful login
+  useEffect(() => {
+    if ((loginState as any).success) {
+      // Wait a moment for auth state to propagate
+      setTimeout(() => {
+        router.push("/");
+        router.refresh();
+      }, 300);
+    }
+  }, [loginState, router]);
+
+  // Handle successful signup
+  useEffect(() => {
+    if ((signupState as any).success) {
+      console.log("✅ Signup success detected, navigating...");
+      setTimeout(() => {
+        router.push("/");
+        router.refresh();
+      }, 300);
+    }
+  }, [signupState, router]);
+
   return (
-    <div className="flex w-full min-h-screen max-w-sm flex-col gap-6">
+    <div className="flex min-h-screen w-full max-w-sm flex-col gap-6">
       <Tabs defaultValue="Login">
         <TabsList>
           <TabsTrigger value="Login">Login</TabsTrigger>
@@ -34,7 +63,7 @@ export default function AuthForm() {
               <CardHeader>
                 <CardTitle>Login to your account</CardTitle>
                 <CardDescription>
-                  Enter you&apos;re email below to login to your account.
+                  Enter your email below to login to your account.
                 </CardDescription>
                 {loginState.error && (
                   <p className="text-sm text-red-600">{loginState.error}</p>
@@ -49,13 +78,14 @@ export default function AuthForm() {
                     name="email"
                     placeholder="john@example.com"
                     autoComplete="email"
+                    disabled={isLoginPending}
                   />
                 </div>
                 <div className="grid gap-3">
                   <div className="flex justify-between">
                     <Label htmlFor="password">Password</Label>
                     <Link href={"/reset-password-form"}>
-                      <Button variant={"link"} size={"default"}>
+                      <Button variant={"link"} size={"default"} type="button">
                         Forgot your password?
                       </Button>
                     </Link>
@@ -65,7 +95,8 @@ export default function AuthForm() {
                     type="password"
                     name="password"
                     placeholder="********"
-                    autoComplete="password"
+                    autoComplete="current-password"
+                    disabled={isLoginPending}
                   />
                 </div>
               </CardContent>
@@ -75,13 +106,16 @@ export default function AuthForm() {
                   className={cn("w-full")}
                   size={"lg"}
                   type="submit"
+                  disabled={isLoginPending}
                 >
-                  Login
+                  {isLoginPending ? "Logging in..." : "Login"}
                 </Button>
                 <Button
                   variant={"outline"}
                   className={cn("w-full bg-gray-200 dark:bg-gray-600")}
                   onClick={signInWithGoogle}
+                  type="button"
+                  disabled={isLoginPending}
                 >
                   <Image
                     src="/google-svg.svg"
@@ -96,15 +130,12 @@ export default function AuthForm() {
           </form>
         </TabsContent>
 
-        {/* Sign up */}
         <TabsContent value="Sign up">
           <form action={signupAction}>
             <Card>
               <CardHeader>
                 <CardTitle>Sign up</CardTitle>
-                <CardDescription>
-                  Create you&apos;ll new account
-                </CardDescription>
+                <CardDescription>Create your new account</CardDescription>
                 {signupState.error && (
                   <p className="text-sm text-red-600">{signupState.error}</p>
                 )}
@@ -116,42 +147,44 @@ export default function AuthForm() {
                     id="full_name"
                     type="text"
                     name="full_name"
-                    autoComplete="text"
+                    autoComplete="name"
+                    disabled={isSignupPending}
                   />
                 </div>
                 <div className="grid gap-3">
-                  <Label htmlFor="email">Email*</Label>
+                  <Label htmlFor="signup-email">Email*</Label>
                   <Input
-                    id="email"
+                    id="signup-email"
                     type="email"
                     name="email"
                     autoComplete="email"
+                    disabled={isSignupPending}
                   />
                 </div>
                 <div className="grid gap-3">
-                  <Label htmlFor="password">Password*</Label>
+                  <Label htmlFor="signup-password">Password*</Label>
                   <Input
-                    id="password"
+                    id="signup-password"
                     type="password"
                     name="password"
-                    autoComplete="password"
+                    autoComplete="new-password"
+                    disabled={isSignupPending}
                   />
                 </div>
               </CardContent>
               <CardFooter className={cn("flex flex-col gap-4")}>
-                {/* Terms and conditions */}
-                <p className="text-xs text-muted-foreground mt-3">
+                <p className="text-muted-foreground mt-3 text-xs">
                   By creating an account, you agree to our{" "}
                   <Link
                     href="/terms"
-                    className="underline hover:text-white text-sm"
+                    className="text-sm underline hover:text-white"
                   >
                     Terms & Conditions
                   </Link>{" "}
                   and{" "}
                   <Link
                     href="/privacy-policy"
-                    className="underline hover:text-white text-sm"
+                    className="text-sm underline hover:text-white"
                   >
                     Privacy Policy
                   </Link>
@@ -162,13 +195,16 @@ export default function AuthForm() {
                   className={cn("w-full")}
                   size={"lg"}
                   type="submit"
+                  disabled={isSignupPending}
                 >
-                  Sign up
+                  {isSignupPending ? "Signing up..." : "Sign up"}
                 </Button>
                 <Button
                   variant={"outline"}
                   className={cn("w-full bg-gray-200 dark:bg-gray-600")}
                   onClick={signInWithGoogle}
+                  type="button"
+                  disabled={isSignupPending}
                 >
                   <Image
                     src="/google-svg.svg"

@@ -9,13 +9,16 @@ export default function TermsGate() {
   const { user } = useUser();
   const pathname = usePathname();
 
+  // Don't show modal if no user
   if (!user) return null;
 
+  // Check user metadata for terms acceptance
   const hasAcceptedTerms =
-    user.terms_accepted === true &&
-    user.privacy_accepted === true &&
-    user.terms_version === CURRENT_TERMS_VERSION;
+    user.user_metadata?.terms_accepted === true &&
+    user.user_metadata?.privacy_accepted === true &&
+    user.user_metadata?.terms_version === CURRENT_TERMS_VERSION;
 
+  // Don't show modal on legal pages
   const isLegalPage =
     pathname.startsWith("/accept-terms") ||
     pathname.startsWith("/terms") ||

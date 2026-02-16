@@ -47,7 +47,7 @@ export default function SubscribeBtn({
   // Check if this specific plan is the current plan
   const isCurrentPlan = isActive && profile?.subscription_plan === priceId;
 
-  const hasHadTrial = isLoggedIn && !loading && profile?.trial_ends_at !== null;
+  const hasHadTrial = isLoggedIn && !loading && profile?.trial_ends_at === null;
 
   const daysLeft =
     isTrialing && profile?.trial_ends_at

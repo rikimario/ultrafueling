@@ -31,7 +31,8 @@ export async function login(prevState: any, formData: FormData) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/");
+  return { success: true };
+  // redirect("/");
 }
 
 export async function signup(prevState: any, formData: FormData) {
@@ -69,9 +70,9 @@ export async function signup(prevState: any, formData: FormData) {
     }
     return { error: error.message };
   }
-
   revalidatePath("/", "layout");
-  redirect("/");
+  return { success: true };
+  // redirect("/");
 }
 
 export async function signInWithGoogle() {
@@ -106,7 +107,6 @@ export async function logout() {
 export async function deleteAccount() {
   const supabase = await createClient();
 
-  // Get the current user
   const {
     data: { user },
     error: userError,
@@ -117,6 +117,7 @@ export async function deleteAccount() {
   }
 
   try {
+    // Cancel Stripe subscriptions
     const customers = await stripe.customers.list({
       email: user.email!,
       limit: 1,
@@ -150,11 +151,30 @@ export async function deleteAccount() {
       },
     );
 
-    // 1. Delete user data
+    // 1. Get profile data to save trial history
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("trial_ends_at")
+      .eq("id", user.id)
+      .single();
+
+    // ✅ 2. Save trial history to separate table (if user had a trial)
+    if (profile?.trial_ends_at) {
+      await supabaseAdmin.from("trial_history").insert({
+        email: user.email!,
+        user_id: user.id,
+        trial_ends_at: profile.trial_ends_at,
+      });
+    }
+
+    // 3. Delete user data
     await supabase.from("user_plans").delete().eq("user_id", user.id);
     await supabase.from("user_preferences").delete().eq("user_id", user.id);
 
-    // 2. Delete avatar files
+    // ✅ 4. Now safe to delete profile (trial history is saved)
+    await supabase.from("profiles").delete().eq("id", user.id);
+
+    // 5. Delete avatar files
     const { data: files } = await supabase.storage
       .from("avatars")
       .list(user.id);
@@ -163,7 +183,7 @@ export async function deleteAccount() {
       await supabase.storage.from("avatars").remove(filePaths);
     }
 
-    // 3. Delete the user account using admin client
+    // 6. Delete the user account using admin client
     const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(
       user.id,
     );
@@ -173,7 +193,7 @@ export async function deleteAccount() {
       return { error: "Failed to delete account. Please try again." };
     }
 
-    // 4. Sign out
+    // 7. Sign out
     await supabase.auth.signOut();
   } catch (error: any) {
     console.error("Delete account error:", error);

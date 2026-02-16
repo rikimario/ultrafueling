@@ -82,7 +82,7 @@ export default function SubscriptionPlans() {
               <CardContent className={cn("flex flex-1 flex-col")}>
                 {/* Price */}
                 <div className="mb-6 text-center">
-                  <span className="text-4xl font-bold">${plan.price}</span>
+                  <span className="text-4xl font-bold">€{plan.price}</span>
                   <span className="text-muted-foreground">{plan.duration}</span>
                 </div>
                 {/* Features */}
