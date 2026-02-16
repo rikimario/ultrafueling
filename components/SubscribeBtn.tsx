@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/contexts/UserContext";
+import SwitchPlanModal from "./SwitchPlanModal";
 
 type Props = {
   priceId: string;
@@ -27,6 +28,7 @@ export default function SubscribeBtn({
   const { user } = useUser();
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const isLoggedIn = !!user;
 
@@ -61,14 +63,6 @@ export default function SubscribeBtn({
       : null;
 
   const handleSubscribe = async () => {
-    // If switching plans, show confirmation
-    if (isActive && !isCurrentPlan && !isTrial) {
-      const confirmed = window.confirm(
-        `Switch to ${isTrial ? "Free Trial" : "this plan"}? You'll be charged the prorated difference.`,
-      );
-      if (!confirmed) return;
-    }
-
     if (submitting) return;
 
     if (!isLoggedIn) {
@@ -76,14 +70,24 @@ export default function SubscribeBtn({
       return;
     }
 
+    // Show confirmation for plan switches
+    if (isActive && !isCurrentPlan && !isTrial) {
+      setShowConfirmModal(true);
+      return;
+    }
+
+    await proceedWithSubscription();
+  };
+
+  const proceedWithSubscription = async () => {
     setSubmitting(true);
+    setShowConfirmModal(false);
 
     const res = await subscribeAction({
       priceId,
       trialDays: isTrial && !hasHadTrial ? trialDays : undefined,
     });
 
-    // If switching plans (no URL returned), reload the page
     if (!res.url && !res.error) {
       setTimeout(() => window.location.reload(), 1000);
       return;
@@ -141,13 +145,23 @@ export default function SubscribeBtn({
   }
 
   return (
-    <Button
-      variant={popular ? "main" : "secondary"}
-      className={cn("w-full")}
-      disabled={disabled}
-      onClick={handleSubscribe}
-    >
-      {submitting ? "Redirecting..." : label}
-    </Button>
+    <>
+      <Button
+        variant={popular ? "main" : "secondary"}
+        className={cn("w-full")}
+        disabled={disabled}
+        onClick={handleSubscribe}
+      >
+        {submitting ? "Redirecting..." : label}
+      </Button>
+
+      {/* Confirmation Modal */}
+      <SwitchPlanModal
+        showConfirmModal={showConfirmModal}
+        setShowConfirmModal={setShowConfirmModal}
+        proceedWithSubscription={proceedWithSubscription}
+        submitting={submitting}
+      />
+    </>
   );
 }
