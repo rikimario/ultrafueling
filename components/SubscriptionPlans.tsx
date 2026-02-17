@@ -10,30 +10,16 @@ import {
 } from "./ui/card";
 
 import SubscribeBtn from "./SubscribeBtn";
-// import getUser from "@/utils/supabase/user";
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
 import { Plans } from "@/lib/subPlans";
-import { createClient } from "@/utils/supabase/server";
 import { useProfile } from "@/hooks/useProfile";
 
 export default function SubscriptionPlans() {
   const { profile, loading } = useProfile();
 
   if (loading) return null;
-  // const user = await getUser();
-  // let profile = null;
 
-  // // Fetch profile data for button states
-  // if (user) {
-  //   const supabase = await createClient();
-  //   const { data } = await supabase
-  //     .from("profiles")
-  //     .select("subscription_status, subscription_plan, trial_ends_at")
-  //     .eq("id", user.id)
-  //     .single();
-  //   profile = data;
-  // }
   return (
     <section id="subscribe" className="relative mx-auto max-w-5xl gap-4 py-20">
       {/* Background Glow */}

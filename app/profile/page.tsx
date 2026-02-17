@@ -1,6 +1,7 @@
 "use client";
 
 import SavedPlans from "@/components/SavedPlans";
+import SubscriptionInfo from "@/components/SubscriptionInfo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { useUser } from "@/contexts/UserContext";
@@ -137,6 +138,8 @@ export default function Profile() {
               </div>
             </CardContent>
           </Card>
+          {/* Subscription Info */}
+          <SubscriptionInfo />
         </div>
 
         {/* Right Saved Results Section */}

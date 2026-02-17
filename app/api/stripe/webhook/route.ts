@@ -51,6 +51,7 @@ export async function POST(req: NextRequest) {
             stripe_subscription_id: subscription.id,
             subscription_plan: subscription.items.data[0].price.id,
             subscription_status: subscription.status,
+            subscribed_at: new Date(subscription.created * 1000).toISOString(),
             trial_ends_at: subscription.trial_end
               ? new Date(subscription.trial_end * 1000).toISOString()
               : null,
@@ -91,6 +92,7 @@ export async function POST(req: NextRequest) {
             })
             .eq("stripe_subscription_id", sub.id);
         } else {
+          const periodEnd = (sub as any).cancel_at;
           // Normal subscription update
           await supabase
             .from("profiles")
@@ -100,6 +102,10 @@ export async function POST(req: NextRequest) {
               trial_ends_at: sub.trial_end
                 ? new Date(sub.trial_end * 1000).toISOString()
                 : null,
+              cancel_at:
+                sub.cancel_at && periodEnd
+                  ? new Date(periodEnd * 1000).toISOString()
+                  : null,
             })
             .eq("stripe_subscription_id", sub.id);
         }
@@ -118,6 +124,7 @@ export async function POST(req: NextRequest) {
             subscription_plan: null,
             stripe_subscription_id: null,
             // Keep trial_ends_at to prevent re-trials
+            cancel_at: null,
           })
           .eq("stripe_subscription_id", sub.id);
 
