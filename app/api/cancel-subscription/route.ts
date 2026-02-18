@@ -38,7 +38,6 @@ export async function POST() {
       );
     }
 
-    // Check if within 30-day money-back guarantee period
     const subscribedAt = new Date(profile.subscribed_at);
     const daysSinceSubscribed = Math.floor(
       (Date.now() - subscribedAt.getTime()) / (1000 * 60 * 60 * 24),
@@ -48,7 +47,6 @@ export async function POST() {
     if (isWithinMoneyBackPeriod) {
       // IMMEDIATE CANCELLATION WITH FULL REFUND
 
-      // Get all charges for this customer
       const charges = await stripe.charges.list({
         customer: profile.stripe_customer_id,
         limit: 5,
@@ -58,7 +56,6 @@ export async function POST() {
         const latestCharge = charges.data[0];
 
         if (latestCharge.paid && !latestCharge.refunded) {
-          // Issue full refund
           await stripe.refunds.create({
             charge: latestCharge.id,
             reason: "requested_by_customer",
@@ -66,8 +63,21 @@ export async function POST() {
         }
       }
 
-      // Cancel subscription immediately
       await stripe.subscriptions.cancel(profile.stripe_subscription_id);
+
+      // ✅ ADD: Mark user as having used their trial privilege
+      if (user.email) {
+        await supabaseAdmin.from("trial_history").upsert(
+          {
+            email: user.email,
+            user_id: user.id,
+            trial_ends_at: new Date().toISOString(),
+          },
+          {
+            onConflict: "email",
+          },
+        );
+      }
 
       return NextResponse.json({
         success: true,
@@ -93,6 +103,20 @@ export async function POST() {
           cancel_at: cancelAt ? new Date(cancelAt * 1000).toISOString() : null,
         })
         .eq("id", user.id);
+
+      // ✅ ADD: Mark user as having used their trial privilege
+      if (user.email) {
+        await supabaseAdmin.from("trial_history").upsert(
+          {
+            email: user.email,
+            user_id: user.id,
+            trial_ends_at: new Date().toISOString(),
+          },
+          {
+            onConflict: "email",
+          },
+        );
+      }
 
       return NextResponse.json({
         success: true,

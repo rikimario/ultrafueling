@@ -22,7 +22,7 @@ export function useProfile() {
     const { data } = await supabase
       .from("profiles")
       .select(
-        "subscription_status, subscription_plan, trial_ends_at, cancel_at, subscribed_at",
+        "subscription_status, subscription_plan, trial_ends_at, cancel_at, subscribed_at, stripe_subscription_id",
       )
       .eq("id", user.id)
       .single();
