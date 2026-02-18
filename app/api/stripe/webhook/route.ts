@@ -39,24 +39,34 @@ export async function POST(req: NextRequest) {
             ? subscription.customer
             : subscription.customer.id;
 
-        // Get user email
         const { data: userData } =
           await supabase.auth.admin.getUserById(userId);
         const userEmail = userData.user?.email;
 
-        await supabase
+        // Check if user already has a subscribed_at timestamp
+        const { data: existingProfile } = await supabase
           .from("profiles")
-          .update({
-            stripe_customer_id: customerId,
-            stripe_subscription_id: subscription.id,
-            subscription_plan: subscription.items.data[0].price.id,
-            subscription_status: subscription.status,
-            subscribed_at: new Date(subscription.created * 1000).toISOString(),
-            trial_ends_at: subscription.trial_end
-              ? new Date(subscription.trial_end * 1000).toISOString()
-              : null,
-          })
-          .eq("id", userId);
+          .select("subscribed_at")
+          .eq("id", userId)
+          .single();
+
+        // Only set subscribed_at if it doesn't exist (first ever subscription)
+        const updateData: any = {
+          stripe_customer_id: customerId,
+          stripe_subscription_id: subscription.id,
+          subscription_plan: subscription.items.data[0].price.id,
+          subscription_status: subscription.status,
+          trial_ends_at: subscription.trial_end
+            ? new Date(subscription.trial_end * 1000).toISOString()
+            : null,
+        };
+
+        // Only set subscribed_at if this is their first subscription ever
+        if (!existingProfile?.subscribed_at) {
+          updateData.subscribed_at = new Date().toISOString();
+        }
+
+        await supabase.from("profiles").update(updateData).eq("id", userId);
 
         // ✅ Record trial in separate table if this was a trial
         if (subscription.trial_end && userEmail) {

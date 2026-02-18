@@ -18,7 +18,9 @@ export async function POST() {
   try {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("stripe_subscription_id, subscription_status, subscribed_at")
+      .select(
+        "stripe_subscription_id, subscription_status, subscribed_at, stripe_customer_id",
+      )
       .eq("id", user.id)
       .single();
 
@@ -46,32 +48,19 @@ export async function POST() {
     if (isWithinMoneyBackPeriod) {
       // IMMEDIATE CANCELLATION WITH FULL REFUND
 
-      // Get the subscription to find the latest invoice
-      const subscription = await stripe.subscriptions.retrieve(
-        profile.stripe_subscription_id,
-      );
+      // Get all charges for this customer
+      const charges = await stripe.charges.list({
+        customer: profile.stripe_customer_id,
+        limit: 5,
+      });
 
-      const latestInvoiceId =
-        typeof subscription.latest_invoice === "string"
-          ? subscription.latest_invoice
-          : subscription.latest_invoice?.id;
+      if (charges.data.length > 0) {
+        const latestCharge = charges.data[0];
 
-      if (latestInvoiceId) {
-        // Get the invoice to find the payment intent
-        const invoice = await stripe.invoices.retrieve(latestInvoiceId);
-
-        // Use as any to access payment_intent
-        const paymentIntentId = (invoice as any).payment_intent;
-
-        if (paymentIntentId) {
-          const piId =
-            typeof paymentIntentId === "string"
-              ? paymentIntentId
-              : paymentIntentId.id;
-
+        if (latestCharge.paid && !latestCharge.refunded) {
           // Issue full refund
           await stripe.refunds.create({
-            payment_intent: piId,
+            charge: latestCharge.id,
             reason: "requested_by_customer",
           });
         }
@@ -80,11 +69,36 @@ export async function POST() {
       // Cancel subscription immediately
       await stripe.subscriptions.cancel(profile.stripe_subscription_id);
 
-      // Update database - subscription will be marked as canceled by webhook
       return NextResponse.json({
         success: true,
         refunded: true,
         message: "Subscription canceled and refunded successfully",
+      });
+    } else {
+      // CANCEL AT PERIOD END (NO REFUND)
+
+      const canceledSubscription = await stripe.subscriptions.update(
+        profile.stripe_subscription_id,
+        {
+          cancel_at_period_end: true,
+        },
+      );
+
+      const cancelAt = (canceledSubscription as any).cancel_at;
+
+      await supabaseAdmin
+        .from("profiles")
+        .update({
+          subscription_status: "active",
+          cancel_at: cancelAt ? new Date(cancelAt * 1000).toISOString() : null,
+        })
+        .eq("id", user.id);
+
+      return NextResponse.json({
+        success: true,
+        refunded: false,
+        message:
+          "Subscription will be canceled at the end of the billing period",
       });
     }
   } catch (error: any) {
