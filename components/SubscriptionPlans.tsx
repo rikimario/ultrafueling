@@ -18,8 +18,6 @@ import { useProfile } from "@/hooks/useProfile";
 export default function SubscriptionPlans() {
   const { profile, loading } = useProfile();
 
-  if (loading) return null;
-
   return (
     <section id="subscribe" className="relative mx-auto max-w-5xl gap-4 py-20">
       {/* Background Glow */}

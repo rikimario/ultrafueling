@@ -41,6 +41,13 @@ export default function SubscriptionInfo() {
   const { profile, loading } = useProfile();
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [canceling, setCanceling] = useState(false);
+  const [cancelType, setCancelType] = useState<"period_end" | "immediate">(
+    "immediate",
+  ); // Default to immediate for yearly
+
+  const isYearlyPlan =
+    profile?.subscription_plan ===
+    process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_YEARLY;
 
   const handleCancelSubscription = async () => {
     setCanceling(true);
@@ -48,20 +55,40 @@ export default function SubscriptionInfo() {
     try {
       const res = await fetch("/api/cancel-subscription", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cancelType:
+            isYearlyPlan && !isWithinMoneyBackPeriod ? cancelType : undefined,
+        }),
       });
 
       const data = await res.json();
 
       if (data.error) {
         toast.error(data.error);
+        setCanceling(false);
       } else {
+        setShowCancelModal(false);
+
         if (data.refunded) {
-          toast.success("Subscription canceled and refunded!");
+          if (data.partialRefund && data.refundAmount) {
+            // Yearly plan with pro-rated refund
+            toast.success(
+              `Subscription canceled! You'll receive a refund of €${data.refundAmount.toFixed(2)}`,
+            );
+          } else {
+            // Full refund (30-day money-back)
+            toast.success("Subscription canceled and fully refunded!");
+          }
         } else {
+          // Monthly plan - cancel at period end
           toast.success("Subscription will be canceled at period end");
         }
-        setShowCancelModal(false);
-        window.location.reload();
+
+        // Reload after showing toast
+        setTimeout(() => window.location.reload(), 1500);
       }
     } catch (error) {
       toast.error("Failed to cancel subscription");
@@ -98,7 +125,6 @@ export default function SubscriptionInfo() {
   const isTrialing = profile?.subscription_status === "trialing";
   const hasSubscription = isActive || isTrialing;
 
-  // Check if subscription is canceled but still active
   const isCanceledAtPeriodEnd = profile?.cancel_at && isActive;
   const cancelDate = profile?.cancel_at
     ? new Date(profile.cancel_at).toLocaleDateString("en-US", {
@@ -148,10 +174,9 @@ export default function SubscriptionInfo() {
             Subscription
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className={cn("p-4")}>
           {hasSubscription ? (
             <div className="space-y-3">
-              {/* Cancellation Warning */}
               {isCanceledAtPeriodEnd && cancelDate && (
                 <div className="mb-3 rounded-lg border border-orange-200 bg-orange-50 p-3 dark:border-orange-900/50 dark:bg-orange-950/50">
                   <p className="text-sm text-orange-800 dark:text-orange-200">
@@ -212,7 +237,6 @@ export default function SubscriptionInfo() {
                   </Button>
                 </Link>
 
-                {/* Only show cancel button if not already canceling */}
                 {isActive && !isCanceledAtPeriodEnd && (
                   <Button
                     variant="destructive"
@@ -225,13 +249,19 @@ export default function SubscriptionInfo() {
               </div>
             </div>
           ) : (
-            <div className="space-y-3">
-              <p className="text-muted-foreground text-sm">
-                You don't have an active subscription yet.
-              </p>
+            <div className="space-y-4">
+              <div className="border-muted-foreground/30 from-muted/30 to-muted/10 rounded-lg border border-dashed bg-gradient-to-br p-6 text-center">
+                <Sparkles className="text-primary/60 mx-auto mb-3 h-8 w-8" />
+                <p className="text-foreground mb-1 text-sm font-medium">
+                  Ready to get started?
+                </p>
+                <p className="text-muted-foreground text-xs">
+                  Choose a plan and unlock premium features
+                </p>
+              </div>
               <Link href="/#subscribe">
                 <Button variant="main" className="w-full text-sm">
-                  View Plans
+                  Explore Plans
                 </Button>
               </Link>
             </div>
@@ -253,19 +283,70 @@ export default function SubscriptionInfo() {
             <DialogTitle className={cn("text-xl font-bold")}>
               Cancel Subscription?
             </DialogTitle>
-            <DialogDescription className={cn("text-muted-foreground mt-2")}>
+            <DialogDescription
+              className={cn("text-muted-foreground mt-2 text-left")}
+            >
               {isWithinMoneyBackPeriod ? (
-                <>
+                <span className="text-center">
                   You're within the 30-day money-back guarantee period. Your
                   subscription will be <strong>canceled immediately</strong> and
                   you'll receive a <strong>full refund</strong>.
+                </span>
+              ) : isYearlyPlan ? (
+                <>
+                  <strong className="mb-3 block text-center">
+                    Choose how you'd like to cancel:
+                  </strong>
+                  <span className="space-y-3">
+                    <label className="hover:bg-muted/50 flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors">
+                      <input
+                        type="radio"
+                        name="cancelType"
+                        value="immediate"
+                        checked={cancelType === "immediate"}
+                        onChange={(e) =>
+                          setCancelType(e.target.value as "immediate")
+                        }
+                        className="mt-1"
+                      />
+                      <span className="flex flex-col text-left">
+                        <span className="text-foreground text-sm font-medium">
+                          Cancel now with partial refund
+                        </span>
+                        <span className="mt-1 text-xs">
+                          Get a pro-rated refund for unused months
+                        </span>
+                      </span>
+                    </label>
+                    <label className="hover:bg-muted/50 flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors">
+                      <input
+                        type="radio"
+                        name="cancelType"
+                        value="period_end"
+                        checked={cancelType === "period_end"}
+                        onChange={(e) =>
+                          setCancelType(e.target.value as "period_end")
+                        }
+                        className="mt-1"
+                      />
+                      <span className="flex flex-col text-left">
+                        <span className="text-foreground text-sm font-medium">
+                          Keep access until {cancelDate}
+                        </span>
+                        <span className="mt-1 text-xs">
+                          Continue using premium features for the remainder of
+                          your paid period
+                        </span>
+                      </span>
+                    </label>
+                  </span>
                 </>
               ) : (
-                <>
+                <div className="text-center">
                   Are you sure you want to cancel your subscription? You'll lose
                   access to premium features at the end of your current billing
                   period. No refund will be issued.
-                </>
+                </div>
               )}
             </DialogDescription>
           </DialogHeader>
