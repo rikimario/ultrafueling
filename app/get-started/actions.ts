@@ -117,7 +117,16 @@ export async function deleteAccount() {
   }
 
   try {
-    // Cancel Stripe subscriptions
+    // Get profile data first (before deleting)
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select(
+        "trial_ends_at, subscribed_at, subscription_plan, subscription_status, stripe_subscription_id",
+      )
+      .eq("id", user.id)
+      .single();
+
+    // Cancel Stripe subscriptions with refunds
     const customers = await stripe.customers.list({
       email: user.email!,
       limit: 1,
@@ -125,7 +134,74 @@ export async function deleteAccount() {
 
     const customer = customers.data[0];
 
-    if (customer) {
+    if (customer && profile?.subscription_status === "active") {
+      const subs = await stripe.subscriptions.list({
+        customer: customer.id,
+        status: "active",
+      });
+
+      for (const sub of subs.data) {
+        const subscribedAt = profile.subscribed_at
+          ? new Date(profile.subscribed_at)
+          : null;
+        const daysSinceSubscribed = subscribedAt
+          ? Math.floor(
+              (Date.now() - subscribedAt.getTime()) / (1000 * 60 * 60 * 24),
+            )
+          : null;
+        const isWithinMoneyBackPeriod =
+          daysSinceSubscribed !== null && daysSinceSubscribed <= 30;
+        const isYearlyPlan =
+          profile.subscription_plan ===
+          process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_YEARLY;
+
+        // Get the latest charge for refund
+        const charges = await stripe.charges.list({
+          customer: customer.id,
+          limit: 5,
+        });
+
+        if (charges.data.length > 0) {
+          const latestCharge = charges.data[0];
+
+          if (latestCharge.paid && !latestCharge.refunded) {
+            if (isWithinMoneyBackPeriod) {
+              // Full refund (30-day money-back guarantee)
+              await stripe.refunds.create({
+                charge: latestCharge.id,
+                reason: "requested_by_customer",
+              });
+              console.log("✅ Full refund issued (30-day money-back)");
+            } else if (isYearlyPlan && subscribedAt) {
+              // Partial refund for yearly plan
+              const now = Date.now();
+              const oneYear = 365 * 24 * 60 * 60 * 1000;
+              const timeUsed = now - subscribedAt.getTime();
+              const timeRemaining = oneYear - timeUsed;
+              const refundPercentage = Math.max(0, timeRemaining / oneYear);
+              const refundAmountCents = Math.floor(
+                latestCharge.amount * refundPercentage,
+              );
+
+              if (refundAmountCents > 0) {
+                await stripe.refunds.create({
+                  charge: latestCharge.id,
+                  amount: refundAmountCents,
+                  reason: "requested_by_customer",
+                });
+                console.log(
+                  `✅ Partial refund issued: €${(refundAmountCents / 100).toFixed(2)}`,
+                );
+              }
+            }
+          }
+        }
+
+        // Cancel subscription immediately
+        await stripe.subscriptions.cancel(sub.id);
+      }
+    } else if (customer) {
+      // Just cancel if no active subscription
       const subs = await stripe.subscriptions.list({
         customer: customer.id,
         status: "active",
@@ -136,6 +212,7 @@ export async function deleteAccount() {
       }
     }
   } catch (err: any) {
+    console.error("Stripe cancellation error:", err);
     return { error: err.message };
   }
 
@@ -151,30 +228,33 @@ export async function deleteAccount() {
       },
     );
 
-    // 1. Get profile data to save trial history
+    // Get profile data again to save trial history
     const { data: profile } = await supabase
       .from("profiles")
-      .select("trial_ends_at")
+      .select("trial_ends_at, subscribed_at")
       .eq("id", user.id)
       .single();
 
-    // ✅ 2. Save trial history to separate table (if user had a trial)
-    if (profile?.trial_ends_at) {
-      await supabaseAdmin.from("trial_history").insert({
-        email: user.email!,
-        user_id: user.id,
-        trial_ends_at: profile.trial_ends_at,
-      });
+    // Save to trial history (prevents re-trials)
+    if (profile?.trial_ends_at || profile?.subscribed_at) {
+      await supabaseAdmin.from("trial_history").upsert(
+        {
+          email: user.email!,
+          user_id: user.id,
+          trial_ends_at: profile.trial_ends_at || new Date().toISOString(),
+        },
+        {
+          onConflict: "email",
+        },
+      );
     }
 
-    // 3. Delete user data
+    // Delete user data
     await supabase.from("user_plans").delete().eq("user_id", user.id);
     await supabase.from("user_preferences").delete().eq("user_id", user.id);
-
-    // ✅ 4. Now safe to delete profile (trial history is saved)
     await supabase.from("profiles").delete().eq("id", user.id);
 
-    // 5. Delete avatar files
+    // Delete avatar files
     const { data: files } = await supabase.storage
       .from("avatars")
       .list(user.id);
@@ -183,7 +263,7 @@ export async function deleteAccount() {
       await supabase.storage.from("avatars").remove(filePaths);
     }
 
-    // 6. Delete the user account using admin client
+    // Delete the user account
     const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(
       user.id,
     );
@@ -193,7 +273,7 @@ export async function deleteAccount() {
       return { error: "Failed to delete account. Please try again." };
     }
 
-    // 7. Sign out
+    // Sign out
     await supabase.auth.signOut();
   } catch (error: any) {
     console.error("Delete account error:", error);
