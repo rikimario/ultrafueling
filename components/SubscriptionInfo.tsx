@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useProfile } from "@/hooks/useProfile";
 import { useState } from "react";
 import { toast } from "sonner";
+import { SubscriptionSkeleton } from "./skeletions";
 
 const planDetails = {
   monthly: {
@@ -105,22 +106,6 @@ export default function SubscriptionInfo() {
   const isWithinMoneyBackPeriod =
     daysSinceSubscribed !== null && daysSinceSubscribed <= 30;
 
-  if (loading) {
-    return (
-      <Card className="animate-pulse">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-lg font-bold">
-            <div className="h-5 w-5 rounded bg-gray-300" />
-            <div className="h-5 w-24 rounded bg-gray-300" />
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="h-20 rounded bg-gray-200" />
-        </CardContent>
-      </Card>
-    );
-  }
-
   const isActive = profile?.subscription_status === "active";
   const isTrialing = profile?.subscription_status === "trialing";
   const hasSubscription = isActive || isTrialing;
@@ -162,6 +147,10 @@ export default function SubscriptionInfo() {
         year: "numeric",
       })
     : null;
+
+  if (loading) {
+    return <SubscriptionSkeleton />;
+  }
 
   return (
     <>
