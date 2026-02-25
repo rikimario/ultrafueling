@@ -204,7 +204,10 @@ export default function SubscribeBtn({
     <>
       <Button
         variant={popular ? "main" : "secondary"}
-        className={cn("w-full")}
+        className={cn(
+          "w-full border-1",
+          popular ? "" : "border-1 border-[#66b3ff]/95",
+        )}
         disabled={disabled}
         onClick={handleSubscribe}
       >
