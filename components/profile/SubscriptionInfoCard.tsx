@@ -1,8 +1,8 @@
 "use client";
 
 import { Crown, Sparkles, Zap } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Button } from "./ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Button } from "../ui/button";
 import {
   Dialog,
   DialogContent,
@@ -10,15 +10,16 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "./ui/dialog";
+} from "../ui/dialog";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useProfile } from "@/hooks/useProfile";
 import { useState } from "react";
 import { toast } from "sonner";
-import { SubscriptionSkeleton } from "./skeletions";
+import { SubscriptionSkeleton } from "../skeletions";
+import { CancelSubscriptionResponse, PlanDetail, PlanKey } from "@/types";
 
-const planDetails = {
+const planDetails: Record<PlanKey, PlanDetail> = {
   monthly: {
     icon: Sparkles,
     label: "Monthly Plan",
@@ -50,7 +51,7 @@ export default function SubscriptionInfo() {
     profile?.subscription_plan ===
     process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_YEARLY;
 
-  const handleCancelSubscription = async () => {
+  const handleCancelSubscription = async (): Promise<void> => {
     setCanceling(true);
 
     try {
@@ -65,7 +66,7 @@ export default function SubscriptionInfo() {
         }),
       });
 
-      const data = await res.json();
+      const data: CancelSubscriptionResponse = await res.json();
 
       if (data.error) {
         toast.error(data.error);
@@ -97,21 +98,21 @@ export default function SubscriptionInfo() {
     }
   };
 
-  const subscribedAt = profile?.subscribed_at
+  const subscribedAt: Date | null = profile?.subscribed_at
     ? new Date(profile.subscribed_at)
     : null;
-  const daysSinceSubscribed = subscribedAt
+  const daysSinceSubscribed: number | null = subscribedAt
     ? Math.floor((Date.now() - subscribedAt.getTime()) / (1000 * 60 * 60 * 24))
     : null;
-  const isWithinMoneyBackPeriod =
+  const isWithinMoneyBackPeriod: boolean =
     daysSinceSubscribed !== null && daysSinceSubscribed <= 30;
 
-  const isActive = profile?.subscription_status === "active";
-  const isTrialing = profile?.subscription_status === "trialing";
-  const hasSubscription = isActive || isTrialing;
+  const isActive: boolean = profile?.subscription_status === "active";
+  const isTrialing: boolean = profile?.subscription_status === "trialing";
+  const hasSubscription: boolean = isActive || isTrialing;
 
-  const isCanceledAtPeriodEnd = profile?.cancel_at && isActive;
-  const cancelDate = profile?.cancel_at
+  const isCanceledAtPeriodEnd: boolean = profile?.cancel_at && isActive;
+  const cancelDate: string | null = profile?.cancel_at
     ? new Date(profile.cancel_at).toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
@@ -119,7 +120,7 @@ export default function SubscriptionInfo() {
       })
     : null;
 
-  let currentPlanKey: "monthly" | "yearly" | "trialing" | null = null;
+  let currentPlanKey: PlanKey | null = null;
 
   if (isTrialing) {
     currentPlanKey = "trialing";
@@ -137,10 +138,12 @@ export default function SubscriptionInfo() {
     }
   }
 
-  const plan = currentPlanKey ? planDetails[currentPlanKey] : null;
+  const plan: PlanDetail | null = currentPlanKey
+    ? planDetails[currentPlanKey]
+    : null;
   const Icon = plan?.icon ?? Zap;
 
-  const renewalDate = profile?.trial_ends_at
+  const renewalDate: string | null = profile?.trial_ends_at
     ? new Date(profile.trial_ends_at).toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
@@ -154,9 +157,9 @@ export default function SubscriptionInfo() {
 
   return (
     <>
-      <Card>
+      <Card className="min-h-[350px] space-y-6">
         <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-lg font-bold">
+          <CardTitle className="flex h-5 items-center justify-center gap-2 text-lg font-bold">
             <Icon
               className={cn("h-5 w-5", plan?.color ?? "text-muted-foreground")}
             />
@@ -219,7 +222,7 @@ export default function SubscriptionInfo() {
                 </div>
               )}
 
-              <div className="mt-4 flex flex-col gap-2">
+              <div className="mt-8 flex flex-col gap-2">
                 <Link href="/#subscribe">
                   <Button variant="outline" className="w-full text-sm">
                     Change Plan
