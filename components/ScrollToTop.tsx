@@ -7,7 +7,19 @@ export default function ScrollToTop() {
   const pathname = usePathname();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    const hash = window.location.hash;
+
+    if (hash) {
+      setTimeout(() => {
+        const element = document.querySelector(hash);
+        if (element) {
+          element.scrollIntoView({ block: "start" });
+        }
+      }, 300);
+    } else {
+      // No hash, scroll to top
+      window.scrollTo(0, 0);
+    }
   }, [pathname]);
 
   return null; // This component doesn't render anything
