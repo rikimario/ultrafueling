@@ -23,10 +23,11 @@ import { Label } from "./ui/label";
 import { cn } from "@/lib/utils";
 import { useDarkMode } from "@/hooks/useDarkMode";
 import { useProfile } from "@/hooks/useProfile";
+import { Skeleton } from "./ui/skeleton";
 
 export default function Navbar({}: {}) {
-  const { user, avatarUrl } = useUser();
-  const { profile, loading, hasPremiumAccess } = useProfile();
+  const { avatarUrl, user, loading: userLoading } = useUser();
+  const { profile, hasPremiumAccess, loading: profileLoading } = useProfile();
   const darkMode = useDarkMode();
 
   const handleLogout = async () => {
@@ -37,6 +38,8 @@ export default function Navbar({}: {}) {
       window.location.href = "/";
     }
   };
+
+  const isLoading = userLoading || profileLoading;
 
   return (
     <nav className="bg-[#212c42] pt-2 md:px-4">
@@ -51,7 +54,16 @@ export default function Navbar({}: {}) {
           />
         </Link>
         <div className="flex cursor-pointer items-center justify-center space-x-4">
-          {profile ? (
+          {isLoading ? (
+            !user ? (
+              <Skeleton className="h-9 w-[106px] rounded-md" />
+            ) : (
+              <div className="flex items-center gap-4">
+                <Skeleton className="hidden h-9 w-[166px] rounded-md md:block" />
+                <Skeleton className="h-14 w-14 rounded-full" />
+              </div>
+            )
+          ) : profile ? (
             <DropdownMenu>
               {hasPremiumAccess ? (
                 <Link href="/advanced-calc">
