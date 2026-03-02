@@ -140,4 +140,14 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
 }
