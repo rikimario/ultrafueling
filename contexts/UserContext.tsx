@@ -13,6 +13,7 @@ type UserContextType = {
   user: any;
   avatarUrl: string | null;
   updateAvatar: (url: string) => void;
+  loading: boolean;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -53,7 +54,9 @@ export function UserProvider({
   };
 
   return (
-    <UserContext.Provider value={{ user, avatarUrl, updateAvatar }}>
+    <UserContext.Provider
+      value={{ user, avatarUrl, updateAvatar, loading: false }}
+    >
       {children}
     </UserContext.Provider>
   );

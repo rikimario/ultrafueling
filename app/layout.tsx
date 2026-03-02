@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import TermsGate from "@/components/TermsGate";
 import { createClient } from "@/utils/supabase/server";
 import ScrollToTop from "@/components/ScrollToTop";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,20 +36,22 @@ export default async function RootLayout({
   } = await supabase.auth.getUser();
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <UserProvider initialUser={user} key={user?.id || "anonymous"}>
-          <ScrollToTop />
-          <TermsGate />
-          <Navbar />
-          <div className="mx-auto max-w-[1320px] px-4 py-4">
-            {children}
-            <Toaster position="top-right" />
-          </div>
-          <Footer />
-        </UserProvider>
+        <ThemeProvider>
+          <UserProvider initialUser={user} key={user?.id || "anonymous"}>
+            <ScrollToTop />
+            <TermsGate />
+            <Navbar />
+            <div className="mx-auto max-w-[1320px] px-4 py-4">
+              {children}
+              <Toaster position="top-right" />
+            </div>
+            <Footer />
+          </UserProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
