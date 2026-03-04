@@ -17,6 +17,8 @@ import StyledMarkdown from "../StyledMarkdown";
 import { exportPlan } from "@/utils/exportPlan";
 import { useProfile } from "@/hooks/useProfile";
 import { Spinner } from "../ui/spinner";
+import { Calculator, FolderOpen } from "lucide-react";
+import Link from "next/link";
 
 type SavedPlan = {
   id: string;
@@ -27,7 +29,7 @@ type SavedPlan = {
 };
 
 export default function SavedPlansDialog({ plans }: { plans: SavedPlan[] }) {
-  const { loading } = useProfile();
+  const { loading, hasPremiumAccess } = useProfile();
 
   const handleDelete = async (id: string) => {
     await fetch("/api/delete-plan", {
@@ -57,6 +59,32 @@ export default function SavedPlansDialog({ plans }: { plans: SavedPlan[] }) {
       {loading ? (
         <div className="flex justify-center py-12">
           <Spinner className="size-24" />
+        </div>
+      ) : plans.length === 0 ? (
+        <div className="flex flex-col items-center justify-center px-4 py-16">
+          <div className="bg-muted/50 mb-4 rounded-full p-6">
+            <FolderOpen className="text-muted-foreground/60 h-16 w-16" />
+          </div>
+          <h3 className="mb-2 text-xl font-semibold">No Saved Plans Yet</h3>
+          <p className="text-muted-foreground mb-6 max-w-md text-center">
+            Create your first fueling plan using the calculator and save it to
+            access it here anytime.
+          </p>
+          {hasPremiumAccess ? (
+            <Link href="/advanced-calc">
+              <Button variant="main" className="gap-2">
+                <Calculator className="h-4 w-4" />
+                Create Your First Plan
+              </Button>
+            </Link>
+          ) : (
+            <Link href="/#subscribe">
+              <Button variant="main" className="gap-2">
+                <Calculator className="h-4 w-4" />
+                Create Your First Plan
+              </Button>
+            </Link>
+          )}
         </div>
       ) : (
         <ScrollArea className="max-h-[70vh]">
