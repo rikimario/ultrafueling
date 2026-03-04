@@ -50,6 +50,7 @@ export default function Navbar({}: {}) {
             alt="logo"
             width={90}
             height={40}
+            className="h-auto w-24"
             priority
           />
         </Link>
