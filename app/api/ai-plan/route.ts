@@ -1,64 +1,156 @@
-// /app/api/ai-plan/route.ts
+import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
-import { createClient } from "@supabase/supabase-js";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  // process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-);
+
+const userRequests = new Map<string, number[]>();
+
+function checkRateLimit(
+  userId: string,
+  maxRequests = 10,
+  windowMs = 60000,
+): {
+  allowed: boolean;
+  remaining: number;
+  resetAt: number;
+} {
+  const now = Date.now();
+  const userTimes = userRequests.get(userId) || [];
+
+  // ✅ Filter out old requests outside the time window
+  const recentRequests = userTimes.filter((time) => now - time < windowMs);
+
+  // ✅ Check if user has exceeded limit
+  const allowed = recentRequests.length < maxRequests;
+  const remaining = Math.max(0, maxRequests - recentRequests.length);
+
+  // ✅ Calculate when the limit resets (oldest request + window)
+  const resetAt =
+    recentRequests.length > 0 ? recentRequests[0] + windowMs : now + windowMs;
+
+  // ✅ Only add new request if allowed
+  if (allowed) {
+    recentRequests.push(now);
+  }
+
+  // ✅ Update the map with cleaned array
+  userRequests.set(userId, recentRequests);
+
+  console.log("🔍 Rate Limit Check:", {
+    userId: userId.substring(0, 8) + "...",
+    recentRequests: recentRequests.length,
+    maxRequests,
+    allowed,
+    remaining,
+    resetInSeconds: Math.ceil((resetAt - now) / 1000),
+  });
+
+  return { allowed, remaining, resetAt };
+}
 
 export async function POST(req: Request) {
   try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // ✅ CHECK RATE LIMIT IMMEDIATELY AFTER AUTH
+    const rateLimit = checkRateLimit(user.id, 10, 60000); // 10 per minute
+
+    if (!rateLimit.allowed) {
+      const waitSeconds = Math.ceil((rateLimit.resetAt - Date.now()) / 1000);
+
+      console.log("❌ RATE LIMIT EXCEEDED:", {
+        userId: user.id.substring(0, 8) + "...",
+        waitSeconds,
+      });
+
+      return NextResponse.json(
+        {
+          error: "Rate limit exceeded",
+          message: `Too many requests. Please try again in ${waitSeconds} seconds.`,
+          retryAfter: waitSeconds,
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(waitSeconds),
+            "X-RateLimit-Limit": "10",
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": String(Math.floor(rateLimit.resetAt / 1000)),
+          },
+        },
+      );
+    }
+
     const body = await req.json();
-    const { userId, advancedInput, advancedResult } = body;
+    const { advancedInput, advancedResult } = body;
 
-    if (!userId)
-      return NextResponse.json({ error: "Missing userId" }, { status: 400 });
+    // ✅ Validate required fields
+    if (!advancedInput || !advancedResult) {
+      return NextResponse.json(
+        { error: "Missing required data" },
+        { status: 400 },
+      );
+    }
 
-    // verify user is premium in Supabase
+    // ✅ Validate input ranges
+    if (advancedInput.distanceKm < 1 || advancedInput.distanceKm > 500) {
+      return NextResponse.json({ error: "Invalid distance" }, { status: 400 });
+    }
+
+    if (advancedInput.durationHours < 1 || advancedInput.durationHours > 100) {
+      return NextResponse.json({ error: "Invalid duration" }, { status: 400 });
+    }
+
+    // ✅ Check premium access
     const { data: profile, error } = await supabase
       .from("profiles")
       .select("id, email, subscription_status")
-      .eq("id", userId)
+      .eq("id", user.id)
       .single();
+
+    const { data: trailHistory } = await supabase
+      .from("trial_history")
+      .select("trail_ends_at")
+      .eq("email", user.email)
+      .maybeSingle();
 
     const allowed =
       profile?.subscription_status === "active" ||
-      profile?.subscription_status === "trialing";
+      profile?.subscription_status === "trialing" ||
+      trailHistory?.trail_ends_at < new Date().toISOString();
 
     if (error || !profile || !allowed) {
       return NextResponse.json({ error: "User not premium" }, { status: 403 });
     }
 
-    // Build a clear prompt
-    //     const prompt = `
-    // You are an expert ultra-distance sports nutrition coach.
-    // Input data:
-    // - runner profile: ${JSON.stringify(advancedInput, null, 2)}
-    // - calculated plan: ${JSON.stringify(advancedResult, null, 2)}
+    // ✅ Limit JSON string size
+    const inputStr = JSON.stringify(advancedInput, null, 2);
+    const resultStr = JSON.stringify(advancedResult, null, 2);
 
-    // Produce:
-    // 1) A concise hour-by-hour fueling script (what to eat/drink each hour: gels, scoops, tablets, solids, exact fluid volumes).
-    // 2) Practical tips for GI management and how to adapt plan during race.
-    // 3) A short "what to pack" checklist (quantities for a 1-person race kit).
-    // Make it clear, numbered, and actionable. Avoid vague language.
-    // `;
+    if (inputStr.length > 30000 || resultStr.length > 30000) {
+      return NextResponse.json(
+        { error: "Input data too large" },
+        { status: 400 },
+      );
+    }
 
-    // ### 1️⃣ Hour-by-Hour Fueling Plan
-    // - Each hour should be clearly labeled (Hour 1, Hour 2, etc.).
-    // - Include calories, carbs (g), sodium (mg), fluids (ml), and specific food items.
-    // - Keep each hour short and easy to follow.
     const prompt = `
 You are an expert ultra-distance sports nutrition coach who specializes in creating personalized race fueling plans for trail and ultra runners. 
 Your goal is to turn the numeric data into a clear, realistic, and race-day-ready fueling guide that a runner could print or follow from a watch.
 Use professional but simple language.
 
 Input data:
-- Runner profile: ${JSON.stringify(advancedInput, null, 2)}
-- Calculated plan: ${JSON.stringify(advancedResult, null, 2)}
+- Runner profile: ${inputStr}
+- Calculated plan: ${resultStr}
 
 Improve this plan to make it more race-ready, realistic, and easy to follow.
 Do not simply restate the numbers — apply coaching insight, adjust for terrain, temperature, and aid stations.

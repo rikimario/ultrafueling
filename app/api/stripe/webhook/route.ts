@@ -43,13 +43,15 @@ export async function POST(req: NextRequest) {
           await supabase.auth.admin.getUserById(userId);
         const userEmail = userData.user?.email;
 
+        const isTrail = subscription.status === "trialing";
+
         // Only set subscribed_at if it doesn't exist (first ever subscription)
         const updateData: any = {
           stripe_customer_id: customerId,
           stripe_subscription_id: subscription.id,
           subscription_plan: subscription.items.data[0].price.id,
           subscription_status: subscription.status,
-          subscribed_at: new Date().toISOString(),
+          subscribed_at: isTrail ? null : new Date().toISOString(),
           trial_ends_at: subscription.trial_end
             ? new Date(subscription.trial_end * 1000).toISOString()
             : null,
@@ -59,55 +61,61 @@ export async function POST(req: NextRequest) {
 
         //  Record trial in separate table if this was a trial
         if (subscription.trial_end && userEmail) {
-          await supabase.from("trial_history").insert({
+          (await supabase.from("trial_history").upsert({
             email: userEmail,
             user_id: userId,
             trial_ends_at: new Date(
               subscription.trial_end * 1000,
             ).toISOString(),
-          });
+          }),
+            {
+              onConflict: "email",
+            });
         }
 
         break;
       }
 
       case "customer.subscription.updated": {
-        const sub = event.data.object as Stripe.Subscription;
+        const subscription = event.data.object as Stripe.Subscription;
+        const customerId =
+          typeof subscription.customer === "string"
+            ? subscription.customer
+            : subscription.customer.id;
 
-        // Check if trial just ended
-        const previousAttributes = (event as any).data.previous_attributes;
-        const trialJustEnded =
-          previousAttributes?.status === "trialing" &&
-          sub.status === "canceled";
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("id, subscription_status, subscribed_at")
+          .eq("stripe_customer_id", customerId)
+          .single();
 
-        if (trialJustEnded) {
-          // Trial ended without payment - set to pending
-          await supabase
-            .from("profiles")
-            .update({
-              subscription_status: "pending",
-              subscription_plan: null,
-              stripe_subscription_id: null,
-            })
-            .eq("stripe_subscription_id", sub.id);
-        } else {
-          const periodEnd = (sub as any).cancel_at;
-          // Normal subscription update
-          await supabase
-            .from("profiles")
-            .update({
-              subscription_status: sub.status,
-              subscription_plan: sub.items.data[0].price.id,
-              trial_ends_at: sub.trial_end
-                ? new Date(sub.trial_end * 1000).toISOString()
-                : null,
-              cancel_at:
-                sub.cancel_at && periodEnd
-                  ? new Date(periodEnd * 1000).toISOString()
-                  : null,
-            })
-            .eq("stripe_subscription_id", sub.id);
+        if (!profile) {
+          return NextResponse.json({ ok: true });
         }
+
+        const cancelAt = (subscription as any).cancel_at;
+
+        // ✅ Check if transitioning from trial to active (first paid period)
+        const wasTrialing = profile.subscription_status === "trialing";
+        const nowActive = subscription.status === "active";
+        const shouldSetSubscribedAt =
+          wasTrialing && nowActive && !profile.subscribed_at;
+
+        const updateData: any = {
+          subscription_status: subscription.status,
+          subscription_plan: subscription.items.data[0].price.id,
+          cancel_at: cancelAt ? new Date(cancelAt * 1000).toISOString() : null,
+        };
+
+        // ✅ Set subscribed_at when trial converts to paid
+        if (shouldSetSubscribedAt) {
+          updateData.subscribed_at = new Date().toISOString();
+        }
+
+        await supabase
+          .from("profiles")
+          .update(updateData)
+          .eq("stripe_customer_id", customerId);
 
         break;
       }

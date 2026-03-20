@@ -45,6 +45,7 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
 
     submitAdvancedCalc(buildAdvancedInput(form));
   };
+
   const handleChange = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
@@ -75,6 +76,7 @@ export default function AdvancedCalcForm({ user }: { user: any }) {
       goal: p.goal || "",
     }));
   };
+
   const resetPrefFields = () => {
     setForm((prev) => ({
       ...prev,
