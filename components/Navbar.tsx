@@ -27,7 +27,13 @@ import { Skeleton } from "./ui/skeleton";
 
 export default function Navbar({}: {}) {
   const { avatarUrl, user, loading: userLoading } = useUser();
-  const { profile, hasPremiumAccess, loading: profileLoading } = useProfile();
+  const {
+    profile,
+    hasPremiumAccess,
+    hasHadTrial,
+    hasHadPaidSubscription,
+    loading: profileLoading,
+  } = useProfile();
   const darkMode = useDarkMode();
 
   const handleLogout = async () => {
@@ -38,6 +44,18 @@ export default function Navbar({}: {}) {
       window.location.href = "/";
     }
   };
+
+  const isTrialing =
+    profile?.subscription_status === "trialing" &&
+    profile?.trial_ends_at &&
+    new Date(profile.trial_ends_at) > new Date();
+
+  const trialDaysLeft = isTrialing
+    ? Math.ceil(
+        (new Date(profile.trial_ends_at).getTime() - Date.now()) /
+          (1000 * 60 * 60 * 24),
+      )
+    : 0;
 
   const isLoading = userLoading || profileLoading;
 

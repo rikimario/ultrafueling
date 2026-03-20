@@ -108,7 +108,10 @@ export default function SubscriptionInfo() {
     daysSinceSubscribed !== null && daysSinceSubscribed <= 30;
 
   const isActive: boolean = profile?.subscription_status === "active";
-  const isTrialing: boolean = profile?.subscription_status === "trialing";
+  const isTrialing: boolean =
+    profile?.subscription_status === "trialing" &&
+    profile?.trial_ends_at !== null &&
+    new Date(profile.trial_ends_at) > new Date();
   const hasSubscription: boolean = isActive || isTrialing;
 
   const isCanceledAtPeriodEnd: boolean = profile?.cancel_at && isActive;
