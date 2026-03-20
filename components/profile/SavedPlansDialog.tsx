@@ -87,7 +87,7 @@ export default function SavedPlansDialog({ plans }: { plans: SavedPlan[] }) {
           )}
         </div>
       ) : (
-        <ScrollArea className="max-h-[70vh]">
+        <ScrollArea className="max-h-screen">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             {plans.map((plan) => {
               const input = plan.input;
