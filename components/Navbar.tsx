@@ -5,6 +5,7 @@ import Link from "next/link";
 import { logout } from "@/app/get-started/actions";
 import Image from "next/image";
 import {
+  BadgeCent,
   CircleUserRound,
   LogOutIcon,
   MoonIcon,
@@ -146,6 +147,16 @@ export default function Navbar({}: {}) {
                   >
                     <Settings strokeWidth={2} />
                     Manage Account
+                  </DropdownMenuItem>
+                </Link>
+                <Link href="/#subscribe">
+                  <DropdownMenuItem
+                    className={cn(
+                      "flex cursor-pointer items-center text-[16px] font-semibold",
+                    )}
+                  >
+                    <BadgeCent strokeWidth={2} />
+                    Pricing
                   </DropdownMenuItem>
                 </Link>
                 {hasPremiumAccess ? (
