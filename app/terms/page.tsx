@@ -2,18 +2,18 @@ import { Section } from "@/utils/small-functions/section";
 
 export default function TermsAndConditions() {
   return (
-    <main className="min-h-screen bg-background py-16 px-4">
-      <div className="max-w-5xl mx-auto">
+    <main className="bg-background min-h-screen px-4 py-16">
+      <div className="mx-auto max-w-5xl">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+        <div className="mb-12 text-center">
+          <h1 className="text-foreground mb-4 text-3xl font-bold md:text-4xl">
             Terms and Conditions
           </h1>
           <p className="text-muted-foreground">Last updated: 2026-01-13</p>
         </div>
 
         {/* Content Card */}
-        <div className="p-2 md:p-10 space-y-8">
+        <div className="space-y-8 p-2 md:p-10">
           <Section title="1. Introduction">
             <p>Welcome to UltraFueling ("Company", "we", "our", "us")!</p>
             <p>
@@ -171,11 +171,168 @@ export default function TermsAndConditions() {
             </p>
           </Section>
 
-          <Section title="8. Refunds">
+          <Section title="8. Refunds and Cancellations">
+            <h3 className="text-foreground mb-3 text-lg font-semibold">
+              8.1 30-Day Money-Back Guarantee
+            </h3>
             <p>
-              We issue refunds for Contracts within{" "}
-              <strong className="text-foreground">14 days</strong> of the
-              original purchase of the Contract.
+              We offer a{" "}
+              <strong className="text-foreground">
+                30-day money-back guarantee
+              </strong>{" "}
+              for all subscription plans. If you cancel your subscription within
+              30 days of your initial purchase date, you will receive a{" "}
+              <strong className="text-foreground">full refund</strong>, and your
+              subscription will be{" "}
+              <strong className="text-foreground">canceled immediately</strong>.
+            </p>
+
+            <h3 className="text-foreground mt-6 mb-3 text-lg font-semibold">
+              8.2 Monthly Subscriptions
+            </h3>
+            <p>
+              For monthly subscriptions canceled{" "}
+              <strong className="text-foreground">
+                after the 30-day money-back period
+              </strong>
+              :
+            </p>
+            <ul className="ml-4 list-inside list-disc space-y-2">
+              <li>No refund will be issued</li>
+              <li>
+                Your subscription will remain active until the end of your
+                current billing period
+              </li>
+              <li>
+                You will retain access to all premium features until that date
+              </li>
+              <li>Your subscription will not renew for the following month</li>
+            </ul>
+
+            <h3 className="text-foreground mt-6 mb-3 text-lg font-semibold">
+              8.3 Yearly Subscriptions
+            </h3>
+            <p>
+              For yearly subscriptions canceled{" "}
+              <strong className="text-foreground">
+                after the 30-day money-back period
+              </strong>
+              , you have{" "}
+              <strong className="text-foreground">two options</strong>:
+            </p>
+
+            <h4 className="text-foreground mt-4 mb-2 text-base font-semibold">
+              Option A: Immediate Cancellation with Pro-Rated Refund
+            </h4>
+            <ul className="ml-4 list-inside list-disc space-y-2">
+              <li>
+                Cancel immediately and receive a{" "}
+                <strong className="text-foreground">pro-rated refund</strong>{" "}
+                for unused months
+              </li>
+              <li>
+                Refund calculated based on complete months remaining in your
+                annual subscription
+              </li>
+              <li>
+                Access to premium features ends immediately upon cancellation
+              </li>
+            </ul>
+
+            <h4 className="text-foreground mt-4 mb-2 text-base font-semibold">
+              Option B: Cancellation at Period End
+            </h4>
+            <ul className="ml-4 list-inside list-disc space-y-2">
+              <li>Cancel at the end of your current billing period</li>
+              <li>
+                <strong className="text-foreground">No refund</strong> will be
+                issued
+              </li>
+              <li>
+                Retain access to all premium features until your subscription
+                expires
+              </li>
+            </ul>
+
+            <h3 className="text-foreground mt-6 mb-3 text-lg font-semibold">
+              8.4 Trial Restrictions
+            </h3>
+            <p>
+              Free trials are offered{" "}
+              <strong className="text-foreground">once per customer</strong>.
+              Trial eligibility is determined by:
+            </p>
+            <ul className="ml-4 list-inside list-disc space-y-2">
+              <li>Email address</li>
+              <li>Payment method</li>
+            </ul>
+            <p className="mt-3">
+              <strong className="text-foreground">Note:</strong> Users who have
+              previously used a free trial or maintained a paid subscription are{" "}
+              <strong className="text-foreground">not eligible</strong> for
+              additional free trials.
+            </p>
+
+            <h3 className="text-foreground mt-6 mb-3 text-lg font-semibold">
+              8.5 Refund Processing
+            </h3>
+            <ul className="ml-4 list-inside list-disc space-y-2">
+              <li>
+                All refunds processed to the{" "}
+                <strong className="text-foreground">
+                  original payment method
+                </strong>
+              </li>
+              <li>
+                Processing time:{" "}
+                <strong className="text-foreground">5-10 business days</strong>{" "}
+                from approval
+              </li>
+              <li>
+                Yearly subscription refunds calculated from your{" "}
+                <strong className="text-foreground">
+                  initial purchase date
+                </strong>
+                , not cancellation date
+              </li>
+            </ul>
+
+            <h3 className="text-foreground mt-6 mb-3 text-lg font-semibold">
+              8.6 Non-Refundable Circumstances
+            </h3>
+            <p>
+              Refunds will <strong className="text-foreground">not</strong> be
+              issued for:
+            </p>
+            <ul className="ml-4 list-inside list-disc space-y-2">
+              <li>Subscriptions canceled after the applicable refund period</li>
+              <li>Violations of these Terms of Service</li>
+              <li>
+                Chargebacks or payment disputes (may result in immediate account
+                termination)
+              </li>
+            </ul>
+
+            <h3 className="text-foreground mt-6 mb-3 text-lg font-semibold">
+              8.7 How to Request a Refund
+            </h3>
+            <p>To request a refund:</p>
+            <ul className="ml-4 list-inside list-decimal space-y-2">
+              <li>
+                Email us at{" "}
+                <strong className="text-foreground">
+                  support@ultrafueling.net
+                </strong>
+                , or
+              </li>
+              <li>
+                Cancel through your{" "}
+                <strong className="text-foreground">account settings</strong>
+              </li>
+            </ul>
+            <p className="mt-3">
+              <strong className="text-foreground">Important:</strong> Refund
+              requests must be submitted within the eligible refund period.
             </p>
           </Section>
 
@@ -228,7 +385,7 @@ export default function TermsAndConditions() {
               You may use Service only for lawful purposes and in accordance
               with Terms. You agree not to use Service:
             </p>
-            <ul className="list-disc list-inside space-y-2 ml-4">
+            <ul className="ml-4 list-inside list-disc space-y-2">
               <li>
                 In any way that violates any applicable national or
                 international law or regulation.
@@ -261,7 +418,7 @@ export default function TermsAndConditions() {
               </li>
             </ul>
             <p className="mt-4">Additionally, you agree not to:</p>
-            <ul className="list-disc list-inside space-y-2 ml-4">
+            <ul className="ml-4 list-inside list-disc space-y-2">
               <li>
                 Use Service in any manner that could disable, overburden,
                 damage, or impair Service or interfere with any other party's
@@ -394,7 +551,7 @@ export default function TermsAndConditions() {
               Copyright Act (DMCA) by providing our Copyright Agent with the
               following information in writing:
             </p>
-            <ul className="list-disc list-inside space-y-2 ml-4">
+            <ul className="ml-4 list-inside list-disc space-y-2">
               <li>
                 An electronic or physical signature of the person authorized to
                 act on behalf of the owner of the copyright's interest.
@@ -458,21 +615,21 @@ export default function TermsAndConditions() {
               web sites or services. We do not warrant the offerings of any of
               these entities/individuals or their websites.
             </p>
-            <p className="uppercase font-semibold text-foreground">
+            <p className="text-foreground font-semibold uppercase">
               YOU ACKNOWLEDGE AND AGREE THAT COMPANY SHALL NOT BE RESPONSIBLE OR
               LIABLE, DIRECTLY OR INDIRECTLY, FOR ANY DAMAGE OR LOSS CAUSED OR
               ALLEGED TO BE CAUSED BY OR IN CONNECTION WITH USE OF OR RELIANCE
               ON ANY SUCH CONTENT, GOODS OR SERVICES AVAILABLE ON OR THROUGH ANY
               SUCH THIRD PARTY WEB SITES OR SERVICES.
             </p>
-            <p className="uppercase font-semibold text-foreground">
+            <p className="text-foreground font-semibold uppercase">
               WE STRONGLY ADVISE YOU TO READ THE TERMS OF SERVICE AND PRIVACY
               POLICIES OF ANY THIRD PARTY WEB SITES OR SERVICES THAT YOU VISIT.
             </p>
           </Section>
 
           <Section title="19. Disclaimer Of Warranty">
-            <p className="uppercase text-foreground">
+            <p className="text-foreground uppercase">
               THESE SERVICES ARE PROVIDED BY COMPANY ON AN "AS IS" AND "AS
               AVAILABLE" BASIS. COMPANY MAKES NO REPRESENTATIONS OR WARRANTIES
               OF ANY KIND, EXPRESS OR IMPLIED, AS TO THE OPERATION OF THEIR
@@ -481,26 +638,26 @@ export default function TermsAndConditions() {
               THEIR CONTENT, AND ANY SERVICES OR ITEMS OBTAINED FROM US IS AT
               YOUR SOLE RISK.
             </p>
-            <p className="uppercase text-foreground">
+            <p className="text-foreground uppercase">
               NEITHER COMPANY NOR ANY PERSON ASSOCIATED WITH COMPANY MAKES ANY
               WARRANTY OR REPRESENTATION WITH RESPECT TO THE COMPLETENESS,
               SECURITY, RELIABILITY, QUALITY, ACCURACY, OR AVAILABILITY OF THE
               SERVICES.
             </p>
-            <p className="uppercase text-foreground">
+            <p className="text-foreground uppercase">
               COMPANY HEREBY DISCLAIMS ALL WARRANTIES OF ANY KIND, WHETHER
               EXPRESS OR IMPLIED, STATUTORY, OR OTHERWISE, INCLUDING BUT NOT
               LIMITED TO ANY WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT,
               AND FITNESS FOR PARTICULAR PURPOSE.
             </p>
-            <p className="uppercase text-foreground">
+            <p className="text-foreground uppercase">
               THE FOREGOING DOES NOT AFFECT ANY WARRANTIES WHICH CANNOT BE
               EXCLUDED OR LIMITED UNDER APPLICABLE LAW.
             </p>
           </Section>
 
           <Section title="20. Limitation Of Liability">
-            <p className="uppercase text-foreground">
+            <p className="text-foreground uppercase">
               EXCEPT AS PROHIBITED BY LAW, YOU WILL HOLD US AND OUR OFFICERS,
               DIRECTORS, EMPLOYEES, AND AGENTS HARMLESS FOR ANY INDIRECT,
               PUNITIVE, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGE, HOWEVER IT
@@ -599,7 +756,7 @@ export default function TermsAndConditions() {
           </Section>
 
           <Section title="26. Acknowledgement">
-            <p className="uppercase text-foreground">
+            <p className="text-foreground uppercase">
               BY USING SERVICE OR OTHER SERVICES PROVIDED BY US, YOU ACKNOWLEDGE
               THAT YOU HAVE READ THESE TERMS OF SERVICE AND AGREE TO BE BOUND BY
               THEM.
@@ -620,21 +777,4 @@ export default function TermsAndConditions() {
       </div>
     </main>
   );
-
-  //   function Section({
-  //     title,
-  //     children,
-  //   }: {
-  //     title: string;
-  //     children: React.ReactNode;
-  //   }) {
-  //     return (
-  //       <section>
-  //         <h2 className="text-xl font-bold text-foreground mb-4">{title}</h2>
-  //         <div className="space-y-3 text-muted-foreground text-lg leading-relaxed">
-  //           {children}
-  //         </div>
-  //       </section>
-  //     );
-  //   }
 }
