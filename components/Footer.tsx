@@ -53,7 +53,7 @@ export default function Footer() {
               <Link href="/#faq">FAQ</Link>
             </li>
             <li className="pb-2 hover:text-gray-300">
-              <Link href="/contact">Contact</Link>
+              <Link href="/feedback">Feedback</Link>
             </li>
             <li className="pb-2 hover:text-gray-300">
               <Link href="/privacy-policy">Privacy Policy</Link>
