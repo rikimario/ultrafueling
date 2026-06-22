@@ -1,3 +1,118 @@
+// import { createServerClient } from "@supabase/ssr";
+// import { NextResponse, type NextRequest } from "next/server";
+
+// export async function updateSession(request: NextRequest) {
+//   let supabaseResponse = NextResponse.next({
+//     request,
+//   });
+
+//   const supabase = createServerClient(
+//     process.env.NEXT_PUBLIC_SUPABASE_URL!,
+//     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+//     {
+//       cookies: {
+//         getAll() {
+//           return request.cookies.getAll();
+//         },
+//         setAll(cookiesToSet) {
+//           cookiesToSet.forEach(({ name, value, options }) =>
+//             request.cookies.set(name, value),
+//           );
+//           supabaseResponse = NextResponse.next({
+//             request,
+//           });
+//           cookiesToSet.forEach(({ name, value, options }) =>
+//             supabaseResponse.cookies.set(name, value, options),
+//           );
+//         },
+//       },
+//     },
+//   );
+
+//   // Do not run code between createServerClient and
+//   // supabase.auth.getUser(). A simple mistake could make it very hard to debug
+//   // issues with users being randomly logged out.
+
+//   // IMPORTANT: DO NOT REMOVE auth.getUser()
+
+//   const {
+//     data: { user },
+//   } = await supabase.auth.getUser();
+
+//   // Check terms & privacy acceptance
+//   const pathname = request.nextUrl.pathname;
+
+//   if (pathname.startsWith("/api/stripe/webhook")) {
+//     return NextResponse.next();
+//   }
+
+//   if (user) {
+//     const hasAcceptedTerms =
+//       user.user_metadata?.terms_accepted === true &&
+//       user.user_metadata?.privacy_accepted === true;
+
+//     const allowedPaths = [
+//       "/terms",
+//       "/privacy",
+//       "/accept-terms",
+//       "/auth",
+//       "/logout",
+//     ];
+
+//     const isAllowed =
+//       pathname === "/" ||
+//       allowedPaths.some((path) => pathname.startsWith(path));
+
+//     if (!hasAcceptedTerms && !isAllowed) {
+//       const url = request.nextUrl.clone();
+//       url.pathname = "/";
+//       return NextResponse.redirect(url);
+//     }
+//   }
+
+//   if (
+//     !user &&
+//     !pathname.startsWith("/get-started") &&
+//     !pathname.startsWith("/auth") &&
+//     !pathname.startsWith("/error") &&
+//     pathname !== "/"
+//   ) {
+//     const url = request.nextUrl.clone();
+//     url.pathname = "/get-started";
+//     return NextResponse.redirect(url);
+//   }
+
+//   // Check if user is authenticated
+
+//   if (
+//     !user &&
+//     !request.nextUrl.pathname.startsWith("/get-started") &&
+//     !request.nextUrl.pathname.startsWith("/auth") &&
+//     !request.nextUrl.pathname.startsWith("/error") &&
+//     !request.nextUrl.pathname.startsWith("/")
+//   ) {
+//     // no user, potentially respond by redirecting the user to the login page
+//     const url = request.nextUrl.clone();
+//     url.pathname = "/get-started";
+//     return NextResponse.redirect(url);
+//   }
+
+//   // IMPORTANT: You *must* return the supabaseResponse object as it is.
+//   // If you're creating a new response object with NextResponse.next() make sure to:
+//   // 1. Pass the request in it, like so:
+//   //    const myNewResponse = NextResponse.next({ request })
+//   // 2. Copy over the cookies, like so:
+//   //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
+//   // 3. Change the myNewResponse object to fit your needs, but avoid changing
+//   //    the cookies!
+//   // 4. Finally:
+//   //    return myNewResponse
+//   // If this is not done, you may be causing the browser and server to go out
+//   // of sync and terminate the user's session prematurely!
+
+//   return supabaseResponse;
+// }
+
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -15,12 +130,14 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
+          cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value),
           );
+
           supabaseResponse = NextResponse.next({
             request,
           });
+
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options),
           );
@@ -29,86 +146,64 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  // Do not run code between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
-
-  // IMPORTANT: DO NOT REMOVE auth.getUser()
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Check terms & privacy acceptance
   const pathname = request.nextUrl.pathname;
 
+  // Allow Stripe webhooks
   if (pathname.startsWith("/api/stripe/webhook")) {
     return NextResponse.next();
   }
 
+  // Public routes accessible without authentication
+  const publicRoutes = [
+    "/",
+    "/auth",
+    "/get-started",
+    "/error",
+    "/terms",
+    "/privacy-policy",
+    "/feedback",
+  ];
+
+  const isPublicRoute = publicRoutes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
+
+  // Logged-in users must accept terms before accessing protected pages
   if (user) {
     const hasAcceptedTerms =
       user.user_metadata?.terms_accepted === true &&
       user.user_metadata?.privacy_accepted === true;
 
     const allowedPaths = [
+      "/",
       "/terms",
-      "/privacy",
+      "/privacy-policy",
       "/accept-terms",
       "/auth",
       "/logout",
     ];
 
-    const isAllowed =
-      pathname === "/" ||
-      allowedPaths.some((path) => pathname.startsWith(path));
+    const isAllowedPath = allowedPaths.some(
+      (path) => pathname === path || pathname.startsWith(`${path}/`),
+    );
 
-    if (!hasAcceptedTerms && !isAllowed) {
+    if (!hasAcceptedTerms && !isAllowedPath) {
       const url = request.nextUrl.clone();
       url.pathname = "/";
       return NextResponse.redirect(url);
     }
   }
 
-  if (
-    !user &&
-    !pathname.startsWith("/get-started") &&
-    !pathname.startsWith("/auth") &&
-    !pathname.startsWith("/error") &&
-    pathname !== "/"
-  ) {
+  // Guests can only access public routes
+  if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/get-started";
     return NextResponse.redirect(url);
   }
-
-  // Check if user is authenticated
-
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith("/get-started") &&
-    !request.nextUrl.pathname.startsWith("/auth") &&
-    !request.nextUrl.pathname.startsWith("/error") &&
-    !request.nextUrl.pathname.startsWith("/")
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
-    const url = request.nextUrl.clone();
-    url.pathname = "/get-started";
-    return NextResponse.redirect(url);
-  }
-
-  // IMPORTANT: You *must* return the supabaseResponse object as it is.
-  // If you're creating a new response object with NextResponse.next() make sure to:
-  // 1. Pass the request in it, like so:
-  //    const myNewResponse = NextResponse.next({ request })
-  // 2. Copy over the cookies, like so:
-  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-  // 3. Change the myNewResponse object to fit your needs, but avoid changing
-  //    the cookies!
-  // 4. Finally:
-  //    return myNewResponse
-  // If this is not done, you may be causing the browser and server to go out
-  // of sync and terminate the user's session prematurely!
 
   return supabaseResponse;
 }
