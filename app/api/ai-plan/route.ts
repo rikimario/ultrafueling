@@ -37,15 +37,6 @@ function checkRateLimit(
   // ✅ Update the map with cleaned array
   userRequests.set(userId, recentRequests);
 
-  console.log("🔍 Rate Limit Check:", {
-    userId: userId.substring(0, 8) + "...",
-    recentRequests: recentRequests.length,
-    maxRequests,
-    allowed,
-    remaining,
-    resetInSeconds: Math.ceil((resetAt - now) / 1000),
-  });
-
   return { allowed, remaining, resetAt };
 }
 
@@ -66,11 +57,6 @@ export async function POST(req: Request) {
 
     if (!rateLimit.allowed) {
       const waitSeconds = Math.ceil((rateLimit.resetAt - Date.now()) / 1000);
-
-      console.log("❌ RATE LIMIT EXCEEDED:", {
-        userId: user.id.substring(0, 8) + "...",
-        waitSeconds,
-      });
 
       return NextResponse.json(
         {
