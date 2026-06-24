@@ -10,12 +10,19 @@ export async function GET(request: Request) {
     next = "/";
   }
 
+  console.log("🔍 Callback hit. Code present:", !!code);
+
   if (code) {
     const supabase = await createClient();
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
+    // ✅ Log the actual error
+    console.log("🔍 Exchange result:", {
+      hasUser: !!data?.user,
+      error: error?.message,
+    });
+
     if (!error && data.user) {
-      // Create profile for OAuth user
       await supabase.from("profiles").upsert(
         {
           id: data.user.id,
@@ -42,6 +49,11 @@ export async function GET(request: Request) {
         return NextResponse.redirect(`${origin}${next}`);
       }
     }
+
+    // ✅ Log if we fell through here
+    console.log("❌ Falling through - error or no user");
+  } else {
+    console.log("❌ No code param in URL");
   }
 
   return NextResponse.redirect(`${origin}/auth/auth-code-error`);

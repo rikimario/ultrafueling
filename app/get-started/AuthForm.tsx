@@ -14,10 +14,11 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { useActionState, useEffect } from "react";
-import { login, signInWithGoogle, signup } from "./actions";
+import { login, signup } from "./actions";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 
 export default function AuthForm() {
   const router = useRouter();
@@ -49,6 +50,31 @@ export default function AuthForm() {
       }, 300);
     }
   }, [signupState, router]);
+
+  async function signInWithGoogle() {
+    const supabase = createClient();
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+        queryParams: {
+          access_type: "offline",
+          prompt: "consent",
+        },
+      },
+    });
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    // signInWithOAuth with PKCE returns a URL — navigate the browser there
+    if (data?.url) {
+      window.location.href = data.url;
+    }
+  }
 
   return (
     <div className="flex min-h-screen w-full max-w-sm flex-col gap-6">
@@ -113,7 +139,7 @@ export default function AuthForm() {
                 <Button
                   variant={"outline"}
                   className={cn("w-full bg-gray-200 dark:bg-gray-600")}
-                  onClick={signInWithGoogle}
+                  onClick={() => signInWithGoogle()}
                   type="button"
                   disabled={isLoginPending}
                 >
@@ -202,7 +228,7 @@ export default function AuthForm() {
                 <Button
                   variant={"outline"}
                   className={cn("w-full bg-gray-200 dark:bg-gray-600")}
-                  onClick={signInWithGoogle}
+                  onClick={() => signInWithGoogle()}
                   type="button"
                   disabled={isSignupPending}
                 >
