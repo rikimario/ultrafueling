@@ -9,6 +9,7 @@ import TermsGate from "@/components/TermsGate";
 import { createClient } from "@/utils/supabase/server";
 import ScrollToTop from "@/components/ScrollToTop";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -52,6 +53,7 @@ export default async function RootLayout({
             <Footer />
           </UserProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
