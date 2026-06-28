@@ -24,7 +24,7 @@ export const Plans = [
     name: "Monthly",
     description: "Best for regular training",
     priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_MONTHLY!,
-    price: 9,
+    price: 6,
     duration: "/month",
     features: [
       "Unlimited fueling plans",
@@ -39,9 +39,9 @@ export const Plans = [
   },
   {
     name: "Yearly",
-    description: "Save 27% annually",
+    description: "Save 18% annually",
     priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_YEARLY!,
-    price: 79,
+    price: 59,
     duration: "/year",
     features: [
       "Unlimited fueling plans",
@@ -50,7 +50,7 @@ export const Plans = [
       "AI-generated fueling notes",
       "Save plans",
       "Export plans as PDF",
-      "Save 29$ vs monthly",
+      "Save 13€ vs monthly",
     ],
     popular: false,
     icon: Crown,
