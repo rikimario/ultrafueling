@@ -41,11 +41,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-        >
+        <ThemeProvider>
           <UserProvider initialUser={user} key={user?.id || "anonymous"}>
             <ScrollToTop />
             <TermsGate />
