@@ -45,7 +45,9 @@ export default function AuthForm() {
     if ((signupState as any).success) {
       console.log("✅ Signup success detected, navigating...");
       setTimeout(() => {
-        router.push("/");
+        router.push(
+          `/get-started/check-email?email=${encodeURIComponent((signupState as any).email)}`,
+        );
         router.refresh();
       }, 300);
     }
