@@ -54,6 +54,7 @@ export async function signup(prevState: any, formData: FormData) {
     email,
     password,
     options: {
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
       data: {
         full_name,
         terms_accepted: true,
@@ -71,7 +72,7 @@ export async function signup(prevState: any, formData: FormData) {
     return { error: error.message };
   }
   revalidatePath("/", "layout");
-  return { success: true };
+  return { success: true, email };
   // redirect("/");
 }
 
