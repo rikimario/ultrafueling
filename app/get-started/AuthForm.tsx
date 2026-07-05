@@ -13,12 +13,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { login, signup } from "./actions";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function AuthForm() {
   const router = useRouter();
@@ -28,6 +29,33 @@ export default function AuthForm() {
   const [signupState, signupAction, isSignupPending] = useActionState(signup, {
     error: "",
   });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+
+  const handleSignupSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const form = e.currentTarget;
+    const password = (form.elements.namedItem("password") as HTMLInputElement)
+      ?.value;
+    const confirmPassword = (
+      form.elements.namedItem("confirm_password") as HTMLInputElement
+    )?.value;
+
+    if (password !== confirmPassword) {
+      e.preventDefault();
+      setPasswordError("Passwords do not match");
+      return;
+    }
+
+    if (password.length < 6) {
+      e.preventDefault();
+      setPasswordError("Password must be at least 6 characters");
+      return;
+    }
+
+    setPasswordError("");
+  };
 
   // Handle successful login
   useEffect(() => {
@@ -159,7 +187,7 @@ export default function AuthForm() {
         </TabsContent>
 
         <TabsContent value="Sign up">
-          <form action={signupAction}>
+          <form action={signupAction} onSubmit={handleSignupSubmit}>
             <Card>
               <CardHeader>
                 <CardTitle>Sign up</CardTitle>
@@ -170,7 +198,9 @@ export default function AuthForm() {
               </CardHeader>
               <CardContent className="grid gap-6">
                 <div className="grid gap-3">
-                  <Label htmlFor="full_name">Username*</Label>
+                  <Label className={cn("gap-1")} htmlFor="full_name">
+                    Username<span className="text-red-400">*</span>
+                  </Label>
                   <Input
                     id="full_name"
                     type="text"
@@ -180,7 +210,9 @@ export default function AuthForm() {
                   />
                 </div>
                 <div className="grid gap-3">
-                  <Label htmlFor="signup-email">Email*</Label>
+                  <Label className={cn("gap-1")} htmlFor="signup-email">
+                    Email<span className="text-red-400">*</span>
+                  </Label>
                   <Input
                     id="signup-email"
                     type="email"
@@ -190,14 +222,66 @@ export default function AuthForm() {
                   />
                 </div>
                 <div className="grid gap-3">
-                  <Label htmlFor="signup-password">Password*</Label>
-                  <Input
-                    id="signup-password"
-                    type="password"
-                    name="password"
-                    autoComplete="new-password"
-                    disabled={isSignupPending}
-                  />
+                  <Label className={cn("gap-1")} htmlFor="signup-password">
+                    Password<span className="text-red-400">*</span>
+                  </Label>
+                  <div className="relative w-full">
+                    <Input
+                      id="signup-password"
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      autoComplete="new-password"
+                      disabled={isSignupPending}
+                      onChange={() => setPasswordError("")}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer transition-colors"
+                      tabIndex={-1}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+                <div className="grid gap-3">
+                  <Label
+                    className={cn("gap-1")}
+                    htmlFor="confirm-signup-password"
+                  >
+                    Confirm Password<span className="text-red-400">*</span>
+                  </Label>
+                  <div className="relative w-full">
+                    <Input
+                      id="confirm-signup-password"
+                      type={showConfirmPassword ? "text" : "password"}
+                      name="confirm_password"
+                      autoComplete="new-password"
+                      disabled={isSignupPending}
+                      className={cn(
+                        "pr-10",
+                        passwordError &&
+                          "border-red-500 focus-visible:ring-red-500",
+                      )}
+                      onChange={() => setPasswordError("")}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword((prev) => !prev)}
+                      className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer transition-colors"
+                      tabIndex={-1}
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
                 </div>
               </CardContent>
               <CardFooter className={cn("flex flex-col gap-4")}>
