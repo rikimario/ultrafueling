@@ -140,7 +140,7 @@ export default function AuthForm() {
                 <div className="grid gap-3">
                   <div className="flex justify-between">
                     <Label htmlFor="password">Password</Label>
-                    <Link href={"/reset-password-form"}>
+                    <Link href={"/get-started/forgot-password"}>
                       <Button variant={"link"} size={"default"} type="button">
                         Forgot your password?
                       </Button>
