@@ -41,13 +41,18 @@ export async function signup(prevState: any, formData: FormData) {
   const full_name = (formData.get("full_name") as string)?.trim();
   const email = (formData.get("email") as string)?.trim();
   const password = (formData.get("password") as string)?.trim();
+  const confirm_password = (formData.get("confirm_password") as string)?.trim();
 
-  if (!full_name || !email || !password) {
+  if (!full_name || !email || !password || !confirm_password) {
     return { error: "All fields are required." };
   }
 
   if (password.length < 6) {
     return { error: "Password must be at least 6 characters long." };
+  }
+
+  if (password !== confirm_password) {
+    return { error: "Passwords do not match." };
   }
 
   const { error } = await supabase.auth.signUp({
@@ -73,7 +78,6 @@ export async function signup(prevState: any, formData: FormData) {
   }
   revalidatePath("/", "layout");
   return { success: true, email };
-  // redirect("/");
 }
 
 export async function logout() {
