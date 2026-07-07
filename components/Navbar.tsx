@@ -25,6 +25,8 @@ import { cn } from "@/lib/utils";
 import { useDarkMode } from "@/hooks/useDarkMode";
 import { useProfile } from "@/hooks/useProfile";
 import { Skeleton } from "./ui/skeleton";
+import ScrollLink from "@/components/ScrollLink";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Navbar({}: {}) {
   const { avatarUrl, user, loading: userLoading } = useUser();
@@ -36,6 +38,23 @@ export default function Navbar({}: {}) {
     loading: profileLoading,
   } = useProfile();
   const darkMode = useDarkMode();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const goToPricing = () => {
+    setTimeout(() => {
+      if (pathname !== "/") {
+        router.push("/#subscribe");
+        return;
+      }
+
+      document.getElementById("subscribe")?.scrollIntoView({
+        behavior: "smooth",
+      });
+
+      window.history.replaceState(null, "", "/#subscribe");
+    }, 100);
+  };
 
   const handleLogout = async () => {
     try {
@@ -149,16 +168,15 @@ export default function Navbar({}: {}) {
                     Manage Account
                   </DropdownMenuItem>
                 </Link>
-                <Link href="/#subscribe">
-                  <DropdownMenuItem
-                    className={cn(
-                      "flex cursor-pointer items-center text-[16px] font-semibold",
-                    )}
-                  >
-                    <BadgeCent strokeWidth={2} />
-                    Pricing
-                  </DropdownMenuItem>
-                </Link>
+                <DropdownMenuItem
+                  onSelect={goToPricing}
+                  className={cn(
+                    "flex cursor-pointer items-center text-[16px] font-semibold",
+                  )}
+                >
+                  <BadgeCent strokeWidth={2} />
+                  Pricing
+                </DropdownMenuItem>
                 {hasPremiumAccess ? (
                   <Link href="/advanced-calc">
                     <DropdownMenuItem

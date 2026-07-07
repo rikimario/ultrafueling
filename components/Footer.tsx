@@ -3,12 +3,23 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import Image from "next/image";
-import { useUser } from "@/contexts/UserContext";
 import { useProfile } from "@/hooks/useProfile";
+import { usePathname, useRouter } from "next/navigation";
+import ScrollLink from "@/components/ScrollLink";
 
 export default function Footer() {
-  // const { user } = useUser();
   const { profile, hasPremiumAccess } = useProfile();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const goToSection = (id: string) => {
+    if (pathname !== "/") {
+      router.push(`/#${id}`);
+      return;
+    }
+
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
   return (
     <footer className="border-border mt-20 border-t bg-[#212c42]">
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 px-6 py-12 md:grid-cols-4">
@@ -33,14 +44,29 @@ export default function Footer() {
         <div>
           <h4 className="mb-3 font-semibold text-gray-200">Product</h4>
           <ul className="text-muted-foreground space-y-2 text-sm">
-            <li className="pb-2 hover:text-gray-300">
-              <Link href="/#freeCalc">Free Calculator</Link>
+            <li className="pb-2">
+              <ScrollLink
+                id="freeCalc"
+                className="cursor-pointer hover:text-gray-300"
+              >
+                Free Calculator
+              </ScrollLink>
             </li>
-            <li className="pb-2 hover:text-gray-300">
-              <Link href="/#howItWorks">How It Works</Link>
+            <li className="pb-2">
+              <ScrollLink
+                id="howItWorks"
+                className="cursor-pointer hover:text-gray-300"
+              >
+                How It Works
+              </ScrollLink>
             </li>
-            <li className="pb-2 hover:text-gray-300">
-              <Link href="/#subscribe">Pricing</Link>
+            <li className="pb-2">
+              <ScrollLink
+                id="subscribe"
+                className="cursor-pointer hover:text-gray-300"
+              >
+                Pricing
+              </ScrollLink>
             </li>
           </ul>
         </div>
@@ -49,17 +75,28 @@ export default function Footer() {
           {/* Company */}
           <h4 className="mb-3 font-semibold text-gray-200">Company</h4>
           <ul className="text-muted-foreground space-y-2 text-sm">
-            <li className="pb-2 hover:text-gray-300">
-              <Link href="/#faq">FAQ</Link>
+            <li className="pb-2">
+              <ScrollLink
+                id="faq"
+                className="cursor-pointer hover:text-gray-300"
+              >
+                FAQ
+              </ScrollLink>
             </li>
-            <li className="pb-2 hover:text-gray-300">
-              <Link href="/feedback">Feedback</Link>
+            <li className="pb-2">
+              <Link className="hover:text-gray-300" href="/feedback">
+                Feedback
+              </Link>
             </li>
-            <li className="pb-2 hover:text-gray-300">
-              <Link href="/privacy-policy">Privacy Policy</Link>
+            <li className="pb-2">
+              <Link className="hover:text-gray-300" href="/privacy-policy">
+                Privacy Policy
+              </Link>
             </li>
-            <li className="pb-2 hover:text-gray-300">
-              <Link href="/terms">Terms & Conditions</Link>
+            <li className="pb-2">
+              <Link className="hover:text-gray-300" href="/terms">
+                Terms & Conditions
+              </Link>
             </li>
           </ul>
         </div>
