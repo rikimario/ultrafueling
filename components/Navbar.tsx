@@ -25,57 +25,23 @@ import { cn } from "@/lib/utils";
 import { useDarkMode } from "@/hooks/useDarkMode";
 import { useProfile } from "@/hooks/useProfile";
 import { Skeleton } from "./ui/skeleton";
-import ScrollLink from "@/components/ScrollLink";
 import { usePathname, useRouter } from "next/navigation";
+import { scrollToSection } from "@/utils/small-functions/scrollToSection";
 
 export default function Navbar({}: {}) {
   const { avatarUrl, user, loading: userLoading } = useUser();
-  const {
-    profile,
-    hasPremiumAccess,
-    hasHadTrial,
-    hasHadPaidSubscription,
-    loading: profileLoading,
-  } = useProfile();
+  const { profile, hasPremiumAccess, loading: profileLoading } = useProfile();
   const darkMode = useDarkMode();
   const pathname = usePathname();
   const router = useRouter();
-
-  const goToPricing = () => {
-    setTimeout(() => {
-      if (pathname !== "/") {
-        router.push("/#subscribe");
-        return;
-      }
-
-      document.getElementById("subscribe")?.scrollIntoView({
-        behavior: "smooth",
-      });
-
-      window.history.replaceState(null, "", "/#subscribe");
-    }, 100);
-  };
 
   const handleLogout = async () => {
     try {
       await logout();
     } catch (error) {
-      // Redirect throws an error in Next.js, catch it and manually redirect
       window.location.href = "/";
     }
   };
-
-  const isTrialing =
-    profile?.subscription_status === "trialing" &&
-    profile?.trial_ends_at &&
-    new Date(profile.trial_ends_at) > new Date();
-
-  const trialDaysLeft = isTrialing
-    ? Math.ceil(
-        (new Date(profile.trial_ends_at).getTime() - Date.now()) /
-          (1000 * 60 * 60 * 24),
-      )
-    : 0;
 
   const isLoading = userLoading || profileLoading;
 
@@ -114,14 +80,13 @@ export default function Navbar({}: {}) {
                   </Button>
                 </Link>
               ) : (
-                <Link href="/#subscribe">
-                  <Button
-                    className="text-gray-800 hover:text-white"
-                    variant="main"
-                  >
-                    Go Premium
-                  </Button>
-                </Link>
+                <Button
+                  onClick={() => scrollToSection("subscribe", pathname, router)}
+                  className="text-gray-800 hover:text-white"
+                  variant="main"
+                >
+                  Go Premium
+                </Button>
               )}
               <DropdownMenuTrigger asChild>
                 <button
@@ -169,7 +134,9 @@ export default function Navbar({}: {}) {
                   </DropdownMenuItem>
                 </Link>
                 <DropdownMenuItem
-                  onSelect={goToPricing}
+                  onSelect={() =>
+                    scrollToSection("subscribe", pathname, router)
+                  }
                   className={cn(
                     "flex cursor-pointer items-center text-[16px] font-semibold",
                   )}

@@ -5,21 +5,13 @@ import { Button } from "./ui/button";
 import Image from "next/image";
 import { useProfile } from "@/hooks/useProfile";
 import { usePathname, useRouter } from "next/navigation";
-import ScrollLink from "@/components/ScrollLink";
+import { scrollToSection } from "@/utils/small-functions/scrollToSection";
 
 export default function Footer() {
   const { profile, hasPremiumAccess } = useProfile();
   const pathname = usePathname();
   const router = useRouter();
 
-  const goToSection = (id: string) => {
-    if (pathname !== "/") {
-      router.push(`/#${id}`);
-      return;
-    }
-
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  };
   return (
     <footer className="border-border mt-20 border-t bg-[#212c42]">
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 px-6 py-12 md:grid-cols-4">
@@ -45,28 +37,28 @@ export default function Footer() {
           <h4 className="mb-3 font-semibold text-gray-200">Product</h4>
           <ul className="text-muted-foreground space-y-2 text-sm">
             <li className="pb-2">
-              <ScrollLink
-                id="freeCalc"
+              <button
+                onClick={() => scrollToSection("freeCalc", pathname, router)}
                 className="cursor-pointer hover:text-gray-300"
               >
                 Free Calculator
-              </ScrollLink>
+              </button>
             </li>
             <li className="pb-2">
-              <ScrollLink
-                id="howItWorks"
+              <button
+                onClick={() => scrollToSection("howItWorks", pathname, router)}
                 className="cursor-pointer hover:text-gray-300"
               >
                 How It Works
-              </ScrollLink>
+              </button>
             </li>
             <li className="pb-2">
-              <ScrollLink
-                id="subscribe"
+              <button
+                onClick={() => scrollToSection("subscribe", pathname, router)}
                 className="cursor-pointer hover:text-gray-300"
               >
                 Pricing
-              </ScrollLink>
+              </button>
             </li>
           </ul>
         </div>
@@ -76,12 +68,13 @@ export default function Footer() {
           <h4 className="mb-3 font-semibold text-gray-200">Company</h4>
           <ul className="text-muted-foreground space-y-2 text-sm">
             <li className="pb-2">
-              <ScrollLink
+              <button
+                onClick={() => scrollToSection("faq", pathname, router)}
                 id="faq"
                 className="cursor-pointer hover:text-gray-300"
               >
                 FAQ
-              </ScrollLink>
+              </button>
             </li>
             <li className="pb-2">
               <Link className="hover:text-gray-300" href="/feedback">
@@ -118,14 +111,13 @@ export default function Footer() {
                 </Button>
               </Link>
             ) : (
-              <Link href="/#subscribe">
-                <Button
-                  className="w-full text-gray-800 hover:text-white"
-                  variant="main"
-                >
-                  Go Premium
-                </Button>
-              </Link>
+              <Button
+                onClick={() => scrollToSection("subscribe", pathname, router)}
+                className="w-full text-gray-800 hover:text-white"
+                variant="main"
+              >
+                Go Premium
+              </Button>
             )
           ) : (
             <Link href="/get-started">
