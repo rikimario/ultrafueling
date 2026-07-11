@@ -18,6 +18,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { SubscriptionSkeleton } from "../skeletions";
 import { CancelSubscriptionResponse, PlanDetail, PlanKey } from "@/types";
+import { scrollToSection } from "@/utils/small-functions/scrollToSection";
+import { usePathname, useRouter } from "next/navigation";
+import { Router } from "next/router";
 
 const planDetails: Record<PlanKey, PlanDetail> = {
   monthly: {
@@ -46,6 +49,8 @@ export default function SubscriptionInfo() {
   const [cancelType, setCancelType] = useState<"period_end" | "immediate">(
     "immediate",
   ); // Default to immediate for yearly
+  const pathname = usePathname();
+  const router = useRouter();
 
   const isYearlyPlan =
     profile?.subscription_plan ===
@@ -226,11 +231,13 @@ export default function SubscriptionInfo() {
               )}
 
               <div className="mt-8 flex flex-col gap-2">
-                <Link href="/#subscribe">
-                  <Button variant="outline" className="w-full text-sm">
-                    Change Plan
-                  </Button>
-                </Link>
+                <Button
+                  onClick={() => scrollToSection("subscribe", pathname, router)}
+                  variant="outline"
+                  className="w-full text-sm"
+                >
+                  Change Plan
+                </Button>
 
                 {isActive && !isCanceledAtPeriodEnd && (
                   <Button
@@ -254,11 +261,15 @@ export default function SubscriptionInfo() {
                   Choose a plan and unlock premium features
                 </p>
               </div>
-              <Link href="/#subscribe">
-                <Button variant="main" className="w-full text-sm">
-                  Explore Plans
-                </Button>
-              </Link>
+              {/* <Link href="/#subscribe"> */}
+              <Button
+                onClick={() => scrollToSection("subscribe", pathname, router)}
+                variant="main"
+                className="w-full text-sm"
+              >
+                Explore Plans
+              </Button>
+              {/* </Link> */}
             </div>
           )}
         </CardContent>

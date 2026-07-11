@@ -19,6 +19,8 @@ import { useProfile } from "@/hooks/useProfile";
 import { Spinner } from "../ui/spinner";
 import { Calculator, FolderOpen } from "lucide-react";
 import Link from "next/link";
+import { scrollToSection } from "@/utils/small-functions/scrollToSection";
+import { usePathname, useRouter } from "next/navigation";
 
 type SavedPlan = {
   id: string;
@@ -30,6 +32,8 @@ type SavedPlan = {
 
 export default function SavedPlansDialog({ plans }: { plans: SavedPlan[] }) {
   const { loading, hasPremiumAccess } = useProfile();
+  const pathname = usePathname();
+  const router = useRouter();
 
   const handleDelete = async (id: string) => {
     await fetch("/api/delete-plan", {
@@ -79,7 +83,11 @@ export default function SavedPlansDialog({ plans }: { plans: SavedPlan[] }) {
             </Link>
           ) : (
             <Link href="/#subscribe">
-              <Button variant="main" className="gap-2">
+              <Button
+                onClick={() => scrollToSection("subscribe", pathname, router)}
+                variant="main"
+                className="gap-2"
+              >
                 <Calculator className="h-4 w-4" />
                 Create Your First Plan
               </Button>
