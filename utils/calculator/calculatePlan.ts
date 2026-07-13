@@ -328,10 +328,8 @@ export function calculateAdvancedPlan(input: AdvancedInput): AdvancedResult {
   const packingNotes = isShortEffort
     ? "Short effort — no nutrition packing needed. Bring a small water bottle."
     : hasAidStations
-      ? `Assuming aid stations every ${aidStationGapHours} hours, carry ~${Math.round(
-          selfCarryFraction * 100,
-        )}% of total nutrition (~${packCarbsGrams} g carbs, ${packFluidsL} L fluids).`
-      : `No aid stations assumed – full self-support load. (~${packCarbsGrams} g carbs, ${packFluidsL} L fluids).`;
+      ? `Carry between each aid station (every ${aidStationGapHours}h): ~${packCarbsGrams}g carbs, ${packFluidsL}L fluids. Total race: ~${totalCarbs}g carbs, ${totalFluidsL}L fluids.`
+      : `No aid stations — full self-support. Carry all: ~${packCarbsGrams}g carbs, ${packFluidsL}L fluids.`;
 
   return {
     distanceKm,
