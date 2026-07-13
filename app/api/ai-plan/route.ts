@@ -88,11 +88,11 @@ export async function POST(req: Request) {
     }
 
     // ✅ Validate input ranges
-    if (advancedInput.distanceKm < 1 || advancedInput.distanceKm > 500) {
+    if (advancedInput.distanceKm < 0 || advancedInput.distanceKm > 500) {
       return NextResponse.json({ error: "Invalid distance" }, { status: 400 });
     }
 
-    if (advancedInput.durationHours < 1 || advancedInput.durationHours > 100) {
+    if (advancedInput.durationHours < 0 || advancedInput.durationHours > 100) {
       return NextResponse.json({ error: "Invalid duration" }, { status: 400 });
     }
 
