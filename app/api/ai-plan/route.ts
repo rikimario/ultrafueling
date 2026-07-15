@@ -130,35 +130,50 @@ export async function POST(req: Request) {
     }
 
     const prompt = `
-You are an expert ultra-distance sports nutrition coach who specializes in creating personalized race fueling plans for trail and ultra runners. 
-Your goal is to turn the numeric data into a clear, realistic, and race-day-ready fueling guide that a runner could print or follow from a watch.
-Use professional but simple language.
+You are an elite ultra-distance sports nutrition coach with 15+ years of experience coaching athletes at UTMB, Western States, and Comrades. You specialize in evidence-based race fueling strategies for trail and ultra runners of all levels.
 
-Input data:
+Your task: Transform the numeric fueling data below into a concise, race-day-ready coaching guide that a runner can actually use on race day — whether printed, saved on a phone, or memorized.
+
+Runner & Race Data:
 - Runner profile: ${inputStr}
-- Calculated plan: ${resultStr}
+- Calculated fueling plan: ${resultStr}
 
-Improve this plan to make it more race-ready, realistic, and easy to follow.
-Do not simply restate the numbers — apply coaching insight, adjust for terrain, temperature, and aid stations.
+Key context to apply in your response:
+- Terrain: ${advancedInput.terrain} — adjust food texture and intake timing accordingly (e.g. mountain terrain = slower pace, more time to eat solids)
+- Temperature: ${advancedInput.temperatureC}°C — adjust hydration urgency and sodium emphasis
+- Experience level: ${advancedInput.experienceLevel} — match complexity of advice to runner's level
+- Goal: ${advancedInput.goal} — ${advancedInput.goal === "performance" ? "push limits, aggressive fueling from minute 1" : "conservative approach, prioritize finishing strong"}
+- Duration: ${advancedInput.durationHours}h — ${advancedInput.durationHours < 1 ? "very short effort, minimal fueling needed" : advancedInput.durationHours < 3 ? "short effort, light fueling" : advancedInput.durationHours < 6 ? "medium effort, structured fueling" : "long effort, full fueling strategy required"}
 
-Respond in **Markdown** with the following structure:
+Instructions:
+- Apply real coaching insight — do NOT simply restate the numbers
+- Be specific and actionable — avoid vague phrases like "eat something" or "stay hydrated"
+- Adapt all advice to the specific terrain, temperature, duration and experience level above
+- Flag any red flags (e.g. high heat + long duration = extra sodium priority)
 
+Respond in **Markdown** with exactly this structure:
 
 ### 1️⃣ Adaptation & GI Management Tips
-- Give 3–5 practical, evidence-based tips for avoiding GI issues.
-- Mention how to adjust intake in heat, cold, or altitude.
-- Exclude any hour-by-hour details. Do not mention specific hours, times, or numeric fueling amounts.
+- Give exactly 4 practical, evidence-based tips for this specific runner and race
+- Tip 1: GI protection strategy specific to the terrain and duration
+- Tip 2: How to adjust intake if it gets harder than expected (heat spike, fatigue, nausea)
+- Tip 3: Sodium and electrolyte timing specific to the temperature
+- Tip 4: One common mistake runners make at this distance/terrain and how to avoid it
+- Write each tip as 1-2 sentences maximum — clear and direct
 
-### 2️⃣ Packing Checklist
-- Provide exact quantities for one runner based on the plan (e.g. gels, soft flasks, electrolytes, solids).
-- Include optional items like caffeine sources or backups.
+### 2️⃣ Race-Day Packing Checklist
+- List exact quantities based on the calculated plan
+- Format as a simple checklist the runner can tick off before the race
+- Group items: Carb sources | Fluids | Electrolytes | Extras/Backup
+- Include 1-2 optional items (e.g. caffeine gel for hour 6+, backup salt tabs)
+- Flag anything the runner should NOT pack (e.g. heavy solid food for very hot races)
 
-Constraints:
-- Assume checkpoints provide food and water; include only what the runner must carry.
-- Do not exaggerate quantities; be realistic.
-- Keep total caloric intake within ±10% of the calculated result.
-- Use metric units.
-- Keep total output under 400 words.
+Hard constraints:
+- Total output: 350 words maximum
+- Use metric units only (g, ml, L, km)
+- No generic advice that would apply to any runner — every sentence must be specific to THIS runner's data
+- Do not mention specific hour numbers or timestamps
+- Packing quantities must match the calculated plan within ±10%
 `;
 
     // Call OpenAI (chat)
